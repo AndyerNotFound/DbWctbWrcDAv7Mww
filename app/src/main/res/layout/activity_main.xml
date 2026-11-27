@@ -39,47 +39,23 @@
                 android:contentDescription="@string/cd_expand_sidebar"
                 app:icon="@drawable/ic_left_panel_open" />
 
-            <com.google.android.material.button.MaterialSplitButton
-                android:id="@+id/folder_split"
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/folder_button"
+                style="?attr/materialButtonStyle"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="1dp"
-                android:paddingTop="4dp"
-                android:paddingBottom="4dp">
-
-                <com.google.android.material.button.MaterialButton
-                    android:id="@+id/folder_button"
-                    style="?attr/materialSplitButtonLeadingFilledStyle"
-                    android:insetLeft="0dp"
-                    android:insetTop="0dp"
-                    android:insetRight="0dp"
-                    android:insetBottom="0dp"
-                    android:minWidth="0dp"
-                    app:iconSize="16dp"
-                    app:iconPadding="4dp"
-                    android:layout_width="wrap_content"
-                    android:layout_height="40dp"
-                    android:paddingStart="12dp"
-                    android:paddingEnd="10dp"
-                    android:text="Design"
-                    android:textSize="12sp" />
-
-                <com.google.android.material.button.MaterialButton
-                    android:id="@+id/folder_chevron"
-                    style="?attr/materialSplitButtonIconFilledStyle"
-                    android:insetLeft="0dp"
-                    android:insetTop="0dp"
-                    android:insetRight="0dp"
-                    android:insetBottom="0dp"
-                    android:minWidth="38dp"
-                    android:paddingStart="10dp"
-                    android:paddingEnd="10dp"
-                    app:iconSize="18dp"
-                    android:layout_width="38dp"
-                    android:layout_height="40dp"
-                    android:contentDescription="Switch session folder"
-                    app:icon="@drawable/m3_split_button_chevron_avd" />
-            </com.google.android.material.button.MaterialSplitButton>
+                android:layout_height="40dp"
+                android:layout_marginStart="2dp"
+                android:insetTop="0dp"
+                android:insetBottom="0dp"
+                android:minWidth="0dp"
+                android:paddingStart="12dp"
+                android:paddingEnd="14dp"
+                android:text="Design"
+                android:textSize="12sp"
+                app:icon="@drawable/ic_folder"
+                app:iconGravity="textStart"
+                app:iconPadding="6dp"
+                app:iconSize="16dp" />
 
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/session_button"
@@ -314,54 +290,27 @@
                         android:contentDescription="@string/cd_fast_message"
                         app:icon="@drawable/ic_bolt" />
 
-                    <com.google.android.material.button.MaterialSplitButton
-                        android:id="@+id/model_split"
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/model_button"
+                        style="?attr/materialButtonStyle"
                         android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_marginStart="1dp"
+                        android:layout_height="40dp"
+                        android:layout_marginStart="2dp"
                         android:layout_weight="1"
-                        android:paddingTop="4dp"
-                        android:paddingBottom="4dp">
-
-                        <com.google.android.material.button.MaterialButton
-                            android:id="@+id/model_button"
-                            style="?attr/materialSplitButtonLeadingFilledStyle"
-                            android:insetLeft="0dp"
-                            android:insetTop="0dp"
-                            android:insetRight="0dp"
-                            android:insetBottom="0dp"
-                            android:minWidth="0dp"
-                            app:iconSize="16dp"
-                            app:iconPadding="4dp"
-                            android:layout_width="0dp"
-                            android:layout_height="40dp"
-                            android:layout_weight="1"
-                            android:ellipsize="end"
-                            android:gravity="center"
-                            android:maxLines="1"
-                            android:paddingStart="6dp"
-                            android:paddingEnd="6dp"
-                            android:text="GPT-5.4"
-                            android:textSize="11sp"
-                            app:icon="@drawable/ic_psychology"
-                            app:iconGravity="textStart" />
-
-                        <com.google.android.material.button.MaterialButton
-                            android:id="@+id/model_chevron"
-                            style="?attr/materialSplitButtonIconFilledStyle"
-                            android:insetLeft="0dp"
-                            android:insetTop="0dp"
-                            android:insetRight="0dp"
-                            android:insetBottom="0dp"
-                            android:minWidth="38dp"
-                            android:paddingStart="10dp"
-                            android:paddingEnd="10dp"
-                            app:iconSize="18dp"
-                            android:layout_width="38dp"
-                            android:layout_height="40dp"
-                            android:contentDescription="@string/cd_model"
-                            app:icon="@drawable/m3_split_button_chevron_avd" />
-                    </com.google.android.material.button.MaterialSplitButton>
+                        android:ellipsize="end"
+                        android:gravity="center"
+                        android:insetTop="0dp"
+                        android:insetBottom="0dp"
+                        android:maxLines="1"
+                        android:minWidth="0dp"
+                        android:paddingStart="10dp"
+                        android:paddingEnd="12dp"
+                        android:text="GPT-5.4"
+                        android:textSize="11sp"
+                        app:icon="@drawable/ic_psychology"
+                        app:iconGravity="textStart"
+                        app:iconPadding="6dp"
+                        app:iconSize="16dp" />
 
                     <com.google.android.material.button.MaterialButton
                         android:id="@+id/btn_interpolation"

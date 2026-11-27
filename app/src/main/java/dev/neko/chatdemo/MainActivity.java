@@ -15,9 +15,10 @@ import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.PopupMenu;
 
+import androidx.annotation.AttrRes;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.content.ContextCompat;
+import androidx.core.graphics.ColorUtils;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowCompat;
@@ -28,7 +29,7 @@ import androidx.viewpager2.adapter.FragmentStateAdapter;
 import androidx.viewpager2.widget.ViewPager2;
 
 import com.google.android.material.button.MaterialButton;
-import com.google.android.material.button.MaterialSplitButton;
+import com.google.android.material.color.MaterialColors;
 import com.google.android.material.progressindicator.LinearProgressIndicator;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.tabs.TabLayout;
@@ -57,7 +58,9 @@ public class MainActivity extends AppCompatActivity {
             R.drawable.ic_check_circle, R.drawable.ic_schedule, R.drawable.ic_check_circle
     };
     private static final int[] STATUS_TINTS = {
-            R.color.neko_primary, R.color.neko_tertiary, R.color.neko_outline
+            androidx.appcompat.R.attr.colorPrimary,
+            com.google.android.material.R.attr.colorTertiary,
+            com.google.android.material.R.attr.colorOutline
     };
     private static final String[] INTERPOLATIONS = {"Smooth", "Linear", "Adaptive"};
     private static final String[] REPLIES = {
@@ -76,9 +79,7 @@ public class MainActivity extends AppCompatActivity {
     private MaterialButton sendButton;
     private MaterialButton recordButton;
     private MaterialButton modelButton;
-    private MaterialButton modelChevron;
     private MaterialButton folderButton;
-    private MaterialButton folderChevron;
     private MaterialButton sessionButton;
     private MaterialButton presetButton;
     private MaterialButton interpolationButton;
@@ -157,9 +158,7 @@ public class MainActivity extends AppCompatActivity {
         sendButton = findViewById(R.id.btn_send);
         recordButton = findViewById(R.id.btn_record);
         modelButton = findViewById(R.id.model_button);
-        modelChevron = findViewById(R.id.model_chevron);
         folderButton = findViewById(R.id.folder_button);
-        folderChevron = findViewById(R.id.folder_chevron);
         sessionButton = findViewById(R.id.session_button);
         presetButton = findViewById(R.id.btn_preset);
         interpolationButton = findViewById(R.id.btn_interpolation);
@@ -169,8 +168,8 @@ public class MainActivity extends AppCompatActivity {
         pager = findViewById(R.id.pager);
         tabs = findViewById(R.id.tabs);
 
-        sendBackgroundColor = ContextCompat.getColor(this, R.color.neko_primary_container);
-        sendButton.setBackgroundTintList(ColorStateList.valueOf(sendBackgroundColor));
+        sendBackgroundColor = color(com.google.android.material.R.attr.colorPrimaryContainer);
+        sendButton.setBackgroundTintList(containerTint(sendBackgroundColor));
     }
 
     private void updateSystemBarAppearance() {
@@ -229,15 +228,12 @@ public class MainActivity extends AppCompatActivity {
         findViewById(R.id.btn_sidebar).setOnClickListener(v ->
                 new SidebarSheet(this).show());
 
-        View.OnClickListener folderMenu = v -> showFolderMenu(v);
-        folderButton.setOnClickListener(folderMenu);
-        folderChevron.setOnClickListener(folderMenu);
+        folderButton.setOnClickListener(v -> showFolderMenu(v));
 
         sessionButton.setOnClickListener(v -> {
             statusIndex = (statusIndex + 1) % STATUS.length;
             sessionButton.setIconResource(STATUS_ICONS[statusIndex]);
-            sessionButton.setIconTint(ColorStateList.valueOf(
-                    ContextCompat.getColor(this, STATUS_TINTS[statusIndex])));
+            sessionButton.setIconTint(ColorStateList.valueOf(color(STATUS_TINTS[statusIndex])));
             snackbar("Session status · " + STATUS[statusIndex]);
         });
 
@@ -256,7 +252,6 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void showFolderMenu(View anchor) {
-        folderChevron.setChecked(true);
         PopupMenu popup = new PopupMenu(this, anchor, Gravity.END);
         for (int i = 0; i < FOLDERS.length; i++) {
             popup.getMenu().add(0, i, i, FOLDERS[i]);
@@ -266,7 +261,6 @@ public class MainActivity extends AppCompatActivity {
             snackbar("Session folder · " + FOLDERS[item.getItemId() % FOLDERS.length]);
             return true;
         });
-        popup.setOnDismissListener(p -> folderChevron.setChecked(false));
         popup.show();
     }
 
@@ -280,9 +274,12 @@ public class MainActivity extends AppCompatActivity {
         }
         popup.setOnMenuItemClickListener(item -> {
             presetIndex = item.getItemId();
-            int tint = presetIndex == 1 ? R.color.neko_tertiary
-                    : presetIndex == 2 ? R.color.neko_primary : R.color.neko_on_surface_variant;
-            presetButton.setIconTint(ColorStateList.valueOf(ContextCompat.getColor(this, tint)));
+            int tint = presetIndex == 1
+                    ? com.google.android.material.R.attr.colorTertiary
+                    : presetIndex == 2
+                    ? androidx.appcompat.R.attr.colorPrimary
+                    : com.google.android.material.R.attr.colorOnSurfaceVariant;
+            presetButton.setIconTint(ColorStateList.valueOf(color(tint)));
             snackbar("Preset · " + PRESETS[presetIndex]);
             return true;
         });
@@ -362,11 +359,12 @@ public class MainActivity extends AppCompatActivity {
             snackbar("Quick message inserted");
         });
         modelButton.setOnClickListener(v -> openReasoning(false));
-        modelChevron.setOnClickListener(v -> openReasoning(true));
         interpolationButton.setOnClickListener(v -> {
             interpolationIndex = (interpolationIndex + 1) % INTERPOLATIONS.length;
-            interpolationButton.setIconTint(ColorStateList.valueOf(ContextCompat.getColor(this,
-                    interpolationIndex == 2 ? R.color.neko_tertiary : R.color.neko_on_surface_variant)));
+            int tint = interpolationIndex == 2
+                    ? com.google.android.material.R.attr.colorTertiary
+                    : com.google.android.material.R.attr.colorOnSurfaceVariant;
+            interpolationButton.setIconTint(ColorStateList.valueOf(color(tint)));
             snackbar("Interpolation · " + INTERPOLATIONS[interpolationIndex]);
         });
         interpolationButton.setTooltipText("Interpolation");
@@ -390,15 +388,10 @@ public class MainActivity extends AppCompatActivity {
                     ? View.IMPORTANT_FOR_ACCESSIBILITY_AUTO
                     : View.IMPORTANT_FOR_ACCESSIBILITY_NO);
         }
-        sendButton.setEnabled(generating || hasText);
     }
 
     private void openReasoning(boolean models) {
-        modelChevron.setChecked(true);
-        ReasoningSheet sheet = new ReasoningSheet(
-                this, models, modelName, modelMeta, effortIndex, reasoningListener);
-        sheet.setOnDismissListener(d -> modelChevron.setChecked(false));
-        sheet.show();
+        new ReasoningSheet(this, models, modelName, modelMeta, effortIndex, reasoningListener).show();
     }
 
     private void openFullscreenInput() {
@@ -518,21 +511,25 @@ public class MainActivity extends AppCompatActivity {
         if (sendButton == null) {
             return;
         }
-        int targetBg = ContextCompat.getColor(this,
-                on ? R.color.neko_tertiary_container : R.color.neko_primary_container);
-        int targetIcon = ContextCompat.getColor(this,
-                on ? R.color.neko_on_tertiary_container : R.color.neko_on_primary_container);
+        int targetBg = color(on
+                ? com.google.android.material.R.attr.colorTertiaryContainer
+                : com.google.android.material.R.attr.colorPrimaryContainer);
+        int targetIcon = color(on
+                ? com.google.android.material.R.attr.colorOnTertiaryContainer
+                : com.google.android.material.R.attr.colorOnPrimaryContainer);
 
         ValueAnimator animator = ValueAnimator.ofArgb(sendBackgroundColor, targetBg);
         animator.setDuration(320);
         animator.addUpdateListener(a -> {
             sendBackgroundColor = ((Number) a.getAnimatedValue()).intValue();
-            sendButton.setBackgroundTintList(ColorStateList.valueOf(sendBackgroundColor));
+            // Rebuild the state list on every frame so the pressed/disabled states keep the
+            // Material state layer instead of being flattened into one solid colour.
+            sendButton.setBackgroundTintList(containerTint(sendBackgroundColor));
         });
         animator.start();
 
         sendButton.setIconResource(on ? R.drawable.ic_stop : R.drawable.ic_send);
-        sendButton.setIconTint(ColorStateList.valueOf(targetIcon));
+        sendButton.setIconTint(iconTint(targetIcon));
         sendButton.setContentDescription(getString(on ? R.string.cd_stop : R.string.cd_send));
         sendButton.animate().scaleX(0.88f).scaleY(0.88f).setDuration(90)
                 .withEndAction(() -> sendButton.animate().scaleX(1f).scaleY(1f).setDuration(150).start())
@@ -547,13 +544,13 @@ public class MainActivity extends AppCompatActivity {
             int minutes = recordSeconds / 60;
             int seconds = recordSeconds % 60;
             contextLabel.setText(String.format(Locale.US, "REC %02d:%02d", minutes, seconds));
-            contextLabel.setTextColor(ContextCompat.getColor(this, R.color.neko_error));
+            contextLabel.setTextColor(color(androidx.appcompat.R.attr.colorError));
         } else if (generating) {
             contextLabel.setText("writing…");
-            contextLabel.setTextColor(ContextCompat.getColor(this, R.color.neko_tertiary));
+            contextLabel.setTextColor(color(com.google.android.material.R.attr.colorTertiary));
         } else {
             contextLabel.setText(contextPercent + "%");
-            contextLabel.setTextColor(ContextCompat.getColor(this, R.color.neko_on_surface_variant));
+            contextLabel.setTextColor(color(com.google.android.material.R.attr.colorOnSurfaceVariant));
         }
     }
 
@@ -562,15 +559,6 @@ public class MainActivity extends AppCompatActivity {
             return;
         }
         modelButton.setIconResource(ReasoningSheet.iconForEffort(effortIndex));
-        int tint;
-        if (effortIndex <= 1) {
-            tint = R.color.neko_on_primary_container;
-        } else if (effortIndex >= 7) {
-            tint = R.color.neko_on_tertiary_container;
-        } else {
-            tint = R.color.neko_on_primary_container;
-        }
-        modelButton.setIconTint(ColorStateList.valueOf(ContextCompat.getColor(this, tint)));
     }
 
     private void setRecording(boolean value) {
@@ -604,6 +592,43 @@ public class MainActivity extends AppCompatActivity {
             default:
                 return name.substring(0, Math.min(8, name.length()));
         }
+    }
+
+    /** Resolves a colour from the current theme so Material You rolls through everywhere. */
+    private int color(@AttrRes int attr) {
+        return MaterialColors.getColor(root, attr);
+    }
+
+    /**
+     * Container tint that keeps the Material state layer alive: pressed darkens, disabled fades.
+     * A flat ColorStateList makes a tonal button look and feel static.
+     */
+    private ColorStateList containerTint(int base) {
+        int onSurface = color(com.google.android.material.R.attr.colorOnSurface);
+        return new ColorStateList(
+                new int[][]{
+                        new int[]{-android.R.attr.state_enabled},
+                        new int[]{android.R.attr.state_pressed},
+                        new int[]{}
+                },
+                new int[]{
+                        ColorUtils.setAlphaComponent(onSurface, 0x1F),
+                        MaterialColors.layer(base, onSurface, 0.10f),
+                        base
+                });
+    }
+
+    private ColorStateList iconTint(int base) {
+        int onSurface = color(com.google.android.material.R.attr.colorOnSurface);
+        return new ColorStateList(
+                new int[][]{
+                        new int[]{-android.R.attr.state_enabled},
+                        new int[]{}
+                },
+                new int[]{
+                        ColorUtils.setAlphaComponent(onSurface, 0x61),
+                        base
+                });
     }
 
     private void snackbar(String message) {

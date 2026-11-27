@@ -17,6 +17,7 @@ import androidx.core.view.WindowInsetsCompat;
 import androidx.core.view.WindowInsetsControllerCompat;
 
 import com.google.android.material.button.MaterialButton;
+import com.google.android.material.color.DynamicColors;
 import com.google.android.material.textfield.TextInputEditText;
 
 import dev.neko.chatdemo.R;
@@ -35,7 +36,7 @@ public class FullscreenInputDialog extends Dialog {
 
     public FullscreenInputDialog(@NonNull Context context, @NonNull String initial,
                                  @NonNull Listener listener) {
-        super(context, R.style.Theme_Neko_FullscreenInput);
+        super(DynamicColors.wrapContextIfAvailable(context), R.style.Theme_Neko_FullscreenInput);
         this.listener = listener;
 
         View root = LayoutInflater.from(context).inflate(R.layout.dialog_fullscreen_input, null);
