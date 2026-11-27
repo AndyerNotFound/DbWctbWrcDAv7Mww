@@ -179,20 +179,20 @@
                   android:paddingEnd="10dp"
                   android:paddingBottom="8dp">
 
-              <!--
-                Edit state of the composer. One removable input chip names the message that is
-                being edited; removing the chip drops the draft and leaves the edit state.
-              -->
-              <com.google.android.material.chip.Chip
-                  android:id="@+id/edit_chip"
-                  style="@style/Widget.Neko.Chip.Input"
-                  android:layout_width="wrap_content"
-                  android:layout_height="wrap_content"
-                  android:layout_marginBottom="6dp"
-                  android:text="@string/edit_chip_default"
-                  android:visibility="gone"
-                  app:chipIcon="@drawable/ic_edit_note"
-                  app:closeIconVisible="true" />
+                  <!--
+                    Edit state of the composer. One removable input chip names the message that
+                    is being edited; removing the chip drops the draft and leaves the state.
+                  -->
+                  <com.google.android.material.chip.Chip
+                      android:id="@+id/edit_chip"
+                      style="@style/Widget.Neko.Chip.Input"
+                      android:layout_width="wrap_content"
+                      android:layout_height="wrap_content"
+                      android:layout_marginBottom="6dp"
+                      android:text="@string/edit_chip_default"
+                      android:visibility="gone"
+                      app:chipIcon="@drawable/ic_edit_note"
+                      app:closeIconVisible="true" />
 
                   <LinearLayout
                       android:layout_width="match_parent"

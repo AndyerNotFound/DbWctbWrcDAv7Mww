@@ -607,6 +607,7 @@ public class MainActivity extends AppCompatActivity
         showKeyboard();
 
         if (editChip != null) {
+            editChip.animate().cancel();
             editChip.setText(getString(R.string.edit_chip, shorten(item.text)));
             editChip.setVisibility(View.VISIBLE);
             editChip.setAlpha(0f);
