@@ -68,13 +68,13 @@ public class ReasoningEffortFragment extends Fragment {
         budgetValue.setText(args.getString(ARG_BUDGET, "not set · derived from effort"));
 
         view.findViewById(R.id.reasoning_model_row).setOnClickListener(v -> {
-            if (getParentFragment() instanceof ReasoningSheet.PageHost) {
-                ((ReasoningSheet.PageHost) getParentFragment()).onOpenModels();
+            if (getParentFragment() instanceof ReasoningPageHost) {
+                ((ReasoningPageHost) getParentFragment()).onOpenModels();
             }
         });
         view.findViewById(R.id.effort_custom).setOnClickListener(v -> {
-            if (getParentFragment() instanceof ReasoningSheet.PageHost) {
-                ((ReasoningSheet.PageHost) getParentFragment()).onOpenCustomEffort();
+            if (getParentFragment() instanceof ReasoningPageHost) {
+                ((ReasoningPageHost) getParentFragment()).onOpenCustomEffort();
             }
         });
 
@@ -85,8 +85,8 @@ public class ReasoningEffortFragment extends Fragment {
             applyLabels(index);
             if (fromUser) {
                 budgetValue.setText("not set · derived from effort");
-                if (getParentFragment() instanceof ReasoningSheet.PageHost) {
-                    ((ReasoningSheet.PageHost) getParentFragment()).onEffortChanged(index, true);
+                if (getParentFragment() instanceof ReasoningPageHost) {
+                    ((ReasoningPageHost) getParentFragment()).onEffortChanged(index, true);
                 }
             }
         });

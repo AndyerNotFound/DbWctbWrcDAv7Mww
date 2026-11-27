@@ -37,26 +37,12 @@ import dev.neko.chatdemo.R;
  * container keeps a fixed height, so the sheet never resizes in the middle of a page change (that
  * resize was what made the old view-based swap flicker).
  */
-public class ReasoningSheet extends BottomSheetDialogFragment implements PageHost {
+public class ReasoningSheet extends BottomSheetDialogFragment implements ReasoningPageHost {
 
     public interface Listener {
         void onModelSelected(@NonNull String name, @NonNull String meta);
 
         void onEffortSelected(int index, @Nullable String budgetLabel);
-    }
-
-    /** Calls the child pages make back into the sheet. */
-    public interface PageHost {
-        void onOpenModels();
-
-        void onEffortChanged(int index, boolean fromUser);
-
-        void onOpenCustomEffort();
-
-        void onModelPicked(@NonNull String name, @NonNull String meta);
-
-        void onModelsChanged(int providerIndex, @Nullable String group, @NonNull String providerName,
-                             int count);
     }
 
     public static final String[] EFFORT_NAMES = {

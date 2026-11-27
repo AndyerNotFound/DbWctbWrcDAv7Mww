@@ -100,8 +100,8 @@ public class ReasoningModelsFragment extends Fragment {
         }
         modelAdapter.submit(models);
 
-        if (getParentFragment() instanceof ReasoningSheet.PageHost) {
-            ((ReasoningSheet.PageHost) getParentFragment())
+        if (getParentFragment() instanceof ReasoningPageHost) {
+            ((ReasoningPageHost) getParentFragment())
                     .onModelsChanged(selectedProvider, selectedGroup, provider.name, models.size());
         }
     }
@@ -128,8 +128,8 @@ public class ReasoningModelsFragment extends Fragment {
     private void selectModel(ReasoningData.Model model) {
         selectedModelName = model.name;
         modelAdapter.notifyDataSetChanged();
-        if (getParentFragment() instanceof ReasoningSheet.PageHost) {
-            ((ReasoningSheet.PageHost) getParentFragment()).onModelPicked(model.name, model.meta);
+        if (getParentFragment() instanceof ReasoningPageHost) {
+            ((ReasoningPageHost) getParentFragment()).onModelPicked(model.name, model.meta);
         }
     }
 
