@@ -11,9 +11,16 @@ import android.os.Looper;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.Gravity;
+import android.view.MotionEvent;
+import android.view.VelocityTracker;
 import android.view.View;
+import android.view.animation.AccelerateInterpolator;
+import android.view.animation.DecelerateInterpolator;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.FrameLayout;
+import android.widget.ImageView;
 import android.widget.PopupMenu;
+import android.widget.TextView;
 
 import androidx.annotation.AttrRes;
 import androidx.annotation.NonNull;
@@ -29,9 +36,9 @@ import androidx.viewpager2.adapter.FragmentStateAdapter;
 import androidx.viewpager2.widget.ViewPager2;
 
 import com.google.android.material.button.MaterialButton;
+import com.google.android.material.card.MaterialCardView;
 import com.google.android.material.color.MaterialColors;
 import com.google.android.material.progressindicator.LinearProgressIndicator;
-import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.tabs.TabLayout;
 import com.google.android.material.tabs.TabLayoutMediator;
 import com.google.android.material.textfield.TextInputEditText;
@@ -48,7 +55,7 @@ import dev.neko.chatdemo.ui.MapFragment;
 import dev.neko.chatdemo.ui.MissionFragment;
 import dev.neko.chatdemo.ui.UsageFragment;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements ReasoningSheet.Listener {
 
     private static final String[] TAB_TITLES = {"Chat", "Map", "Mission", "Usage"};
     private static final String[] FOLDERS = {"Design", "Research", "Personal"};
@@ -84,7 +91,12 @@ public class MainActivity extends AppCompatActivity {
     private MaterialButton presetButton;
     private MaterialButton interpolationButton;
     private LinearProgressIndicator contextProgress;
-    private android.widget.TextView contextLabel;
+    private TextView contextLabel;
+    private MaterialCardView noticeCard;
+    private ImageView noticeIcon;
+    private TextView noticeText;
+    private MaterialButton noticeAction;
+    private Runnable noticeTimeout;
     private ViewPager2 pager;
     private TabLayout tabs;
 
@@ -108,23 +120,6 @@ public class MainActivity extends AppCompatActivity {
     private int sendBackgroundColor;
     private String modelName = "GPT-5.4";
     private String modelMeta = "OpenAI · 200k context · vision";
-
-    private final ReasoningSheet.Listener reasoningListener = new ReasoningSheet.Listener() {
-        @Override
-        public void onModelSelected(@NonNull String name, @NonNull String meta) {
-            modelName = name;
-            modelMeta = meta;
-            if (modelButton != null) {
-                modelButton.setText(compactModelName(name));
-            }
-        }
-
-        @Override
-        public void onEffortSelected(int index, String budgetLabel) {
-            effortIndex = index;
-            updateModelChip();
-        }
-    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -165,6 +160,7 @@ public class MainActivity extends AppCompatActivity {
         contextProgress = findViewById(R.id.context_progress);
         contextLabel = findViewById(R.id.context_label);
         contextProgress.setWaveAmplitude(0);
+        setupNotice();
         pager = findViewById(R.id.pager);
         tabs = findViewById(R.id.tabs);
 
@@ -188,6 +184,15 @@ public class MainActivity extends AppCompatActivity {
             Insets ime = insets.getInsets(WindowInsetsCompat.Type.ime());
             topBar.setPadding(bars.left, bars.top, bars.right, topBar.getPaddingBottom());
             inputDock.setPadding(bars.left, 0, bars.right, Math.max(bars.bottom, ime.bottom));
+            if (noticeCard != null) {
+                FrameLayout.LayoutParams params =
+                        (FrameLayout.LayoutParams) noticeCard.getLayoutParams();
+                int top = bars.top + dp(6);
+                if (params.topMargin != top) {
+                    params.topMargin = top;
+                    noticeCard.setLayoutParams(params);
+                }
+            }
             return insets;
         });
         ViewCompat.requestApplyInsets(root);
@@ -234,7 +239,7 @@ public class MainActivity extends AppCompatActivity {
             statusIndex = (statusIndex + 1) % STATUS.length;
             sessionButton.setIconResource(STATUS_ICONS[statusIndex]);
             sessionButton.setIconTint(ColorStateList.valueOf(color(STATUS_TINTS[statusIndex])));
-            snackbar("Session status · " + STATUS[statusIndex]);
+            showNotice(STATUS_ICONS[statusIndex], "Session status · " + STATUS[statusIndex]);
         });
 
         presetButton.setOnClickListener(this::showPresetMenu);
@@ -245,7 +250,7 @@ public class MainActivity extends AppCompatActivity {
             sessionButton.setText("New chat");
             contextPercent = 4;
             updateContextIndicator(true);
-            snackbar("New chat · context reset");
+            showNotice(R.drawable.ic_add_comment, "New chat · context reset");
         });
         findViewById(R.id.btn_menu).setOnClickListener(this::showSessionMenu);
 
@@ -258,7 +263,8 @@ public class MainActivity extends AppCompatActivity {
         }
         popup.setOnMenuItemClickListener(item -> {
             folderButton.setText(FOLDERS[item.getItemId() % FOLDERS.length]);
-            snackbar("Session folder · " + FOLDERS[item.getItemId() % FOLDERS.length]);
+            showNotice(R.drawable.ic_folder,
+                    "Session folder · " + FOLDERS[item.getItemId() % FOLDERS.length]);
             return true;
         });
         popup.show();
@@ -280,7 +286,7 @@ public class MainActivity extends AppCompatActivity {
                     ? androidx.appcompat.R.attr.colorPrimary
                     : com.google.android.material.R.attr.colorOnSurfaceVariant;
             presetButton.setIconTint(ColorStateList.valueOf(color(tint)));
-            snackbar("Preset · " + PRESETS[presetIndex]);
+            showNotice(R.drawable.ic_tune, "Preset · " + PRESETS[presetIndex]);
             return true;
         });
         popup.show();
@@ -298,10 +304,10 @@ public class MainActivity extends AppCompatActivity {
                     new AttachmentsSheet(this).show();
                     break;
                 case 3:
-                    snackbar("Session settings · demo");
+                    showNotice(R.drawable.ic_settings, "Session settings · demo");
                     break;
                 default:
-                    snackbar(item.getTitle() + " · demo");
+                    showNotice(R.drawable.ic_more_vert, item.getTitle() + " · demo");
                     break;
             }
             return true;
@@ -356,7 +362,7 @@ public class MainActivity extends AppCompatActivity {
             input.setText(quick);
             input.setSelection(quick.length());
             input.requestFocus();
-            snackbar("Quick message inserted");
+            showNotice(R.drawable.ic_bolt, "Quick message inserted");
         });
         modelButton.setOnClickListener(v -> openReasoning(false));
         interpolationButton.setOnClickListener(v -> {
@@ -365,7 +371,7 @@ public class MainActivity extends AppCompatActivity {
                     ? com.google.android.material.R.attr.colorTertiary
                     : com.google.android.material.R.attr.colorOnSurfaceVariant;
             interpolationButton.setIconTint(ColorStateList.valueOf(color(tint)));
-            snackbar("Interpolation · " + INTERPOLATIONS[interpolationIndex]);
+            showNotice(R.drawable.ic_animation, "Interpolation · " + INTERPOLATIONS[interpolationIndex]);
         });
         interpolationButton.setTooltipText("Interpolation");
         recordButton.setTooltipText("Record");
@@ -391,7 +397,23 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void openReasoning(boolean models) {
-        new ReasoningSheet(this, models, modelName, modelMeta, effortIndex, reasoningListener).show();
+        ReasoningSheet.newInstance(models, modelName, modelMeta, effortIndex)
+                .show(getSupportFragmentManager(), "reasoning");
+    }
+
+    @Override
+    public void onModelSelected(@NonNull String name, @NonNull String meta) {
+        modelName = name;
+        modelMeta = meta;
+        if (modelButton != null) {
+            modelButton.setText(compactModelName(name));
+        }
+    }
+
+    @Override
+    public void onEffortSelected(int index, String budgetLabel) {
+        effortIndex = index;
+        updateModelChip();
     }
 
     private void openFullscreenInput() {
@@ -422,7 +444,7 @@ public class MainActivity extends AppCompatActivity {
         }
         String text = input.getText() == null ? "" : input.getText().toString().trim();
         if (text.isEmpty()) {
-            snackbar("Write something first");
+            showNotice(R.drawable.ic_error, "Write something first");
             input.requestFocus();
             return;
         }
@@ -444,7 +466,7 @@ public class MainActivity extends AppCompatActivity {
         if (chatFragment != null) {
             chatFragment.addAssistantMessage("Stopped where you asked. The partial thought is still in the thread.");
         }
-        snackbar("Generation stopped");
+        showNotice(R.drawable.ic_stop, "Generation stopped");
     }
 
     private void setGenerating(boolean value) {
@@ -478,7 +500,7 @@ public class MainActivity extends AppCompatActivity {
             }
             contextPercent = Math.min(99, contextPercent + 1);
             setGenerating(false);
-            snackbar("Neko answered · context " + contextPercent + "%");
+            showNotice(R.drawable.ic_psychology, "Neko answered · context " + contextPercent + "%");
         };
 
         scrollTicker = new Runnable() {
@@ -567,9 +589,9 @@ public class MainActivity extends AppCompatActivity {
         if (value) {
             recordSeconds = 0;
             handler.post(recordingRunnable);
-            snackbar("Recording · tap again to stop");
+            showNotice(R.drawable.ic_mic, "Recording · tap again to stop");
         } else {
-            snackbar("Voice note discarded · demo");
+            showNotice(R.drawable.ic_mic, "Voice note discarded · demo");
         }
         updateContextIndicator(false);
     }
@@ -631,8 +653,117 @@ public class MainActivity extends AppCompatActivity {
                 });
     }
 
-    private void snackbar(String message) {
-        Snackbar.make(root, message, Snackbar.LENGTH_SHORT).show();
+    private void setupNotice() {
+        noticeCard = findViewById(R.id.top_notice);
+        noticeIcon = findViewById(R.id.notice_icon);
+        noticeText = findViewById(R.id.notice_text);
+        noticeAction = findViewById(R.id.notice_action);
+        noticeTimeout = this::hideNotice;
+
+        final float[] startY = new float[1];
+        final boolean[] dragging = new boolean[1];
+        final VelocityTracker[] tracker = new VelocityTracker[1];
+        noticeCard.setOnTouchListener((v, event) -> {
+            switch (event.getActionMasked()) {
+                case MotionEvent.ACTION_DOWN:
+                    startY[0] = event.getRawY();
+                    dragging[0] = true;
+                    v.animate().cancel();
+                    handler.removeCallbacks(noticeTimeout);
+                    tracker[0] = VelocityTracker.obtain();
+                    tracker[0].addMovement(event);
+                    return true;
+                case MotionEvent.ACTION_MOVE:
+                    if (!dragging[0]) {
+                        return false;
+                    }
+                    if (tracker[0] != null) {
+                        tracker[0].addMovement(event);
+                    }
+                    // Only upward drags peel the card away from the top edge.
+                    v.setTranslationY(Math.min(0f, event.getRawY() - startY[0]));
+                    return true;
+                case MotionEvent.ACTION_UP:
+                case MotionEvent.ACTION_CANCEL:
+                    if (!dragging[0]) {
+                        return false;
+                    }
+                    dragging[0] = false;
+                    float velocity = 0f;
+                    if (tracker[0] != null) {
+                        tracker[0].addMovement(event);
+                        tracker[0].computeCurrentVelocity(1000);
+                        velocity = tracker[0].getYVelocity();
+                        tracker[0].recycle();
+                        tracker[0] = null;
+                    }
+                    if (v.getTranslationY() < -v.getHeight() * 0.3f || velocity < -900f) {
+                        hideNotice();
+                    } else {
+                        v.animate().translationY(0f).setDuration(160).start();
+                        handler.postDelayed(noticeTimeout, 2200);
+                    }
+                    return true;
+                default:
+                    return false;
+            }
+        });
+    }
+
+    private void showNotice(int iconRes, String message) {
+        showNotice(iconRes, message, "Dismiss", null);
+    }
+
+    private void showNotice(int iconRes, String message, String actionLabel, Runnable action) {
+        if (noticeCard == null) {
+            return;
+        }
+        handler.removeCallbacks(noticeTimeout);
+        noticeCard.animate().cancel();
+
+        noticeIcon.setImageResource(iconRes);
+        noticeText.setText(message);
+        noticeAction.setText(actionLabel);
+        noticeAction.setOnClickListener(v -> {
+            hideNotice();
+            if (action != null) {
+                action.run();
+            }
+        });
+
+        noticeCard.setVisibility(View.VISIBLE);
+        noticeCard.setAlpha(0f);
+        noticeCard.setTranslationY(-noticeCard.getHeight() - dp(16));
+        noticeCard.animate()
+                .alpha(1f)
+                .translationY(0f)
+                .setDuration(220)
+                .setInterpolator(new DecelerateInterpolator())
+                .start();
+        handler.postDelayed(noticeTimeout, 3800);
+    }
+
+    private void hideNotice() {
+        if (noticeCard == null || noticeCard.getVisibility() != View.VISIBLE) {
+            return;
+        }
+        handler.removeCallbacks(noticeTimeout);
+        noticeCard.animate().cancel();
+        noticeCard.animate()
+                .alpha(0f)
+                .translationY(-noticeCard.getHeight() - dp(16))
+                .setDuration(180)
+                .setInterpolator(new AccelerateInterpolator())
+                .withEndAction(() -> {
+                    if (noticeCard.getAlpha() == 0f) {
+                        noticeCard.setVisibility(View.INVISIBLE);
+                    }
+                })
+                .start();
+    }
+
+    private int dp(int value) {
+        return Math.round(value * getResources().getDisplayMetrics().density);
     }
 
     private void hideKeyboard() {

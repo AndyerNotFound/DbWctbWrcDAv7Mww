@@ -1,361 +1,374 @@
-<?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/root"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="?attr/colorSurface"
-    android:orientation="vertical"
     tools:context=".MainActivity">
 
     <LinearLayout
-        android:id="@+id/top_bar"
+        android:id="@+id/content"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="?attr/colorSurface"
-        android:elevation="2dp"
+        android:layout_height="match_parent"
         android:orientation="vertical">
 
         <LinearLayout
-            android:id="@+id/toolbar_row"
-            android:layout_width="match_parent"
-            android:layout_height="56dp"
-            android:baselineAligned="false"
-            android:gravity="center_vertical"
-            android:orientation="horizontal"
-            android:paddingStart="4dp"
-            android:paddingEnd="4dp">
-
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/btn_sidebar"
-                style="?attr/materialIconButtonStyle"
-                android:insetLeft="0dp"
-                android:insetTop="0dp"
-                android:insetRight="0dp"
-                android:insetBottom="0dp"
-                android:layout_width="40dp"
-                android:layout_height="40dp"
-                android:contentDescription="@string/cd_expand_sidebar"
-                app:icon="@drawable/ic_left_panel_open" />
-
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/folder_button"
-                style="?attr/materialButtonStyle"
-                android:layout_width="wrap_content"
-                android:layout_height="40dp"
-                android:layout_marginStart="2dp"
-                android:insetTop="0dp"
-                android:insetBottom="0dp"
-                android:minWidth="0dp"
-                android:paddingStart="12dp"
-                android:paddingEnd="14dp"
-                android:text="Design"
-                android:textSize="12sp"
-                app:icon="@drawable/ic_folder"
-                app:iconGravity="textStart"
-                app:iconPadding="6dp"
-                app:iconSize="16dp" />
-
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/session_button"
-                style="@style/Widget.Material3Expressive.Button.TextButton"
-                android:layout_width="0dp"
-                android:layout_height="40dp"
-                android:layout_marginStart="1dp"
-                android:layout_marginEnd="2dp"
-                android:layout_weight="1"
-                android:ellipsize="end"
-                android:gravity="start|center_vertical"
-                android:insetLeft="0dp"
-                android:insetRight="0dp"
-                android:maxLines="1"
-                android:minWidth="0dp"
-                android:paddingStart="8dp"
-                android:paddingEnd="6dp"
-                android:text="@string/session_title"
-                android:textColor="?attr/colorOnSurface"
-                android:textSize="12sp"
-                app:icon="@drawable/ic_check_circle"
-                app:iconGravity="textStart"
-                app:iconPadding="5dp"
-                app:iconSize="16dp"
-                app:iconTint="?attr/colorPrimary" />
-
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/btn_preset"
-                style="?attr/materialIconButtonStyle"
-                android:insetLeft="0dp"
-                android:insetTop="0dp"
-                android:insetRight="0dp"
-                android:insetBottom="0dp"
-                android:layout_width="40dp"
-                android:layout_height="40dp"
-                android:contentDescription="@string/cd_preset"
-                app:icon="@drawable/ic_tune" />
-
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/btn_new_chat"
-                style="?attr/materialIconButtonStyle"
-                android:insetLeft="0dp"
-                android:insetTop="0dp"
-                android:insetRight="0dp"
-                android:insetBottom="0dp"
-                android:layout_width="40dp"
-                android:layout_height="40dp"
-                android:contentDescription="@string/cd_new_chat"
-                app:icon="@drawable/ic_add_comment" />
-
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/btn_menu"
-                style="?attr/materialIconButtonStyle"
-                android:insetLeft="0dp"
-                android:insetTop="0dp"
-                android:insetRight="0dp"
-                android:insetBottom="0dp"
-                android:layout_width="40dp"
-                android:layout_height="40dp"
-                android:contentDescription="@string/cd_menu"
-                app:icon="@drawable/ic_more_vert" />
-        </LinearLayout>
-
-        <com.google.android.material.tabs.TabLayout
-            android:id="@+id/tabs"
-            android:layout_width="match_parent"
-            android:layout_height="48dp"
-            android:background="@android:color/transparent"
-            app:tabGravity="fill"
-            app:tabIndicator="@drawable/tab_indicator_rounded"
-            app:tabIndicatorAnimationMode="elastic"
-            app:tabIndicatorColor="?attr/colorPrimary"
-            app:tabIndicatorFullWidth="true"
-            app:tabInlineLabel="true"
-            app:tabMode="fixed"
-            app:tabPaddingStart="2dp"
-            app:tabPaddingEnd="2dp"
-            app:tabRippleColor="?attr/colorControlHighlight"
-            app:tabSelectedTextColor="?attr/colorPrimary"
-            app:tabTextAppearance="@style/TextAppearance.Neko.Tab"
-            app:tabTextColor="?attr/colorOnSurfaceVariant" />
-    </LinearLayout>
-
-    <androidx.viewpager2.widget.ViewPager2
-        android:id="@+id/pager"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1" />
-
-    <FrameLayout
-        android:id="@+id/input_dock_container"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="?attr/colorSurface">
-
-        <com.google.android.material.card.MaterialCardView
-            android:id="@+id/input_panel"
-            style="?attr/materialCardViewFilledStyle"
+            android:id="@+id/top_bar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            android:layout_marginTop="4dp"
-            android:layout_marginEnd="8dp"
-            android:layout_marginBottom="8dp"
-            app:cardBackgroundColor="?attr/colorSurfaceContainerLow"
-            app:cardElevation="2dp"
-            app:shapeAppearanceOverlay="@style/ShapeAppearanceOverlay.Neko.InputDock">
+            android:background="?attr/colorSurface"
+            android:elevation="2dp"
+            android:orientation="vertical">
 
             <LinearLayout
+                android:id="@+id/toolbar_row"
+                android:layout_width="match_parent"
+                android:layout_height="56dp"
+                android:baselineAligned="false"
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
+                android:paddingStart="4dp"
+                android:paddingEnd="4dp">
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btn_sidebar"
+                    style="?attr/materialIconButtonStyle"
+                    android:insetLeft="0dp"
+                    android:insetTop="0dp"
+                    android:insetRight="0dp"
+                    android:insetBottom="0dp"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:layout_marginEnd="4dp"
+                    android:contentDescription="@string/cd_expand_sidebar"
+                    app:icon="@drawable/ic_left_panel_open" />
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/folder_button"
+                    style="?attr/materialButtonStyle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="40dp"
+                    android:layout_marginEnd="4dp"
+                    android:insetTop="0dp"
+                    android:insetBottom="0dp"
+                    android:minWidth="0dp"
+                    android:paddingStart="12dp"
+                    android:paddingEnd="14dp"
+                    android:text="Design"
+                    android:textSize="12sp"
+                    app:icon="@drawable/ic_folder"
+                    app:iconGravity="textStart"
+                    app:iconPadding="6dp"
+                    app:iconSize="16dp" />
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/session_button"
+                    style="@style/Widget.Material3Expressive.Button.TextButton"
+                    android:layout_width="0dp"
+                    android:layout_height="40dp"
+                    android:layout_marginEnd="4dp"
+                    android:layout_weight="1"
+                    android:ellipsize="end"
+                    android:gravity="start|center_vertical"
+                    android:insetLeft="0dp"
+                    android:insetRight="0dp"
+                    android:maxLines="1"
+                    android:minWidth="0dp"
+                    android:paddingStart="8dp"
+                    android:paddingEnd="6dp"
+                    android:text="@string/session_title"
+                    android:textColor="?attr/colorOnSurface"
+                    android:textSize="12sp"
+                    app:icon="@drawable/ic_check_circle"
+                    app:iconGravity="textStart"
+                    app:iconPadding="5dp"
+                    app:iconSize="16dp"
+                    app:iconTint="?attr/colorPrimary" />
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btn_preset"
+                    style="?attr/materialIconButtonStyle"
+                    android:insetLeft="0dp"
+                    android:insetTop="0dp"
+                    android:insetRight="0dp"
+                    android:insetBottom="0dp"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:layout_marginEnd="4dp"
+                    android:contentDescription="@string/cd_preset"
+                    app:icon="@drawable/ic_tune" />
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btn_new_chat"
+                    style="?attr/materialIconButtonStyle"
+                    android:insetLeft="0dp"
+                    android:insetTop="0dp"
+                    android:insetRight="0dp"
+                    android:insetBottom="0dp"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:layout_marginEnd="4dp"
+                    android:contentDescription="@string/cd_new_chat"
+                    app:icon="@drawable/ic_add_comment" />
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btn_menu"
+                    style="?attr/materialIconButtonStyle"
+                    android:insetLeft="0dp"
+                    android:insetTop="0dp"
+                    android:insetRight="0dp"
+                    android:insetBottom="0dp"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:contentDescription="@string/cd_menu"
+                    app:icon="@drawable/ic_more_vert" />
+            </LinearLayout>
+
+            <com.google.android.material.tabs.TabLayout
+                android:id="@+id/tabs"
+                android:layout_width="match_parent"
+                android:layout_height="48dp"
+                android:background="@android:color/transparent"
+                app:tabGravity="fill"
+                app:tabIndicator="@drawable/tab_indicator_rounded"
+                app:tabIndicatorAnimationMode="elastic"
+                app:tabIndicatorColor="?attr/colorPrimary"
+                app:tabIndicatorFullWidth="true"
+                app:tabInlineLabel="true"
+                app:tabMode="fixed"
+                app:tabPaddingStart="2dp"
+                app:tabPaddingEnd="2dp"
+                app:tabRippleColor="?attr/colorControlHighlight"
+                app:tabSelectedTextColor="?attr/colorPrimary"
+                app:tabTextAppearance="@style/TextAppearance.Neko.Tab"
+                app:tabTextColor="?attr/colorOnSurfaceVariant" />
+        </LinearLayout>
+
+        <androidx.viewpager2.widget.ViewPager2
+            android:id="@+id/pager"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1" />
+
+        <FrameLayout
+            android:id="@+id/input_dock_container"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="?attr/colorSurface">
+
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/input_panel"
+                style="?attr/materialCardViewFilledStyle"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:paddingStart="10dp"
-                android:paddingTop="10dp"
-                android:paddingEnd="10dp"
-                android:paddingBottom="8dp">
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="4dp"
+                android:layout_marginEnd="8dp"
+                android:layout_marginBottom="8dp"
+                app:cardBackgroundColor="?attr/colorSurfaceContainerLow"
+                app:cardElevation="2dp"
+                app:shapeAppearanceOverlay="@style/ShapeAppearanceOverlay.Neko.InputDock">
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:gravity="center_vertical"
-                    android:orientation="horizontal">
+                    android:orientation="vertical"
+                    android:paddingStart="10dp"
+                    android:paddingTop="10dp"
+                    android:paddingEnd="10dp"
+                    android:paddingBottom="8dp">
 
-                    <com.google.android.material.progressindicator.LinearProgressIndicator
-                        android:id="@+id/context_progress"
-                        style="@style/Widget.Neko.WavyProgressIndicator"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:max="100"
-                        android:progress="68"
-                        app:indicatorColor="?attr/colorPrimary"
-                        app:trackColor="?attr/colorSurfaceContainerHighest" />
-
-                    <TextView
-                        android:id="@+id/context_label"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginStart="10dp"
-                        android:fontFamily="sans-serif-medium"
-                        android:text="68%"
-                        android:textAppearance="?attr/textAppearanceLabelMedium"
-                        android:textColor="?attr/colorOnSurfaceVariant" />
-                </LinearLayout>
-
-                <FrameLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="4dp">
-
-                    <com.google.android.material.textfield.TextInputLayout
-                        android:id="@+id/input_layout"
-                        style="@style/Widget.Material3.TextInputLayout.FilledBox"
+                    <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:hint="@string/message_hint"
-                        app:boxBackgroundColor="?attr/colorSurfaceContainerHigh"
-                        app:boxStrokeWidth="0dp"
-                        app:boxStrokeWidthFocused="0dp"
-                        app:hintEnabled="true">
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal">
 
-                        <com.google.android.material.textfield.TextInputEditText
-                            android:id="@+id/input"
+                        <com.google.android.material.progressindicator.LinearProgressIndicator
+                            android:id="@+id/context_progress"
+                            style="@style/Widget.Neko.WavyProgressIndicator"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:max="100"
+                            android:progress="68"
+                            app:indicatorColor="?attr/colorPrimary"
+                            app:trackColor="?attr/colorSurfaceContainerHighest" />
+
+                        <TextView
+                            android:id="@+id/context_label"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="10dp"
+                            android:fontFamily="sans-serif-medium"
+                            android:text="68%"
+                            android:textAppearance="?attr/textAppearanceLabelMedium"
+                            android:textColor="?attr/colorOnSurfaceVariant" />
+                    </LinearLayout>
+
+                    <FrameLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="4dp">
+
+                        <com.google.android.material.textfield.TextInputLayout
+                            android:id="@+id/input_layout"
+                            style="@style/Widget.Material3.TextInputLayout.FilledBox"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:background="@null"
-                            android:gravity="top|start"
-                            android:importantForAutofill="no"
-                            android:inputType="textCapSentences|textMultiLine"
-                            android:lineSpacingExtra="2dp"
-                            android:maxLines="6"
-                            android:minLines="1"
-                            android:paddingEnd="46dp"
-                            android:scrollbars="vertical"
-                            android:textSize="15sp" />
-                    </com.google.android.material.textfield.TextInputLayout>
+                            android:hint="@string/message_hint"
+                            app:boxBackgroundColor="?attr/colorSurfaceContainerHigh"
+                            app:boxStrokeWidth="0dp"
+                            app:boxStrokeWidthFocused="0dp"
+                            app:hintEnabled="true">
 
-                    <!--
-                      Full-screen affordance lives outside the TextInputLayout on purpose: an end
-                      icon inside the layout changes the edit text's measured width every time it
-                      appears or disappears, which re-wraps the text and leaves a stale height
-                      after the field is cleared.
-                    -->
-                    <com.google.android.material.button.MaterialButton
-                        android:id="@+id/btn_fullscreen"
-                        style="?attr/materialIconButtonStyle"
-                        android:insetLeft="0dp"
-                        android:insetTop="0dp"
-                        android:insetRight="0dp"
-                        android:insetBottom="0dp"
-                        android:layout_width="40dp"
-                        android:layout_height="40dp"
-                        android:layout_gravity="top|end"
-                        android:layout_marginTop="6dp"
-                        android:layout_marginEnd="2dp"
-                        android:alpha="0"
-                        android:clickable="false"
-                        android:contentDescription="@string/cd_fullscreen"
-                        android:focusable="false"
-                        app:icon="@drawable/ic_open_in_full" />
-                </FrameLayout>
+                            <com.google.android.material.textfield.TextInputEditText
+                                android:id="@+id/input"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:background="@null"
+                                android:gravity="top|start"
+                                android:importantForAutofill="no"
+                                android:inputType="textCapSentences|textMultiLine"
+                                android:lineSpacingExtra="2dp"
+                                android:maxLines="6"
+                                android:minLines="1"
+                                android:paddingEnd="46dp"
+                                android:scrollbars="vertical"
+                                android:textSize="15sp" />
+                        </com.google.android.material.textfield.TextInputLayout>
 
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="48dp"
-                    android:layout_marginTop="2dp"
-                    android:baselineAligned="false"
-                    android:gravity="center_vertical"
-                    android:orientation="horizontal">
+                        <!--
+                          Full-screen affordance lives outside the TextInputLayout on purpose: an end
+                          icon inside the layout changes the edit text's measured width every time it
+                          appears or disappears, which re-wraps the text and leaves a stale height
+                          after the field is cleared.
+                        -->
+                        <com.google.android.material.button.MaterialButton
+                            android:id="@+id/btn_fullscreen"
+                            style="?attr/materialIconButtonStyle"
+                            android:insetLeft="0dp"
+                            android:insetTop="0dp"
+                            android:insetRight="0dp"
+                            android:insetBottom="0dp"
+                            android:layout_width="40dp"
+                            android:layout_height="40dp"
+                            android:layout_gravity="top|end"
+                            android:layout_marginTop="6dp"
+                            android:layout_marginEnd="2dp"
+                            android:alpha="0"
+                            android:clickable="false"
+                            android:contentDescription="@string/cd_fullscreen"
+                            android:focusable="false"
+                            app:icon="@drawable/ic_open_in_full" />
+                    </FrameLayout>
 
-                    <com.google.android.material.button.MaterialButton
-                        android:id="@+id/btn_attach"
-                        style="?attr/materialIconButtonStyle"
-                        android:insetLeft="0dp"
-                        android:insetTop="0dp"
-                        android:insetRight="0dp"
-                        android:insetBottom="0dp"
-                        android:layout_width="40dp"
-                        android:layout_height="40dp"
-                        android:contentDescription="@string/cd_attach"
-                        app:icon="@drawable/ic_attach_file" />
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="48dp"
+                        android:layout_marginTop="2dp"
+                        android:baselineAligned="false"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal">
 
-                    <com.google.android.material.button.MaterialButton
-                        android:id="@+id/btn_quick"
-                        style="?attr/materialIconButtonStyle"
-                        android:insetLeft="0dp"
-                        android:insetTop="0dp"
-                        android:insetRight="0dp"
-                        android:insetBottom="0dp"
-                        android:layout_width="40dp"
-                        android:layout_height="40dp"
-                        android:contentDescription="@string/cd_fast_message"
-                        app:icon="@drawable/ic_bolt" />
+                        <com.google.android.material.button.MaterialButton
+                            android:id="@+id/btn_attach"
+                            style="?attr/materialIconButtonStyle"
+                            android:insetLeft="0dp"
+                            android:insetTop="0dp"
+                            android:insetRight="0dp"
+                            android:insetBottom="0dp"
+                            android:layout_width="40dp"
+                            android:layout_height="40dp"
+                            android:contentDescription="@string/cd_attach"
+                            app:icon="@drawable/ic_attach_file" />
 
-                    <com.google.android.material.button.MaterialButton
-                        android:id="@+id/model_button"
-                        style="?attr/materialButtonStyle"
-                        android:layout_width="0dp"
-                        android:layout_height="40dp"
-                        android:layout_marginStart="2dp"
-                        android:layout_weight="1"
-                        android:ellipsize="end"
-                        android:gravity="center"
-                        android:insetTop="0dp"
-                        android:insetBottom="0dp"
-                        android:maxLines="1"
-                        android:minWidth="0dp"
-                        android:paddingStart="10dp"
-                        android:paddingEnd="12dp"
-                        android:text="GPT-5.4"
-                        android:textSize="11sp"
-                        app:icon="@drawable/ic_psychology"
-                        app:iconGravity="textStart"
-                        app:iconPadding="6dp"
-                        app:iconSize="16dp" />
+                        <com.google.android.material.button.MaterialButton
+                            android:id="@+id/btn_quick"
+                            style="?attr/materialIconButtonStyle"
+                            android:insetLeft="0dp"
+                            android:insetTop="0dp"
+                            android:insetRight="0dp"
+                            android:insetBottom="0dp"
+                            android:layout_width="40dp"
+                            android:layout_height="40dp"
+                            android:contentDescription="@string/cd_fast_message"
+                            app:icon="@drawable/ic_bolt" />
 
-                    <com.google.android.material.button.MaterialButton
-                        android:id="@+id/btn_interpolation"
-                        style="?attr/materialIconButtonStyle"
-                        android:insetLeft="0dp"
-                        android:insetTop="0dp"
-                        android:insetRight="0dp"
-                        android:insetBottom="0dp"
-                        android:layout_width="40dp"
-                        android:layout_height="40dp"
-                        android:contentDescription="@string/cd_interpolation"
-                        app:icon="@drawable/ic_animation" />
+                        <com.google.android.material.button.MaterialButton
+                            android:id="@+id/model_button"
+                            style="?attr/materialButtonStyle"
+                            android:layout_width="0dp"
+                            android:layout_height="40dp"
+                            android:layout_marginStart="2dp"
+                            android:layout_weight="1"
+                            android:ellipsize="end"
+                            android:gravity="center"
+                            android:insetTop="0dp"
+                            android:insetBottom="0dp"
+                            android:maxLines="1"
+                            android:minWidth="0dp"
+                            android:paddingStart="10dp"
+                            android:paddingEnd="12dp"
+                            android:text="GPT-5.4"
+                            android:textSize="11sp"
+                            app:icon="@drawable/ic_psychology"
+                            app:iconGravity="textStart"
+                            app:iconPadding="6dp"
+                            app:iconSize="16dp" />
 
-                    <com.google.android.material.button.MaterialButton
-                        android:id="@+id/btn_record"
-                        style="?attr/materialIconButtonFilledTonalStyle"
-                        android:insetLeft="0dp"
-                        android:insetTop="0dp"
-                        android:insetRight="0dp"
-                        android:insetBottom="0dp"
-                        android:layout_width="40dp"
-                        android:layout_height="40dp"
-                        android:layout_marginStart="2dp"
-                        android:checkable="true"
-                        android:contentDescription="@string/cd_record"
-                        app:icon="@drawable/ic_mic" />
+                        <com.google.android.material.button.MaterialButton
+                            android:id="@+id/btn_interpolation"
+                            style="?attr/materialIconButtonStyle"
+                            android:insetLeft="0dp"
+                            android:insetTop="0dp"
+                            android:insetRight="0dp"
+                            android:insetBottom="0dp"
+                            android:layout_width="40dp"
+                            android:layout_height="40dp"
+                            android:contentDescription="@string/cd_interpolation"
+                            app:icon="@drawable/ic_animation" />
 
-                    <com.google.android.material.button.MaterialButton
-                        android:id="@+id/btn_send"
-                        style="?attr/materialIconButtonFilledTonalStyle"
-                        android:insetLeft="0dp"
-                        android:insetTop="0dp"
-                        android:insetRight="0dp"
-                        android:insetBottom="0dp"
-                        android:paddingLeft="12dp"
-                        android:paddingRight="12dp"
-                        android:paddingTop="12dp"
-                        android:paddingBottom="12dp"
-                        android:layout_width="44dp"
-                        android:layout_height="44dp"
-                        android:layout_marginStart="4dp"
-                        android:contentDescription="@string/cd_send"
-                        app:icon="@drawable/ic_send" />
+                        <com.google.android.material.button.MaterialButton
+                            android:id="@+id/btn_record"
+                            style="?attr/materialIconButtonFilledTonalStyle"
+                            android:insetLeft="0dp"
+                            android:insetTop="0dp"
+                            android:insetRight="0dp"
+                            android:insetBottom="0dp"
+                            android:layout_width="40dp"
+                            android:layout_height="40dp"
+                            android:layout_marginStart="2dp"
+                            android:checkable="true"
+                            android:contentDescription="@string/cd_record"
+                            app:icon="@drawable/ic_mic" />
+
+                        <com.google.android.material.button.MaterialButton
+                            android:id="@+id/btn_send"
+                            style="?attr/materialIconButtonFilledTonalStyle"
+                            android:insetLeft="0dp"
+                            android:insetTop="0dp"
+                            android:insetRight="0dp"
+                            android:insetBottom="0dp"
+                            android:paddingLeft="12dp"
+                            android:paddingRight="12dp"
+                            android:paddingTop="12dp"
+                            android:paddingBottom="12dp"
+                            android:layout_width="44dp"
+                            android:layout_height="44dp"
+                            android:layout_marginStart="4dp"
+                            android:contentDescription="@string/cd_send"
+                            app:icon="@drawable/ic_send" />
+                    </LinearLayout>
                 </LinearLayout>
-            </LinearLayout>
-        </com.google.android.material.card.MaterialCardView>
-    </FrameLayout>
-</LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
+        </FrameLayout>
+    </LinearLayout>
+
+    <include
+        layout="@layout/view_top_notice"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="top" />
+</FrameLayout>
