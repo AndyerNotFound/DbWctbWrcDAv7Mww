@@ -30,10 +30,15 @@ public class SettingsDetailActivity extends AppCompatActivity {
         setContentView(R.layout.activity_settings_detail);
         SettingsUi.applyInsets(findViewById(R.id.detail_root),
                 findViewById(R.id.detail_top_bar), findViewById(R.id.detail_scroll));
-        findViewById(R.id.detail_back).setOnClickListener(v -> finish());
+        findViewById(R.id.detail_back).setOnClickListener(v -> finishAfterTransition());
 
         String page = getIntent().getStringExtra(EXTRA_PAGE);
         bindPage(page == null ? "theme" : page);
+    }
+
+    @Override
+    public void onBackPressed() {
+        finishAfterTransition();
     }
 
     private void bindPage(String page) {

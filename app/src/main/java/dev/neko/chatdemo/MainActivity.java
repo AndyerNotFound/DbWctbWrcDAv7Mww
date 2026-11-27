@@ -266,8 +266,10 @@ public class MainActivity extends AppCompatActivity implements ReasoningSheet.Li
     }
 
     private void setupTopBar() {
+        // The sidebar sits to the left of the chat, so it uses the backward shared axis X pair:
+        // it enters from the left and leaves to the left, with the chat page travelling right.
         findViewById(R.id.btn_sidebar).setOnClickListener(v ->
-                UiTransitions.startPanel(this, new Intent(this, SidebarActivity.class)));
+                UiTransitions.start(this, new Intent(this, SidebarActivity.class), false));
 
         folderButton.setOnClickListener(v -> showFolderMenu(v));
 

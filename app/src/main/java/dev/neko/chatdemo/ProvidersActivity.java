@@ -36,7 +36,7 @@ public class ProvidersActivity extends AppCompatActivity implements ProvidersAda
         SettingsUi.applyInsets(findViewById(R.id.providers_root),
                 findViewById(R.id.providers_top_bar), findViewById(R.id.providers_list));
 
-        findViewById(R.id.providers_back).setOnClickListener(v -> finish());
+        findViewById(R.id.providers_back).setOnClickListener(v -> finishAfterTransition());
         findViewById(R.id.providers_import).setOnClickListener(v ->
                 notice(getString(R.string.settings_notice_import)));
         findViewById(R.id.providers_add).setOnClickListener(v ->
@@ -68,6 +68,11 @@ public class ProvidersActivity extends AppCompatActivity implements ProvidersAda
     @Override
     public void onFetchModels(@NonNull ProvidersAdapter.ProviderItem provider) {
         notice(getString(R.string.settings_notice_models, provider.baseUrl));
+    }
+
+    @Override
+    public void onBackPressed() {
+        finishAfterTransition();
     }
 
     private void notice(String message) {

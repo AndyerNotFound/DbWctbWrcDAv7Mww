@@ -9,8 +9,8 @@ context budget bar.
 
 ## What is inside
 
-- **Top bar** — expandable sidebar (side sheet), session-folder split button, session title
-  (text button with a live status icon), session preset, new chat, overflow menu.
+- **Top bar** — sidebar entry (shared axis X to the panel), session-folder split button, session
+  title (text button with a live status icon), session preset, new chat, overflow menu.
 - **Tabs** — Chat / Map / Mission / Usage, fill gravity, elastic animation, full-width
   rounded line indicator.
 - **Composer** — wavy determinate/indeterminate context progress, filled multi-line field
@@ -23,8 +23,8 @@ context budget bar.
   foldable providers and rich model cards.
 - **Sidebar** — a full page session panel: a collapse chevron plus the Neko Chat title on top,
   three pinned quick actions stacked as one full width column, and the chat history scrolling
-  on its own underneath. Expanding a day group fades its rows in with `MaterialFade` instead of
-  cutting, and the bottom left FAB opens Settings through a container transform.
+  on its own underneath. Each day group is a card that grows into its own page with a
+  `MaterialContainerTransform` fragment transition, and the bottom left FAB opens Settings.
 - **Custom views** — branching conversation map (animated live head) and animated
   throughput bar chart.
 - Light and dark schemes, edge-to-edge insets, portrait demo.
@@ -39,8 +39,9 @@ context budget bar.
 - Tap the model split button for the reasoning sheet; open the model page, switch providers
   (the left rail folds), pick a model, drag the effort slider, open the custom
   `reasoning_effort` / `thinking_budget` dialog.
-- Tap the sidebar icon for the session panel; the collapse chevron on its leading edge closes it,
-  and the FAB at the bottom left morphs into Settings.
+- Tap the sidebar icon for the session panel; the collapse chevron on its leading edge closes it
+  with the shared axis X return, and a day group card grows into its own page.
+- Tap the FAB at the bottom left for Settings; the settings pages are pushed with shared axis X.
 - Type in the field (the fullscreen glyph appears), send, watch the bar turn wavy and the
   tonal send button flip to stop. Toggle the mic for the REC state.
 

@@ -20,8 +20,6 @@ public class SettingsActivity extends SettingsPageActivity {
 
     public static final String PREFS = "neko_prefs";
     public static final String KEY_COLOR_MODE = "color_mode";
-    /** Set by callers that hand a shared element to the container transform. */
-    public static final String EXTRA_CONTAINER = "container";
 
     public static void start(Activity from) {
         UiTransitions.start(from, new Intent(from, SettingsActivity.class), true);

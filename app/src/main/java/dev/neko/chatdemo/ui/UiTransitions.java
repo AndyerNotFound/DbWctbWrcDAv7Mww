@@ -15,8 +15,8 @@ import android.view.animation.DecelerateInterpolator;
  * Shared axis X activity transitions.
  *
  * <p>{@code forward = true} reads like "deeper": both pages travel left, the new one enters from
- * the right. {@code forward = false} is the side panel direction: both pages travel right, the new
- * one enters from the left.
+ * the right. {@code forward = false} is the back direction: both pages travel right, the new one
+ * enters from the left.
  *
  * <p>Activity windows only accept framework transitions, so the shared axis is built from a
  * {@link Slide} and a {@link Fade} running together rather than {@code MaterialSharedAxis}.
@@ -25,6 +25,7 @@ public final class UiTransitions {
 
     private static final int DURATION = 320;
 
+    /** Exit / reenter pair for the page that stays underneath. */
     public static void outgoing(Activity activity, boolean forward) {
         int edge = forward ? Gravity.START : Gravity.END;
         Window window = activity.getWindow();
@@ -32,6 +33,7 @@ public final class UiTransitions {
         window.setReenterTransition(axis(edge));
     }
 
+    /** Enter / return pair for the page that comes on top. */
     public static void incoming(Activity activity, boolean forward) {
         int edge = forward ? Gravity.END : Gravity.START;
         Window window = activity.getWindow();
@@ -40,22 +42,9 @@ public final class UiTransitions {
     }
 
     /**
-     * Opens a full page panel: the panel slides in from the left and the page underneath stays
-     * put, so closing it slides the same panel back out to the left.
+     * Pushes {@code intent} with the shared axis X pair. Pair it with
+     * {@link #incoming(Activity, boolean)} and {@code finishAfterTransition()} on the new page.
      */
-    public static void startPanel(Activity from, Intent intent) {
-        from.getWindow().setExitTransition(null);
-        from.getWindow().setReenterTransition(null);
-        from.startActivity(intent, ActivityOptions.makeSceneTransitionAnimation(from).toBundle());
-    }
-
-    /** Companion of {@link #startPanel(Activity, Intent)} for the panel activity itself. */
-    public static void incomingPanel(Activity activity) {
-        Window window = activity.getWindow();
-        window.setEnterTransition(axis(Gravity.START));
-        window.setReturnTransition(axis(Gravity.START));
-    }
-
     public static void start(Activity from, Intent intent, boolean forward) {
         outgoing(from, forward);
         from.startActivity(intent, ActivityOptions.makeSceneTransitionAnimation(from).toBundle());
