@@ -160,7 +160,8 @@ public class SidebarFragment extends Fragment {
 
     @Override
     public void onDestroyView() {
-        for (ValueAnimator animator : heightAnimators.values()) {
+        // Copy first: cancelling an animator removes it from the map through its own listener.
+        for (ValueAnimator animator : new ArrayList<>(heightAnimators.values())) {
             animator.cancel();
         }
         heightAnimators.clear();
