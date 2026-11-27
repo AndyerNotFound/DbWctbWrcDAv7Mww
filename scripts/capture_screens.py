@@ -12,7 +12,7 @@ os.makedirs(OUT, exist_ok=True)
 
 
 def run(args, **kwargs):
-    return subprocess.run(args, check=True, text=True, **kwargs)
+    return subprocess.run(args, check=True, text=True, capture_output=True, **kwargs)
 
 
 def adb(*args, **kwargs):
@@ -158,6 +158,11 @@ shot("08-models-anthropic.png")
 tap_text("Claude Opus 4.5")
 wait(1.5)
 shot("09-reasoning.png")
+tap_desc("Custom reasoning value")
+wait(1.3)
+shot("09b-custom-reasoning.png")
+tap_text("Cancel")
+wait(1.0)
 back()
 wait(1.2)
 
@@ -182,7 +187,16 @@ tap_desc("Full screen input")
 wait(1.5)
 shot("12-fullscreen.png")
 back()
-wait(1.2)
+wait(1.4)
+tap_desc("Record voice message")
+wait(1.8)
+shot("12b-recording.png")
+tap_desc("Record voice message")
+wait(2.0)
+tap_desc("Send message")
+wait(0.9)
+shot("12c-generating.png")
+wait(3.6)
 
 # Dark mode.
 adb("shell", "cmd", "uimode", "night", "yes")
