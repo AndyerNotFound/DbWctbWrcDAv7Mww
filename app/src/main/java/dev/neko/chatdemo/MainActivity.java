@@ -50,6 +50,7 @@ import java.util.Locale;
 
 import dev.neko.chatdemo.sheet.AttachmentsSheet;
 import dev.neko.chatdemo.sheet.ReasoningSheet;
+import dev.neko.chatdemo.ui.ChatAdapter;
 import dev.neko.chatdemo.ui.ChatFragment;
 import dev.neko.chatdemo.ui.ChatItem;
 import dev.neko.chatdemo.ui.FullscreenInputDialog;
@@ -540,25 +541,13 @@ public class MainActivity extends AppCompatActivity
 
             @Override
             public void onCopy() {
-                android.content.ClipboardManager clipboard =
-                        (android.content.ClipboardManager) getSystemService(CLIPBOARD_SERVICE);
-                if (clipboard != null && item.text != null) {
-                    clipboard.setPrimaryClip(
-                            android.content.ClipData.newPlainText(getString(R.string.app_name),
-                                    item.text));
-                }
+                copyToClipboard(item.text);
                 showNotice(R.drawable.ic_content_copy, getString(R.string.notice_copied));
             }
 
             @Override
             public void onQuote() {
-                String quoted = "> " + (item.text == null ? "" : item.text.replace("\n", "\n> ")) + "\n\n";
-                String existing = input.getText() == null ? "" : input.getText().toString();
-                input.setText(quoted + existing);
-                input.setSelection(input.getText() == null ? 0 : input.getText().length());
-                input.requestFocus();
-                showKeyboard();
-                showNotice(R.drawable.ic_chat_bubble, getString(R.string.notice_quoted));
+                showNotice(R.drawable.ic_open_in_full, getString(R.string.notice_preview));
             }
 
             @Override
@@ -567,8 +556,8 @@ public class MainActivity extends AppCompatActivity
             }
 
             @Override
-            public void onReadAloud() {
-                showNotice(R.drawable.ic_graphic_eq, getString(R.string.notice_read_aloud));
+            public void onShare() {
+                showNotice(R.drawable.ic_north_east, getString(R.string.notice_shared));
             }
 
             @Override
@@ -582,6 +571,72 @@ public class MainActivity extends AppCompatActivity
                 showNotice(R.drawable.ic_delete, getString(R.string.notice_deleted));
             }
         });
+    }
+
+    @Override
+    public void onAssistantAction(@NonNull View anchor, @NonNull ChatItem item, int action) {
+        switch (action) {
+            case ChatAdapter.ACTION_COPY:
+                copyToClipboard(item.text);
+                showNotice(R.drawable.ic_content_copy, getString(R.string.notice_copied));
+                break;
+            case ChatAdapter.ACTION_RETRY:
+                showNotice(R.drawable.ic_refresh, getString(R.string.notice_regenerated));
+                break;
+            case ChatAdapter.ACTION_SHARE:
+                showNotice(R.drawable.ic_north_east, getString(R.string.notice_shared));
+                break;
+            case ChatAdapter.ACTION_MORE:
+            default:
+                MessageActionsSheet.show(this, anchor, new MessageActionsSheet.Callbacks() {
+                    @Override
+                    public void onEdit() {
+                        beginEditing(item);
+                    }
+
+                    @Override
+                    public void onCopy() {
+                        copyToClipboard(item.text);
+                        showNotice(R.drawable.ic_content_copy, getString(R.string.notice_copied));
+                    }
+
+                    @Override
+                    public void onQuote() {
+                        showNotice(R.drawable.ic_open_in_full, getString(R.string.notice_preview));
+                    }
+
+                    @Override
+                    public void onBranch() {
+                        showNotice(R.drawable.ic_alt_route, getString(R.string.notice_branched));
+                    }
+
+                    @Override
+                    public void onShare() {
+                        showNotice(R.drawable.ic_north_east, getString(R.string.notice_shared));
+                    }
+
+                    @Override
+                    public void onDelete() {
+                        if (chatFragment != null) {
+                            chatFragment.removeMessage(item);
+                        }
+                        showNotice(R.drawable.ic_delete, getString(R.string.notice_deleted));
+                    }
+                });
+                break;
+        }
+    }
+
+    private void copyToClipboard(String text) {
+        if (text == null) {
+            return;
+        }
+        android.content.ClipboardManager clipboard =
+                (android.content.ClipboardManager) getSystemService(CLIPBOARD_SERVICE);
+        if (clipboard != null) {
+            clipboard.setPrimaryClip(
+                    android.content.ClipData.newPlainText(getString(R.string.app_name), text));
+        }
     }
 
     /**

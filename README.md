@@ -34,19 +34,27 @@ context budget bar.
   icons are tinted with `?attr/colorOnSurface`, and every vector in `drawable/` fills with a
   theme attribute, so the leading glyphs and the in-content icons follow light and dark instead
   of staying white.
-- **Conversation** — an assistant reply has no bubble: the avatar and the author sit above the
-  reply, and the text spans the full width between two equal side margins. Tool calls, code
-  blocks and suggestion chips follow the same header, with their own card or code surface as the
-  only inset element. A user message is a button shaped surface (`BubbleButton`): filled
-  container, 10% pressed state layer, ripple clipped to the outline, `Button` accessibility role,
-  and a `message_media` slot so a thumbnail or any other rich child sits above the caption.
+- **Conversation** — an assistant reply has no bubble. The avatar and the author sit above the
+  content, and everything the assistant did before speaking — the reasoning pass and the tool
+  calls — lives in one `StepCardView`: a header with the step count and a chevron, and rows that
+  fold down to the last two steps so only what led to the reply stays visible. The body shows
+  only its latest paragraph; a pill labelled *Earlier* unfolds the paragraphs before it, so the
+  whole pre-answer part of the turn can be collapsed at once. The body is text-selectable, so a
+  long press starts a selection. Below it, a footer holds the actions (copy, regenerate, share,
+  more) as standard icon buttons inside a pill shaped `MaterialButtonGroup`, with the turn's
+  stats — duration, tokens, model — closing the row on the end side.
+- **User message** — a button shaped surface (`BubbleButton`): filled container, 10% pressed
+  state layer, ripple clipped to the outline, `Button` accessibility role, and a `message_media`
+  slot so a thumbnail or any other rich child sits above the caption. Pressing it morphs the
+  corners from the bubble shape towards the small pressed shape and springs back on release, the
+  way an M3 button does; there is no haptic tick.
 - **Message editing** — tapping a user bubble pulls that message back into the field and turns
   the bubble to `colorTertiaryContainer`. A removable input chip above the field names what is
   being edited; removing it clears the draft and leaves the edit state, and sending writes the
   text back into the same row.
-- **Message actions** — holding a user bubble opens a floating card under it: a multi-section
-  list (section subheader + segmented `ListItemLayout` rows) for copy, quote, edit, branch, read
-  aloud and delete.
+- **Message actions** — holding a user bubble opens a floating card under it. Options are
+  stacked as their own rounded rows carrying an icon and a label only — no icon container, no
+  outline, no trailing chevron — and the destructive row switches to the error container.
 - **Settings** — a multi-section list: each block is named by a section header, and its rows are
   `ListItemLayout` segments sharing one continuous card, so only the first row rounds its top
   corners and only the last rounds its bottom.
@@ -75,8 +83,11 @@ context budget bar.
 - Tap a user bubble: it comes back into the field with a removable chip above it, and the bubble
   turns tertiary while it is being edited. Remove the chip to drop the draft, or send to write the
   text back into the same row.
-- Hold a user bubble: a card grows out of it with a multi-section list — copy, quote, edit,
-  branch, read aloud, delete.
+- Hold a user bubble: a card grows out of it with stacked icon-and-label options — select and
+  copy, preview, edit, share, create branch, delete.
+- Tap the header of the reasoning card on an assistant reply to unfold every step; tap *Earlier*
+  to bring back the paragraphs before the latest one. Hold the reply body to select text, and use
+  the icon row under it for copy, regenerate, share and more.
 
 ## Build
 

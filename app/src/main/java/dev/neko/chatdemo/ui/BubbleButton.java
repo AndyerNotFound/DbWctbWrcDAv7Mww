@@ -1,11 +1,13 @@
 package dev.neko.chatdemo.ui;
 
+import android.animation.ValueAnimator;
 import android.content.Context;
 import android.content.res.ColorStateList;
 import android.content.res.TypedArray;
 import android.graphics.Color;
 import android.graphics.drawable.RippleDrawable;
 import android.util.AttributeSet;
+import android.view.animation.PathInterpolator;
 import android.widget.Button;
 import android.widget.LinearLayout;
 
@@ -24,12 +26,12 @@ import dev.neko.chatdemo.R;
  *
  * <p>Material 3 buttons are text widgets: they carry a label and at most two icons, so they cannot
  * host a thumbnail, a caption and a row of chips. This view reproduces the button surface instead —
- * the same filled container, the same 10% state layer while pressed, the same bounded ripple, and
- * the same accessibility role ({@code Button}) — while staying a layout, so a message can hold any
- * rich media inside it.
+ * the filled container, the state layer, the bounded ripple and the {@code Button} accessibility
+ * role — while staying a layout, so a message can hold any rich media inside it.
  *
- * <p>One corner is left nearly square so the bubble points at the sender. That is the only thing the
- * XML has to decide:
+ * <p>Pressing it behaves like an M3 button rather than a list row: the corners morph from the
+ * rounded bubble shape towards the small pressed shape and settle back on release. There is no
+ * haptic tick — the shape is the feedback.
  *
  * <pre>
  * &lt;dev.neko.chatdemo.ui.BubbleButton
@@ -43,7 +45,21 @@ public class BubbleButton extends LinearLayout {
     public static final int SHARP_BOTTOM_RIGHT = 1;
     public static final int SHARP_BOTTOM_LEFT = 2;
 
+    /** The pressed corner radius, from the M3 button's small container shape. */
+    private static final float PRESSED_RADIUS_DP = 8f;
+
     private final MaterialShapeDrawable fill;
+    private final MaterialShapeDrawable mask;
+
+    private final float radius;
+    private final float tail;
+    private final int sharpCorner;
+
+    @Nullable
+    private ValueAnimator morph;
+    /** 0 = resting bubble shape, 1 = fully pressed shape. */
+    private float morphProgress;
+    private boolean pressed;
 
     public BubbleButton(Context context) {
         this(context, null);
@@ -56,45 +72,33 @@ public class BubbleButton extends LinearLayout {
     public BubbleButton(Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
         setOrientation(VERTICAL);
+        // The shape morph is the press feedback; a buzz on top of it reads as a different widget.
+        setHapticFeedbackEnabled(false);
 
         TypedArray a = context.obtainStyledAttributes(
                 attrs, R.styleable.BubbleButton, defStyleAttr, 0);
-        float radius = a.getDimension(R.styleable.BubbleButton_bubbleCornerSize, dp(20));
-        float tail = a.getDimension(R.styleable.BubbleButton_bubbleTailSize, dp(5));
-        int sharp = a.getInt(R.styleable.BubbleButton_bubbleSharpCorner, SHARP_BOTTOM_RIGHT);
+        radius = a.getDimension(R.styleable.BubbleButton_bubbleCornerSize, dp(20));
+        tail = a.getDimension(R.styleable.BubbleButton_bubbleTailSize, dp(5));
+        sharpCorner = a.getInt(R.styleable.BubbleButton_bubbleSharpCorner, SHARP_BOTTOM_RIGHT);
         int container = a.getColor(R.styleable.BubbleButton_bubbleContainerColor,
-                MaterialColors.getColor(this, com.google.android.material.R.attr.colorPrimaryContainer));
+                MaterialColors.getColor(this,
+                        com.google.android.material.R.attr.colorPrimaryContainer));
         a.recycle();
 
-        ShapeAppearanceModel.Builder builder = ShapeAppearanceModel.builder()
-                .setAllCornerSizes(radius);
-        if (sharp == SHARP_BOTTOM_RIGHT) {
-            builder.setBottomRightCornerSize(tail);
-        } else if (sharp == SHARP_BOTTOM_LEFT) {
-            builder.setBottomLeftCornerSize(tail);
-        }
-        ShapeAppearanceModel shape = builder.build();
+        ShapeAppearanceModel shape = shapeFor(morphProgress);
 
         fill = new MaterialShapeDrawable(shape);
         fill.setFillColor(containerState(container));
         fill.setElevation(0f);
 
-        // The mask only needs the outline: the ripple is clipped to it, so the press feedback never
-        // spills into the square corners the bubble leaves behind.
-        MaterialShapeDrawable mask = new MaterialShapeDrawable(shape);
+        // The ripple is clipped to the outline, so the press never spills past the rounded bubble.
+        mask = new MaterialShapeDrawable(shape);
         mask.setFillColor(ColorStateList.valueOf(Color.WHITE));
 
-        RippleDrawable ripple = new RippleDrawable(rippleState(), fill, mask);
-        setBackground(ripple);
+        setBackground(new RippleDrawable(rippleState(), fill, mask));
+
         setClickable(true);
         setFocusable(true);
-    }
-
-    /** The container colour, so callers can derive matching content colours from the same source. */
-    @ColorInt
-    public int containerColor() {
-        ColorStateList list = fill.getFillColor();
-        return list == null ? Color.TRANSPARENT : list.getDefaultColor();
     }
 
     /** Retints the bubble, e.g. while the message it belongs to is being edited. */
@@ -107,12 +111,65 @@ public class BubbleButton extends LinearLayout {
         return Button.class.getName();
     }
 
+    @Override
+    protected void drawableStateChanged() {
+        super.drawableStateChanged();
+        // The framework can refresh the drawable state while the view is still being constructed,
+        // before the shape drawables exist.
+        if (fill == null || mask == null) {
+            return;
+        }
+        boolean nowPressed = isPressed();
+        if (nowPressed != pressed) {
+            pressed = nowPressed;
+            morphTo(nowPressed);
+        }
+    }
+
+    /**
+     * Press: corners snap towards the small shape in a short, mostly linear move. Release: they
+     * spring back with a slight overshoot, which is what makes the bubble feel elastic.
+     */
+    private void morphTo(boolean down) {
+        if (morph != null) {
+            morph.cancel();
+        }
+        final float from = morphProgress;
+        final float to = down ? 1f : 0f;
+        morph = ValueAnimator.ofFloat(from, to);
+        morph.setDuration(down ? 120 : 320);
+        morph.setInterpolator(down
+                ? new PathInterpolator(0.2f, 0f, 0f, 1f)
+                : new PathInterpolator(0.34f, 1.32f, 0.64f, 1f));
+        morph.addUpdateListener(a -> {
+            morphProgress = (float) a.getAnimatedValue();
+            ShapeAppearanceModel shape = shapeFor(morphProgress);
+            fill.setShapeAppearanceModel(shape);
+            mask.setShapeAppearanceModel(shape);
+        });
+        morph.start();
+    }
+
+    /** Interpolates the resting bubble into the pressed shape; the tail corner stays put. */
+    private ShapeAppearanceModel shapeFor(float progress) {
+        float corner = radius + (dp(PRESSED_RADIUS_DP) - radius) * progress;
+        ShapeAppearanceModel.Builder builder = ShapeAppearanceModel.builder()
+                .setAllCornerSizes(corner);
+        if (sharpCorner == SHARP_BOTTOM_RIGHT) {
+            builder.setBottomRightCornerSize(tail);
+        } else if (sharpCorner == SHARP_BOTTOM_LEFT) {
+            builder.setBottomLeftCornerSize(tail);
+        }
+        return builder.build();
+    }
+
     /**
      * A pressed state layer instead of a flat colour: the container deepens by 10% while the finger
      * is down, exactly like a filled tonal button.
      */
     private ColorStateList containerState(@ColorInt int base) {
-        int onSurface = MaterialColors.getColor(this, com.google.android.material.R.attr.colorOnSurface);
+        int onSurface = MaterialColors.getColor(this,
+                com.google.android.material.R.attr.colorOnSurface);
         return new ColorStateList(
                 new int[][]{
                         new int[]{-android.R.attr.state_enabled},
@@ -127,7 +184,8 @@ public class BubbleButton extends LinearLayout {
     }
 
     private ColorStateList rippleState() {
-        int onSurface = MaterialColors.getColor(this, com.google.android.material.R.attr.colorOnSurface);
+        int onSurface = MaterialColors.getColor(this,
+                com.google.android.material.R.attr.colorOnSurface);
         return ColorStateList.valueOf(ColorUtils.setAlphaComponent(onSurface, 0x1F));
     }
 

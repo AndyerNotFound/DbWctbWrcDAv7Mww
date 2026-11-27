@@ -132,20 +132,27 @@
     <string name="edit_notice_started">编辑中 · 草稿已回填输入框</string>
     <string name="edit_notice_cancelled">已退出编辑 · 草稿已清空</string>
     <string name="notice_edited">消息已更新</string>
+    <string name="steps_title">思考与工具</string>
+    <string name="steps_count">%1$d 步</string>
+    <string name="steps_hidden">还有 %1$d 步</string>
+    <string name="earlier_expand">更早内容</string>
+    <string name="earlier_collapse">收起</string>
+    <string name="cd_copy_message">复制消息</string>
+    <string name="cd_regenerate">重新生成</string>
+    <string name="cd_share_message">分享消息</string>
+    <string name="cd_more_actions">更多操作</string>
     <string name="message_action_edit">编辑</string>
-    <string name="message_action_copy">复制文本</string>
-    <string name="message_action_quote">引用回复</string>
+    <string name="message_action_copy">选择复制</string>
+    <string name="message_action_preview">消息预览</string>
+    <string name="message_action_share">分享</string>
+    <string name="message_action_branch">创建分支</string>
     <string name="message_action_delete">删除</string>
-    <string name="message_action_delete_sub">从对话中移除这条消息</string>
-    <string name="message_action_branch">从这里分支</string>
-    <string name="message_action_speak">朗读</string>
-    <string name="message_action_copy_section">剪贴板</string>
-    <string name="message_action_thread_section">对话</string>
     <string name="notice_copied">已复制到剪贴板</string>
-    <string name="notice_quoted">已引用到输入框</string>
+    <string name="notice_preview">消息预览 · 演示</string>
     <string name="notice_deleted">消息已删除</string>
     <string name="notice_branched">已从该消息分支 · 演示</string>
-    <string name="notice_read_aloud">朗读 · 演示</string>
+    <string name="notice_shared">分享面板 · 演示</string>
+    <string name="notice_regenerated">已重新生成 · 演示</string>
 
     <!-- Model rows -->
     <string name="model_meta_context">OpenAI · 200k 上下文</string>
