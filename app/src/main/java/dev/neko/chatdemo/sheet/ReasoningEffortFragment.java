@@ -65,7 +65,8 @@ public class ReasoningEffortFragment extends Fragment {
         labels = view.findViewById(R.id.effort_labels);
         slider = view.findViewById(R.id.effort_slider);
 
-        budgetValue.setText(args.getString(ARG_BUDGET, "not set · derived from effort"));
+        budgetValue.setText(args.getString(ARG_BUDGET,
+                getString(R.string.reasoning_budget_unset)));
 
         view.findViewById(R.id.reasoning_model_row).setOnClickListener(v -> {
             if (getParentFragment() instanceof ReasoningPageHost) {
@@ -84,7 +85,7 @@ public class ReasoningEffortFragment extends Fragment {
             int index = ReasoningSheet.clampEffort(Math.round(value));
             applyLabels(index);
             if (fromUser) {
-                budgetValue.setText("not set · derived from effort");
+                budgetValue.setText(R.string.reasoning_budget_unset);
                 if (getParentFragment() instanceof ReasoningPageHost) {
                     ((ReasoningPageHost) getParentFragment()).onEffortChanged(index, true);
                 }

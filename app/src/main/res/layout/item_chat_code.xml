@@ -101,7 +101,7 @@
                         <ImageView
                             android:layout_width="14dp"
                             android:layout_height="14dp"
-                            android:contentDescription="Copy code"
+                            android:contentDescription="@string/cd_copy_code"
                             android:src="@drawable/ic_content_copy"
                             app:tint="@color/neko_code_dim" />
                     </LinearLayout>

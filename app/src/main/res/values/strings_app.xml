@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Tabs -->
+    <string name="tab_chat">Chat</string>
+    <string name="tab_map">Map</string>
+    <string name="tab_mission">Mission</string>
+    <string name="tab_usage">Usage</string>
+
+    <!-- Top bar data -->
+    <string name="folder_design">Design</string>
+    <string name="folder_research">Research</string>
+    <string name="folder_personal">Personal</string>
+    <string name="preset_balanced">Balanced</string>
+    <string name="preset_creative">Creative</string>
+    <string name="preset_precise">Precise</string>
+    <string name="preset_debug">Debug</string>
+    <string name="state_active">Active</string>
+    <string name="state_paused">Paused</string>
+    <string name="state_complete">Complete</string>
+    <string name="interp_smooth">Smooth</string>
+    <string name="interp_linear">Linear</string>
+    <string name="interp_adaptive">Adaptive</string>
+    <string name="new_chat_title">New chat</string>
+
+    <!-- Menu -->
+    <string name="menu_rename">Rename session</string>
+    <string name="menu_export">Export transcript</string>
+    <string name="menu_compress">Compress history</string>
+    <string name="menu_settings">Session settings</string>
+
+    <!-- Notices -->
+    <string name="notice_session_state">Session status · %1$s</string>
+    <string name="notice_new_chat">New chat · context reset</string>
+    <string name="notice_folder">Session folder · %1$s</string>
+    <string name="notice_preset">Preset · %1$s</string>
+    <string name="notice_settings_demo">Session settings · demo</string>
+    <string name="notice_menu_demo">%1$s · demo</string>
+    <string name="notice_quick">Quick message inserted</string>
+    <string name="notice_interpolation">Interpolation · %1$s</string>
+    <string name="notice_empty_input">Write something first</string>
+    <string name="notice_stopped">Generation stopped</string>
+    <string name="notice_answered">Neko answered · context %1$d%%</string>
+    <string name="notice_recording">Recording · tap again to stop</string>
+    <string name="notice_recording_discarded">Voice note discarded · demo</string>
+    <string name="state_writing">writing…</string>
+    <string name="notice_dismiss">Dismiss</string>
+
+    <!-- Fullscreen composer -->
+    <string name="compose_title">Compose</string>
+
+    <!-- Reasoning sheet -->
+    <string name="reasoning_page_title">Reasoning &amp; model</string>
+    <string name="reasoning_page_subtitle">Effort, budget and the model behind the turn</string>
+    <string name="reasoning_models_title">Model selection</string>
+    <string name="reasoning_budget_unset">not set · derived from effort</string>
+    <string name="reasoning_budget_custom">%1$s tokens · custom</string>
+    <string name="reasoning_models_count">%1$s · %2$d models</string>
+    <string name="reasoning_custom_helper_effort">off · auto · minimal · low · medium · high · xhigh · max · ultra</string>
+    <string name="reasoning_custom_helper_budget">0 – 32,768 tokens</string>
+    <string name="reasoning_custom_number">Enter a number</string>
+    <string name="reasoning_custom_range">0 – 32,768</string>
+    <string name="reasoning_custom_unknown">Unknown effort</string>
+    <string name="action_cancel">Cancel</string>
+    <string name="action_apply">Apply</string>
+
+    <!-- Sidebar -->
+    <string name="cd_back">Back</string>
+    <string name="sidebar_title">Sessions</string>
+    <string name="sidebar_new_session">New session</string>
+    <string name="sidebar_recent">Sessions</string>
+    <string name="sidebar_tonight">4 tonight</string>
+    <string name="sidebar_settings">Settings</string>
+    <string name="sidebar_version">Neko Chat 1.0.0 · MD3 demo</string>
+    <string name="sidebar_workspace">Neko Studio</string>
+    <string name="sidebar_workspace_meta">andyer@local · 1 workspace</string>
+    <string name="sidebar_notice_new">Demo: new session</string>
+
+    <!-- Settings -->
+    <string name="settings_title">Settings</string>
+    <string name="settings_color_mode">Color Mode</string>
+    <string name="settings_color_follow">Follow System</string>
+    <string name="settings_color_light">Light</string>
+    <string name="settings_color_dark">Dark</string>
+    <string name="settings_color_summary_follow">Follows the system theme</string>
+    <string name="settings_color_summary_light">Always light</string>
+    <string name="settings_color_summary_dark">Always dark</string>
+    <string name="settings_preferences">Preferences</string>
+    <string name="settings_theme">Theme</string>
+    <string name="settings_theme_sub">Colour roles, contrast, black level</string>
+    <string name="settings_general">General</string>
+    <string name="settings_general_sub">Language, haptics, drafts</string>
+    <string name="settings_ui">UI Preferences</string>
+    <string name="settings_ui_sub">Density, tokens, motion</string>
+    <string name="settings_notifications">Notifications</string>
+    <string name="settings_notifications_sub">Top notices and sounds</string>
+    <string name="settings_network">Network</string>
+    <string name="settings_network_sub">Proxy, metering, timeouts</string>
+    <string name="settings_providers">Providers</string>
+    <string name="settings_import_provider">Import Provider</string>
+    <string name="settings_add_provider">Add Provider</string>
+    <string name="settings_search_hint">Search providers</string>
+    <string name="settings_models_count">%1$d models</string>
+    <string name="settings_provider_sub">%1$d models · %2$s</string>
+    <string name="settings_base_url">Base URL</string>
+    <string name="settings_api_key">API Key</string>
+    <string name="settings_fetch_models">Get /v1/models</string>
+    <string name="settings_empty">No providers match that search</string>
+    <string name="settings_notice_import">Provider import · demo</string>
+    <string name="settings_notice_add">New provider · demo</string>
+    <string name="settings_notice_models">GET %1$s/v1/models · 200 OK</string>
+    <string name="settings_notice_mode">Color mode · %1$s</string>
+    <string name="settings_cd_expand">Expand provider</string>
+    <string name="settings_cd_collapse">Collapse provider</string>
+
+    <!-- Detail rows -->
+    <string name="row_theme_dynamic">Dynamic colour</string>
+    <string name="row_theme_amoled">Pure black surfaces</string>
+    <string name="row_theme_contrast">High contrast</string>
+    <string name="row_general_haptics">Haptic feedback</string>
+    <string name="row_general_drafts">Auto-save drafts</string>
+    <string name="row_general_confirm">Confirm before delete</string>
+    <string name="row_ui_compact">Compact lists</string>
+    <string name="row_ui_tokens">Show token counts</string>
+    <string name="row_ui_motion">Page transitions</string>
+    <string name="row_notif_notices">Top notices</string>
+    <string name="row_notif_recording">Recording reminders</string>
+    <string name="row_notif_sound">Sound</string>
+    <string name="row_net_proxy">Use proxy</string>
+    <string name="row_net_metered">Metered connection warning</string>
+    <string name="row_net_retry">Retry on timeout</string>
+</resources>

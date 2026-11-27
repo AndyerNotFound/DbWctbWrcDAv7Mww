@@ -38,21 +38,21 @@
             style="@style/Widget.Neko.Chip"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Summarize the thread"
+            android:text="@string/suggestion_summarize"
             app:chipIcon="@drawable/ic_auto_awesome" />
 
         <com.google.android.material.chip.Chip
             style="@style/Widget.Neko.Chip"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Review the dock"
+            android:text="@string/suggestion_review_dock"
             app:chipIcon="@drawable/ic_animation" />
 
         <com.google.android.material.chip.Chip
             style="@style/Widget.Neko.Chip"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Write the devlog"
+            android:text="@string/suggestion_devlog"
             app:chipIcon="@drawable/ic_draft" />
     </com.google.android.material.chip.ChipGroup>
 </LinearLayout>

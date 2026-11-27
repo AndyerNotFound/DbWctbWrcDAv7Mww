@@ -60,7 +60,7 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Model"
+                        android:text="@string/eff_model"
                         android:textAppearance="?attr/textAppearanceLabelSmall"
                         android:textColor="?attr/colorOnSurfaceVariant" />
 
@@ -76,7 +76,7 @@
                         android:id="@+id/current_model_meta"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="OpenAI · 200k context · vision"
+                        android:text="@string/model_meta_vision"
                         android:textAppearance="?attr/textAppearanceBodySmall"
                         android:textColor="?attr/colorOnSurfaceVariant" />
                 </LinearLayout>
@@ -101,7 +101,7 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="Reasoning effort"
+                android:text="@string/eff_title"
                 android:textAppearance="?attr/textAppearanceTitleSmall"
                 android:textColor="?attr/colorOnSurface" />
 
@@ -114,7 +114,7 @@
                 android:paddingTop="4dp"
                 android:paddingEnd="10dp"
                 android:paddingBottom="4dp"
-                android:text="High"
+                android:text="@string/eff_level_high"
                 android:textAppearance="?attr/textAppearanceLabelMedium"
                 android:textColor="?attr/colorOnPrimaryContainer" />
         </LinearLayout>
@@ -123,7 +123,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="2dp"
-            android:text="Higher effort spends more thinking tokens before the first visible word."
+            android:text="@string/eff_desc"
             android:textAppearance="?attr/textAppearanceBodySmall"
             android:textColor="?attr/colorOnSurfaceVariant" />
 
@@ -154,63 +154,63 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="Off" />
+                android:text="@string/eff_level_off" />
 
             <TextView
                 style="@style/TextAppearance.Neko.EffortLabel"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="Auto" />
+                android:text="@string/eff_level_auto" />
 
             <TextView
                 style="@style/TextAppearance.Neko.EffortLabel"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="Minimal" />
+                android:text="@string/eff_level_minimal" />
 
             <TextView
                 style="@style/TextAppearance.Neko.EffortLabel"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="Low" />
+                android:text="@string/eff_level_low" />
 
             <TextView
                 style="@style/TextAppearance.Neko.EffortLabel"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="Medium" />
+                android:text="@string/eff_level_medium" />
 
             <TextView
                 style="@style/TextAppearance.Neko.EffortLabel"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="High" />
+                android:text="@string/eff_level_high" />
 
             <TextView
                 style="@style/TextAppearance.Neko.EffortLabel"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="XHigh" />
+                android:text="@string/eff_level_xhigh" />
 
             <TextView
                 style="@style/TextAppearance.Neko.EffortLabel"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="Max" />
+                android:text="@string/eff_level_max" />
 
             <TextView
                 style="@style/TextAppearance.Neko.EffortLabel"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="Ultra" />
+                android:text="@string/eff_level_ultra" />
         </LinearLayout>
 
         <com.google.android.material.card.MaterialCardView
@@ -251,7 +251,7 @@
                         android:id="@+id/budget_value"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="not set · derived from effort"
+                        android:text="@string/eff_budget_unset"
                         android:textAppearance="?attr/textAppearanceBodySmall"
                         android:textColor="?attr/colorOnSurfaceVariant" />
                 </LinearLayout>
@@ -265,7 +265,7 @@
                     android:insetBottom="0dp"
                     android:layout_width="40dp"
                     android:layout_height="40dp"
-                    android:contentDescription="Custom reasoning value"
+                    android:contentDescription="@string/cd_custom_reasoning_value"
                     app:icon="@drawable/ic_tune"
                     app:iconSize="20dp" />
             </LinearLayout>
@@ -276,7 +276,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="12dp"
             android:gravity="center"
-            android:text="Changes apply to the next turn."
+            android:text="@string/eff_footer"
             android:textAppearance="?attr/textAppearanceLabelSmall"
             android:textColor="?attr/colorOnSurfaceVariant" />
     </LinearLayout>

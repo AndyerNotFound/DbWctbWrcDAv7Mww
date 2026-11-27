@@ -18,7 +18,7 @@
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Saved locally. Drafts never leave the device until you send them."
+            android:text="@string/drafts_intro"
             android:textAppearance="?attr/textAppearanceBodySmall"
             android:textColor="?attr/colorOnSurfaceVariant" />
 
@@ -42,7 +42,7 @@
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="Dock alignment notes"
+                    android:text="@string/draft_one_title"
                     android:textAppearance="?attr/textAppearanceTitleSmall"
                     android:textColor="?attr/colorOnSurface" />
 
@@ -52,7 +52,7 @@
                     android:layout_marginTop="2dp"
                     android:ellipsize="end"
                     android:maxLines="2"
-                    android:text="The field should stop at six lines, then scroll internally. The fullscreen affordance only appears when…"
+                    android:text="@string/draft_one_preview"
                     android:textAppearance="?attr/textAppearanceBodySmall"
                     android:textColor="?attr/colorOnSurfaceVariant" />
 
@@ -67,7 +67,7 @@
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:text="2h ago · 312 chars"
+                        android:text="@string/draft_one_meta"
                         android:textAppearance="?attr/textAppearanceLabelSmall"
                         android:textColor="?attr/colorOnSurfaceVariant" />
 
@@ -80,7 +80,7 @@
                         android:insetBottom="0dp"
                         android:layout_width="36dp"
                         android:layout_height="36dp"
-                        android:contentDescription="Delete draft"
+                        android:contentDescription="@string/cd_delete_draft"
                         android:paddingStart="9dp"
                         android:paddingEnd="9dp"
                         app:icon="@drawable/ic_delete"
@@ -109,7 +109,7 @@
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="Screenshot checklist"
+                    android:text="@string/draft_two_title"
                     android:textAppearance="?attr/textAppearanceTitleSmall"
                     android:textColor="?attr/colorOnSurface" />
 
@@ -119,7 +119,7 @@
                     android:layout_marginTop="2dp"
                     android:ellipsize="end"
                     android:maxLines="2"
-                    android:text="Capture Chat, Map, Mission, Usage, both sheets, and the fullscreen composer in light mode…"
+                    android:text="@string/draft_two_preview"
                     android:textAppearance="?attr/textAppearanceBodySmall"
                     android:textColor="?attr/colorOnSurfaceVariant" />
 
@@ -134,7 +134,7 @@
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:text="yesterday · 204 chars"
+                        android:text="@string/draft_two_meta"
                         android:textAppearance="?attr/textAppearanceLabelSmall"
                         android:textColor="?attr/colorOnSurfaceVariant" />
 
@@ -147,7 +147,7 @@
                         android:insetBottom="0dp"
                         android:layout_width="36dp"
                         android:layout_height="36dp"
-                        android:contentDescription="Delete draft"
+                        android:contentDescription="@string/cd_delete_draft"
                         android:paddingStart="9dp"
                         android:paddingEnd="9dp"
                         app:icon="@drawable/ic_delete"
@@ -161,7 +161,7 @@
             android:layout_width="match_parent"
             android:layout_height="48dp"
             android:layout_marginTop="14dp"
-            android:text="New draft"
+            android:text="@string/drafts_new"
             app:icon="@drawable/ic_add"
             app:iconGravity="textStart" />
 
@@ -170,7 +170,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="12dp"
             android:gravity="center"
-            android:text="Tip: press and hold a draft to pin it to the top."
+            android:text="@string/drafts_tip"
             android:textAppearance="?attr/textAppearanceLabelSmall"
             android:textColor="?attr/colorOnSurfaceVariant" />
     </LinearLayout>

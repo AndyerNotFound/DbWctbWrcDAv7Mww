@@ -16,4 +16,222 @@
     <string name="cd_send">Send message</string>
     <string name="cd_stop">Stop generating</string>
     <string name="cd_fullscreen">Full screen input</string>
+
+    <!-- Chat map -->
+    <string name="conversation_map">Conversation map</string>
+    <string name="map_summary">3 branches · 18 nodes · 1 live head</string>
+    <string name="map_branch_retries">2 retries</string>
+    <string name="role_you">You</string>
+    <string name="role_neko">Neko</string>
+    <string name="role_tool">Tool</string>
+    <string name="cd_recenter_map">Recenter map</string>
+
+    <!-- Mission -->
+    <string name="mission_eyebrow">Workspace · night session</string>
+    <string name="mission_title">Mission control</string>
+    <string name="status_live">LIVE</string>
+    <string name="mission_intro">One session, one working directory, one cat keeping an eye on the build.</string>
+    <string name="mission_active">Active mission</string>
+    <string name="mission_card_title">MD3 chat shell</string>
+    <string name="mission_steps">9 of 14 steps</string>
+    <string name="mission_elapsed">1h 42m elapsed</string>
+    <string name="mission_plan">Plan</string>
+    <string name="mission_plan_remaining">2 remaining</string>
+    <string name="plan_item_tokens">Design tokens &amp; theme</string>
+    <string name="plan_item_tokens_desc">Teal / clay palette in light and dark</string>
+    <string name="status_done">done</string>
+    <string name="plan_item_map_desc">Bezier branches with a pulsing head</string>
+    <string name="plan_item_sheets">Bottom sheets</string>
+    <string name="plan_item_sheets_desc">Shared axis X with a back stack</string>
+    <string name="status_now">now</string>
+    <string name="plan_item_screens">Screenshot pass</string>
+    <string name="plan_item_screens_desc">Capture light and dark frames in CI</string>
+    <string name="status_next">next</string>
+    <string name="workspace_title">Workspace</string>
+    <string name="status_bound">bound</string>
+    <string name="workspace_free_space">3.4 GB free</string>
+    <string name="status_git_clean">git clean</string>
+    <string name="action_change">Change</string>
+    <string name="activity_title">Activity</string>
+    <string name="activity_window">last 20 min</string>
+    <string name="activity_edit_files">Neko edited 4 files</string>
+    <string name="activity_inspection">Ran a layout inspection</string>
+    <string name="activity_compression">Compressed 6 messages into a summary</string>
+
+    <!-- Usage -->
+    <string name="usage_eyebrow">Session 04 · 128k window</string>
+    <string name="usage_title">Session usage</string>
+    <string name="usage_resets">resets in 4h 12m</string>
+    <string name="usage_tokens">Tokens</string>
+    <string name="usage_tokens_today">+12.1k today</string>
+    <string name="usage_cost">Cost</string>
+    <string name="usage_cost_per_turn">$0.014 / turn</string>
+    <string name="usage_turns">Turns</string>
+    <string name="usage_turns_breakdown">12 user · 12 neko</string>
+    <string name="usage_cache_hit">Cache hit</string>
+    <string name="usage_cache_saved">saved ≈ 41s</string>
+    <string name="usage_context_window">Context window</string>
+    <string name="usage_context_system">System 22%</string>
+    <string name="usage_context_tools">Tools 11%</string>
+    <string name="usage_context_messages">Messages 67%</string>
+    <string name="usage_throughput">Throughput</string>
+    <string name="usage_throughput_peak">peak 1.8k tok/min</string>
+    <string name="time_30_min_ago">30 min ago</string>
+    <string name="time_now">now</string>
+    <string name="usage_model_mix">Model mix</string>
+    <string name="usage_models_active">3 active</string>
+    <string name="usage_footer">Session 04 · visual demo data · 23:59</string>
+
+    <!-- Fullscreen composer -->
+    <string name="cd_close_fullscreen">Close full screen input</string>
+    <string name="fullscreen_title">Compose</string>
+    <string name="fullscreen_subtitle">Dock refactor · GPT-5.4</string>
+    <string name="fullscreen_hint">Write as much as you need…</string>
+    <string name="fullscreen_footer">Markdown supported · the draft is kept when you close this view</string>
+
+    <!-- Custom reasoning -->
+    <string name="reasoning_custom_title">Custom reasoning</string>
+    <string name="reasoning_custom_desc">Send either a symbolic effort level or an explicit thinking-token budget.</string>
+    <string name="reasoning_custom_value_hint">Value</string>
+    <string name="reasoning_custom_budget_note">Budget mode accepts 0 – 32,768 tokens.</string>
+
+    <!-- Reasoning effort -->
+    <string name="eff_model">Model</string>
+    <string name="model_meta_vision">OpenAI · 200k context · vision</string>
+    <string name="eff_title">Reasoning effort</string>
+    <string name="eff_level_high">High</string>
+    <string name="eff_desc">Higher effort spends more thinking tokens before the first visible word.</string>
+    <string name="eff_level_off">Off</string>
+    <string name="eff_level_auto">Auto</string>
+    <string name="eff_level_minimal">Minimal</string>
+    <string name="eff_level_low">Low</string>
+    <string name="eff_level_medium">Medium</string>
+    <string name="eff_level_xhigh">XHigh</string>
+    <string name="eff_level_max">Max</string>
+    <string name="eff_level_ultra">Ultra</string>
+    <string name="eff_budget_unset">not set · derived from effort</string>
+    <string name="cd_custom_reasoning_value">Custom reasoning value</string>
+    <string name="eff_footer">Changes apply to the next turn.</string>
+
+    <!-- Chat list items -->
+    <string name="suggestion_summarize">Summarize the thread</string>
+    <string name="suggestion_review_dock">Review the dock</string>
+    <string name="suggestion_devlog">Write the devlog</string>
+    <string name="cd_copy_code">Copy code</string>
+    <string name="divider_today">Today · 23:41</string>
+    <string name="tool_read_files">Read · 3 files</string>
+    <string name="status_completed">completed</string>
+
+    <!-- Model rows -->
+    <string name="model_meta_context">OpenAI · 200k context</string>
+    <string name="model_desc_flagship">Flagship reasoning, tools and vision.</string>
+    <string name="model_tier_flagship">Flagship</string>
+
+    <!-- Attachments sheet -->
+    <string name="cd_go_back">Back</string>
+    <string name="attach_title">Add to chat</string>
+    <string name="attach_subtitle">Session 04 · Design folder</string>
+    <string name="cd_close">Close</string>
+
+    <!-- Attachment page -->
+    <string name="attach_media">Media</string>
+    <string name="attach_image">Image</string>
+    <string name="attach_image_desc">PNG, JPG, WebP · up to 20 MB</string>
+    <string name="attach_video">Video</string>
+    <string name="attach_video_desc">MP4, WebM · up to 60 s</string>
+    <string name="attach_file">File upload</string>
+    <string name="attach_file_desc">Text, code, archives · 100 MB</string>
+    <string name="attach_camera">Camera</string>
+    <string name="attach_camera_desc">Capture a photo or a whiteboard</string>
+    <string name="attach_context">Context</string>
+    <string name="attach_drafts">Drafts</string>
+    <string name="attach_drafts_desc">3 unsent drafts</string>
+    <string name="attach_web_search">Web search</string>
+    <string name="attach_web_search_desc">Tavily · 5 results</string>
+    <string name="attach_compress">Compress session history</string>
+    <string name="attach_compress_desc">Last compressed 2h ago · 68% used</string>
+    <string name="attach_workspace">Workspace &amp; work directory</string>
+    <string name="attach_features">Expanding feature management</string>
+    <string name="attach_features_desc">6 tools enabled · 2 extensions</string>
+
+    <!-- Compress page -->
+    <string name="compress_intro">Fold the older part of this thread into one compact summary. Recent messages stay verbatim.</string>
+    <string name="compress_level_title">Compression level</string>
+    <string name="compress_level_light">Light</string>
+    <string name="compress_level_balanced">Balanced</string>
+    <string name="compress_level_aggressive">Aggressive</string>
+    <string name="compress_keep_title">Keep recent messages</string>
+    <string name="compress_result_title">Estimated result</string>
+    <string name="compress_result_body">18 messages → 1 summary\nSaves ≈ 22,400 tokens · keeps the last 12 messages</string>
+    <string name="compress_action">Compress session</string>
+
+    <!-- Drafts page -->
+    <string name="drafts_intro">Saved locally. Drafts never leave the device until you send them.</string>
+    <string name="draft_one_title">Dock alignment notes</string>
+    <string name="draft_one_preview">The field should stop at six lines, then scroll internally. The fullscreen affordance only appears when…</string>
+    <string name="draft_one_meta">2h ago · 312 chars</string>
+    <string name="cd_delete_draft">Delete draft</string>
+    <string name="draft_two_title">Screenshot checklist</string>
+    <string name="draft_two_preview">Capture Chat, Map, Mission, Usage, both sheets, and the fullscreen composer in light mode…</string>
+    <string name="draft_two_meta">yesterday · 204 chars</string>
+    <string name="drafts_new">New draft</string>
+    <string name="drafts_tip">Tip: press and hold a draft to pin it to the top.</string>
+
+    <!-- Features page -->
+    <string name="features_intro">Turn capabilities on for this session. They are folded into the system prompt and consume context.</string>
+    <string name="feature_vision">Vision</string>
+    <string name="feature_vision_desc">Read screenshots and images</string>
+    <string name="feature_tools">Tool use</string>
+    <string name="feature_tools_desc">Read, write and run inside the workspace</string>
+    <string name="feature_memory">Memory</string>
+    <string name="feature_memory_desc">Carry notes into the next session</string>
+    <string name="feature_research">Deep research</string>
+    <string name="feature_research_desc">Long-running multi-page browsing</string>
+    <string name="features_extensions">Extensions</string>
+    <string name="ext_android">Android</string>
+    <string name="ext_git">Git</string>
+    <string name="ext_web">Web</string>
+    <string name="ext_files">Files</string>
+    <string name="features_footer">Tool access is scoped to the bound folder. Shell commands run in the session sandbox.</string>
+
+    <!-- Web page -->
+    <string name="web_enable">Enable web search</string>
+    <string name="web_enable_desc">Let Neko look things up when the thread needs it</string>
+    <string name="web_safe">Safe search</string>
+    <string name="web_safe_desc">Filter explicit results from providers</string>
+    <string name="web_provider">Provider</string>
+    <string name="web_max_results">Max results</string>
+    <string name="web_footer">Search results are injected as a tool message and billed as input tokens.</string>
+
+    <!-- Workspace page -->
+    <string name="workspace_dirs_title">Work directories</string>
+    <string name="workspace_dirs_desc">Tools can read and write only inside the bound directory.</string>
+    <string name="status_active">active</string>
+    <string name="status_read_only">read only</string>
+    <string name="workspace_bind_folder">Bind a folder</string>
+
+    <!-- Reasoning sheet -->
+    <string name="reasoning_title">Reasoning &amp; model</string>
+    <string name="reasoning_subtitle">Effort, budget and the model behind the turn</string>
+
+    <!-- Sidebar -->
+    <string name="sidebar_identity_name">Neko Studio</string>
+    <string name="sidebar_identity_meta">andyer@local · 1 workspace</string>
+    <string name="sidebar_action_new_session">New session</string>
+    <string name="sidebar_sessions">Sessions</string>
+    <string name="sidebar_sessions_count">4 tonight</string>
+    <string name="session_item_one_title">Late night refactor</string>
+    <string name="session_item_one_preview">The dock should stop at six lines…</string>
+    <string name="session_item_one_meta">now · 24 turns · 86.4k tokens</string>
+    <string name="session_item_two_title">Sheet motion study</string>
+    <string name="session_item_two_meta">2h ago · 8 turns</string>
+    <string name="session_item_three_title">Palette pass</string>
+    <string name="session_item_three_meta">yesterday · 16 turns</string>
+    <string name="session_item_four_title">Apr 12 · build log</string>
+    <string name="session_item_four_meta">Apr 12 · 41 turns</string>
+    <string name="sidebar_action_settings">Settings</string>
+    <string name="sidebar_footer_version">Neko Chat 1.0.0 · MD3 demo</string>
+
+    <!-- Top notice -->
+    <string name="notice_action_dismiss">Dismiss</string>
 </resources>

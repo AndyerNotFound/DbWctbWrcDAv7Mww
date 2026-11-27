@@ -18,7 +18,7 @@
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Turn capabilities on for this session. They are folded into the system prompt and consume context."
+            android:text="@string/features_intro"
             android:textAppearance="?attr/textAppearanceBodySmall"
             android:textColor="?attr/colorOnSurfaceVariant" />
 
@@ -37,14 +37,14 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Vision"
+                    android:text="@string/feature_vision"
                     android:textAppearance="?attr/textAppearanceBodyLarge"
                     android:textColor="?attr/colorOnSurface" />
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Read screenshots and images"
+                    android:text="@string/feature_vision_desc"
                     android:textAppearance="?attr/textAppearanceBodySmall"
                     android:textColor="?attr/colorOnSurfaceVariant" />
             </LinearLayout>
@@ -76,14 +76,14 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Tool use"
+                    android:text="@string/feature_tools"
                     android:textAppearance="?attr/textAppearanceBodyLarge"
                     android:textColor="?attr/colorOnSurface" />
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Read, write and run inside the workspace"
+                    android:text="@string/feature_tools_desc"
                     android:textAppearance="?attr/textAppearanceBodySmall"
                     android:textColor="?attr/colorOnSurfaceVariant" />
             </LinearLayout>
@@ -115,14 +115,14 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Memory"
+                    android:text="@string/feature_memory"
                     android:textAppearance="?attr/textAppearanceBodyLarge"
                     android:textColor="?attr/colorOnSurface" />
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Carry notes into the next session"
+                    android:text="@string/feature_memory_desc"
                     android:textAppearance="?attr/textAppearanceBodySmall"
                     android:textColor="?attr/colorOnSurfaceVariant" />
             </LinearLayout>
@@ -153,14 +153,14 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Deep research"
+                    android:text="@string/feature_research"
                     android:textAppearance="?attr/textAppearanceBodyLarge"
                     android:textColor="?attr/colorOnSurface" />
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Long-running multi-page browsing"
+                    android:text="@string/feature_research_desc"
                     android:textAppearance="?attr/textAppearanceBodySmall"
                     android:textColor="?attr/colorOnSurfaceVariant" />
             </LinearLayout>
@@ -175,7 +175,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="14dp"
-            android:text="Extensions"
+            android:text="@string/features_extensions"
             android:textAppearance="?attr/textAppearanceTitleSmall"
             android:textColor="?attr/colorOnSurface" />
 
@@ -189,28 +189,28 @@
                 style="@style/Widget.Material3.Chip.Assist"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Android"
+                android:text="@string/ext_android"
                 app:chipIcon="@drawable/ic_smart_toy" />
 
             <com.google.android.material.chip.Chip
                 style="@style/Widget.Material3.Chip.Assist"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Git"
+                android:text="@string/ext_git"
                 app:chipIcon="@drawable/ic_account_tree" />
 
             <com.google.android.material.chip.Chip
                 style="@style/Widget.Material3.Chip.Assist"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Web"
+                android:text="@string/ext_web"
                 app:chipIcon="@drawable/ic_language" />
 
             <com.google.android.material.chip.Chip
                 style="@style/Widget.Material3.Chip.Assist"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Files"
+                android:text="@string/ext_files"
                 app:chipIcon="@drawable/ic_folder" />
         </com.google.android.material.chip.ChipGroup>
 
@@ -243,7 +243,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginStart="9dp"
                     android:layout_weight="1"
-                    android:text="Tool access is scoped to the bound folder. Shell commands run in the session sandbox."
+                    android:text="@string/features_footer"
                     android:textAppearance="?attr/textAppearanceBodySmall"
                     android:textColor="?attr/colorOnSurfaceVariant" />
             </LinearLayout>

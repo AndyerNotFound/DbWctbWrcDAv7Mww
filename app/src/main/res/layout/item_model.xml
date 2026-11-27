@@ -50,7 +50,7 @@
                 android:id="@+id/model_meta"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="OpenAI · 200k context"
+                android:text="@string/model_meta_context"
                 android:textAppearance="?attr/textAppearanceLabelSmall"
                 android:textColor="?attr/colorOnSurfaceVariant" />
 
@@ -61,7 +61,7 @@
                 android:layout_marginTop="3dp"
                 android:ellipsize="end"
                 android:maxLines="2"
-                android:text="Flagship reasoning, tools and vision."
+                android:text="@string/model_desc_flagship"
                 android:textAppearance="?attr/textAppearanceBodySmall"
                 android:textColor="?attr/colorOnSurfaceVariant" />
         </LinearLayout>

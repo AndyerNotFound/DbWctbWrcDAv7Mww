@@ -50,7 +50,7 @@
             android:minWidth="0dp"
             android:paddingStart="10dp"
             android:paddingEnd="10dp"
-            android:text="Dismiss"
+            android:text="@string/notice_action_dismiss"
             android:textSize="12sp" />
     </LinearLayout>
 </com.google.android.material.card.MaterialCardView>

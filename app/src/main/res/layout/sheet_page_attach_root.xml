@@ -18,7 +18,7 @@
             android:paddingTop="8dp"
             android:paddingEnd="20dp"
             android:paddingBottom="4dp"
-            android:text="Media"
+            android:text="@string/attach_media"
             android:textAppearance="@style/TextAppearance.Neko.Eyebrow"
             android:textColor="?attr/colorPrimary" />
 
@@ -58,14 +58,14 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Image"
+                    android:text="@string/attach_image"
                     android:textAppearance="?attr/textAppearanceBodyLarge"
                     android:textColor="?attr/colorOnSurface" />
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="PNG, JPG, WebP · up to 20 MB"
+                    android:text="@string/attach_image_desc"
                     android:textAppearance="?attr/textAppearanceBodySmall"
                     android:textColor="?attr/colorOnSurfaceVariant" />
             </LinearLayout>
@@ -127,14 +127,14 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Video"
+                    android:text="@string/attach_video"
                     android:textAppearance="?attr/textAppearanceBodyLarge"
                     android:textColor="?attr/colorOnSurface" />
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="MP4, WebM · up to 60 s"
+                    android:text="@string/attach_video_desc"
                     android:textAppearance="?attr/textAppearanceBodySmall"
                     android:textColor="?attr/colorOnSurfaceVariant" />
             </LinearLayout>
@@ -183,14 +183,14 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="File upload"
+                    android:text="@string/attach_file"
                     android:textAppearance="?attr/textAppearanceBodyLarge"
                     android:textColor="?attr/colorOnSurface" />
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Text, code, archives · 100 MB"
+                    android:text="@string/attach_file_desc"
                     android:textAppearance="?attr/textAppearanceBodySmall"
                     android:textColor="?attr/colorOnSurfaceVariant" />
             </LinearLayout>
@@ -239,14 +239,14 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Camera"
+                    android:text="@string/attach_camera"
                     android:textAppearance="?attr/textAppearanceBodyLarge"
                     android:textColor="?attr/colorOnSurface" />
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Capture a photo or a whiteboard"
+                    android:text="@string/attach_camera_desc"
                     android:textAppearance="?attr/textAppearanceBodySmall"
                     android:textColor="?attr/colorOnSurfaceVariant" />
             </LinearLayout>
@@ -266,7 +266,7 @@
             android:paddingTop="14dp"
             android:paddingEnd="20dp"
             android:paddingBottom="4dp"
-            android:text="Context"
+            android:text="@string/attach_context"
             android:textAppearance="@style/TextAppearance.Neko.Eyebrow"
             android:textColor="?attr/colorPrimary" />
 
@@ -306,14 +306,14 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Drafts"
+                    android:text="@string/attach_drafts"
                     android:textAppearance="?attr/textAppearanceBodyLarge"
                     android:textColor="?attr/colorOnSurface" />
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="3 unsent drafts"
+                    android:text="@string/attach_drafts_desc"
                     android:textAppearance="?attr/textAppearanceBodySmall"
                     android:textColor="?attr/colorOnSurfaceVariant" />
             </LinearLayout>
@@ -362,14 +362,14 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Web search"
+                    android:text="@string/attach_web_search"
                     android:textAppearance="?attr/textAppearanceBodyLarge"
                     android:textColor="?attr/colorOnSurface" />
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Tavily · 5 results"
+                    android:text="@string/attach_web_search_desc"
                     android:textAppearance="?attr/textAppearanceBodySmall"
                     android:textColor="?attr/colorOnSurfaceVariant" />
             </LinearLayout>
@@ -418,14 +418,14 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Compress session history"
+                    android:text="@string/attach_compress"
                     android:textAppearance="?attr/textAppearanceBodyLarge"
                     android:textColor="?attr/colorOnSurface" />
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Last compressed 2h ago · 68% used"
+                    android:text="@string/attach_compress_desc"
                     android:textAppearance="?attr/textAppearanceBodySmall"
                     android:textColor="?attr/colorOnSurfaceVariant" />
             </LinearLayout>
@@ -445,7 +445,7 @@
             android:paddingTop="14dp"
             android:paddingEnd="20dp"
             android:paddingBottom="4dp"
-            android:text="Workspace"
+            android:text="@string/workspace_title"
             android:textAppearance="@style/TextAppearance.Neko.Eyebrow"
             android:textColor="?attr/colorPrimary" />
 
@@ -485,7 +485,7 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Workspace &amp; work directory"
+                    android:text="@string/attach_workspace"
                     android:textAppearance="?attr/textAppearanceBodyLarge"
                     android:textColor="?attr/colorOnSurface" />
 
@@ -541,14 +541,14 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Expanding feature management"
+                    android:text="@string/attach_features"
                     android:textAppearance="?attr/textAppearanceBodyLarge"
                     android:textColor="?attr/colorOnSurface" />
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="6 tools enabled · 2 extensions"
+                    android:text="@string/attach_features_desc"
                     android:textAppearance="?attr/textAppearanceBodySmall"
                     android:textColor="?attr/colorOnSurfaceVariant" />
             </LinearLayout>

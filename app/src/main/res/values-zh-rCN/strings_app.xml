@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Tabs -->
+    <string name="tab_chat">聊天</string>
+    <string name="tab_map">地图</string>
+    <string name="tab_mission">任务</string>
+    <string name="tab_usage">用量</string>
+
+    <!-- Top bar data -->
+    <string name="folder_design">设计</string>
+    <string name="folder_research">研究</string>
+    <string name="folder_personal">个人</string>
+    <string name="preset_balanced">均衡</string>
+    <string name="preset_creative">创意</string>
+    <string name="preset_precise">精确</string>
+    <string name="preset_debug">调试</string>
+    <string name="state_active">进行中</string>
+    <string name="state_paused">已暂停</string>
+    <string name="state_complete">已完成</string>
+    <string name="interp_smooth">平滑</string>
+    <string name="interp_linear">线性</string>
+    <string name="interp_adaptive">自适应</string>
+    <string name="new_chat_title">新会话</string>
+
+    <!-- Menu -->
+    <string name="menu_rename">重命名会话</string>
+    <string name="menu_export">导出对话记录</string>
+    <string name="menu_compress">压缩历史</string>
+    <string name="menu_settings">会话设置</string>
+
+    <!-- Notices -->
+    <string name="notice_session_state">会话状态 · %1$s</string>
+    <string name="notice_new_chat">新会话 · 上下文已重置</string>
+    <string name="notice_folder">会话文件夹 · %1$s</string>
+    <string name="notice_preset">预设 · %1$s</string>
+    <string name="notice_settings_demo">会话设置 · 演示</string>
+    <string name="notice_menu_demo">%1$s · 演示</string>
+    <string name="notice_quick">已插入快捷消息</string>
+    <string name="notice_interpolation">插值 · %1$s</string>
+    <string name="notice_empty_input">先写点什么</string>
+    <string name="notice_stopped">已停止生成</string>
+    <string name="notice_answered">Neko 已回复 · 上下文 %1$d%%</string>
+    <string name="notice_recording">录音中 · 再点一次停止</string>
+    <string name="notice_recording_discarded">语音已丢弃 · 演示</string>
+    <string name="state_writing">正在写…</string>
+    <string name="notice_dismiss">知道了</string>
+
+    <!-- Fullscreen composer -->
+    <string name="compose_title">编写</string>
+
+    <!-- Reasoning sheet -->
+    <string name="reasoning_page_title">推理与模型</string>
+    <string name="reasoning_page_subtitle">这一轮背后的强度、预算与模型</string>
+    <string name="reasoning_models_title">选择模型</string>
+    <string name="reasoning_budget_unset">未设置 · 由强度推导</string>
+    <string name="reasoning_budget_custom">%1$s tokens · 自定义</string>
+    <string name="reasoning_models_count">%1$s · %2$d 个模型</string>
+    <string name="reasoning_custom_helper_effort">off · auto · minimal · low · medium · high · xhigh · max · ultra</string>
+    <string name="reasoning_custom_helper_budget">0 – 32,768 tokens</string>
+    <string name="reasoning_custom_number">请输入数字</string>
+    <string name="reasoning_custom_range">0 – 32,768</string>
+    <string name="reasoning_custom_unknown">未知的强度</string>
+    <string name="action_cancel">取消</string>
+    <string name="action_apply">应用</string>
+
+    <!-- Sidebar -->
+    <string name="cd_back">返回</string>
+    <string name="sidebar_title">会话</string>
+    <string name="sidebar_new_session">新建会话</string>
+    <string name="sidebar_recent">会话</string>
+    <string name="sidebar_tonight">今晚 4 个</string>
+    <string name="sidebar_settings">设置</string>
+    <string name="sidebar_version">Neko Chat 1.0.0 · MD3 演示</string>
+    <string name="sidebar_workspace">Neko Studio</string>
+    <string name="sidebar_workspace_meta">andyer@local · 1 个工作区</string>
+    <string name="sidebar_notice_new">演示：新建会话</string>
+
+    <!-- Settings -->
+    <string name="settings_title">设置</string>
+    <string name="settings_color_mode">颜色模式</string>
+    <string name="settings_color_follow">跟随系统</string>
+    <string name="settings_color_light">浅色</string>
+    <string name="settings_color_dark">深色</string>
+    <string name="settings_color_summary_follow">跟随系统主题</string>
+    <string name="settings_color_summary_light">始终使用浅色</string>
+    <string name="settings_color_summary_dark">始终使用深色</string>
+    <string name="settings_preferences">偏好设置</string>
+    <string name="settings_theme">主题</string>
+    <string name="settings_theme_sub">配色角色、对比度、纯黑</string>
+    <string name="settings_general">通用</string>
+    <string name="settings_general_sub">语言、触感、草稿</string>
+    <string name="settings_ui">界面偏好</string>
+    <string name="settings_ui_sub">密度、tokens、动效</string>
+    <string name="settings_notifications">通知</string>
+    <string name="settings_notifications_sub">顶部提示与声音</string>
+    <string name="settings_network">网络</string>
+    <string name="settings_network_sub">代理、计费网络、超时</string>
+    <string name="settings_providers">服务商</string>
+    <string name="settings_import_provider">导入服务商</string>
+    <string name="settings_add_provider">添加服务商</string>
+    <string name="settings_search_hint">搜索服务商</string>
+    <string name="settings_models_count">%1$d 个模型</string>
+    <string name="settings_provider_sub">%1$d 个模型 · %2$s</string>
+    <string name="settings_base_url">Base URL</string>
+    <string name="settings_api_key">API Key</string>
+    <string name="settings_fetch_models">获取 /v1/models</string>
+    <string name="settings_empty">没有匹配的服务商</string>
+    <string name="settings_notice_import">导入服务商 · 演示</string>
+    <string name="settings_notice_add">新增服务商 · 演示</string>
+    <string name="settings_notice_models">GET %1$s/v1/models · 200 OK</string>
+    <string name="settings_notice_mode">颜色模式 · %1$s</string>
+    <string name="settings_cd_expand">展开服务商</string>
+    <string name="settings_cd_collapse">收起服务商</string>
+
+    <!-- Detail rows -->
+    <string name="row_theme_dynamic">动态取色</string>
+    <string name="row_theme_amoled">纯黑背景</string>
+    <string name="row_theme_contrast">高对比度</string>
+    <string name="row_general_haptics">触感反馈</string>
+    <string name="row_general_drafts">自动保存草稿</string>
+    <string name="row_general_confirm">删除前确认</string>
+    <string name="row_ui_compact">紧凑列表</string>
+    <string name="row_ui_tokens">显示 token 数</string>
+    <string name="row_ui_motion">页面转场</string>
+    <string name="row_notif_notices">顶部提示</string>
+    <string name="row_notif_recording">录音提醒</string>
+    <string name="row_notif_sound">声音</string>
+    <string name="row_net_proxy">使用代理</string>
+    <string name="row_net_metered">计费网络提醒</string>
+    <string name="row_net_retry">超时重试</string>
+</resources>

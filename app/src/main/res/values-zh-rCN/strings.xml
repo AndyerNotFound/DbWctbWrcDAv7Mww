@@ -1,0 +1,240 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- App -->
+    <string name="app_name">Neko Chat</string>
+    <string name="session_title">Dock 重构</string>
+    <string name="message_hint">给 Neko 发消息…</string>
+
+    <!-- Content descriptions -->
+    <string name="cd_expand_sidebar">展开侧边栏</string>
+    <string name="cd_preset">会话预设</string>
+    <string name="cd_new_chat">新聊天</string>
+    <string name="cd_menu">会话菜单</string>
+    <string name="cd_session_title">会话状态</string>
+    <string name="cd_attach">添加附件</string>
+    <string name="cd_fast_message">快捷消息</string>
+    <string name="cd_model">模型与推理力度</string>
+    <string name="cd_interpolation">插值动画</string>
+    <string name="cd_record">录制语音消息</string>
+    <string name="cd_send">发送消息</string>
+    <string name="cd_stop">停止生成</string>
+    <string name="cd_fullscreen">全屏输入</string>
+
+    <!-- Chat map -->
+    <string name="conversation_map">会话地图</string>
+    <string name="map_summary">3 个分支 · 18 个节点 · 1 个活跃头节点</string>
+    <string name="map_branch_retries">2 次重试</string>
+    <string name="role_you">你</string>
+    <string name="role_neko">Neko</string>
+    <string name="role_tool">工具</string>
+    <string name="cd_recenter_map">重新居中地图</string>
+
+    <!-- Mission -->
+    <string name="mission_eyebrow">工作区 · 夜间会话</string>
+    <string name="mission_title">任务控制台</string>
+    <string name="status_live">实时</string>
+    <string name="mission_intro">一个会话，一个工作目录，还有一只盯着构建的猫。</string>
+    <string name="mission_active">进行中的任务</string>
+    <string name="mission_card_title">MD3 聊天外壳</string>
+    <string name="mission_steps">已完成 9 / 14 步</string>
+    <string name="mission_elapsed">已用 1 小时 42 分</string>
+    <string name="mission_plan">计划</string>
+    <string name="mission_plan_remaining">剩 2 项</string>
+    <string name="plan_item_tokens">设计令牌与主题</string>
+    <string name="plan_item_tokens_desc">浅色与深色下的青绿 / 陶土配色</string>
+    <string name="status_done">已完成</string>
+    <string name="plan_item_map_desc">贝塞尔分支与脉动的头节点</string>
+    <string name="plan_item_sheets">底部面板</string>
+    <string name="plan_item_sheets_desc">带回退栈的共享轴 X 转场</string>
+    <string name="status_now">进行中</string>
+    <string name="plan_item_screens">截图检查</string>
+    <string name="plan_item_screens_desc">在 CI 中截取浅色与深色画面</string>
+    <string name="status_next">待开始</string>
+    <string name="workspace_title">工作区</string>
+    <string name="status_bound">已绑定</string>
+    <string name="workspace_free_space">剩余 3.4 GB</string>
+    <string name="status_git_clean">git 无改动</string>
+    <string name="action_change">更改</string>
+    <string name="activity_title">动态</string>
+    <string name="activity_window">最近 20 分钟</string>
+    <string name="activity_edit_files">Neko 编辑了 4 个文件</string>
+    <string name="activity_inspection">运行了一次布局检查</string>
+    <string name="activity_compression">将 6 条消息压缩为摘要</string>
+
+    <!-- Usage -->
+    <string name="usage_eyebrow">会话 04 · 128k 窗口</string>
+    <string name="usage_title">会话用量</string>
+    <string name="usage_resets">4 小时 12 分后重置</string>
+    <string name="usage_tokens">令牌</string>
+    <string name="usage_tokens_today">今日 +12.1k</string>
+    <string name="usage_cost">花费</string>
+    <string name="usage_cost_per_turn">每轮 $0.014</string>
+    <string name="usage_turns">轮次</string>
+    <string name="usage_turns_breakdown">用户 12 条 · Neko 12 条</string>
+    <string name="usage_cache_hit">缓存命中</string>
+    <string name="usage_cache_saved">节省约 41 秒</string>
+    <string name="usage_context_window">上下文窗口</string>
+    <string name="usage_context_system">系统 22%</string>
+    <string name="usage_context_tools">工具 11%</string>
+    <string name="usage_context_messages">消息 67%</string>
+    <string name="usage_throughput">吞吐</string>
+    <string name="usage_throughput_peak">峰值 1.8k tok/min</string>
+    <string name="time_30_min_ago">30 分钟前</string>
+    <string name="time_now">现在</string>
+    <string name="usage_model_mix">模型分布</string>
+    <string name="usage_models_active">3 个活跃</string>
+    <string name="usage_footer">会话 04 · 视觉演示数据 · 23:59</string>
+
+    <!-- Fullscreen composer -->
+    <string name="cd_close_fullscreen">关闭全屏输入</string>
+    <string name="fullscreen_title">撰写</string>
+    <string name="fullscreen_subtitle">Dock 重构 · GPT-5.4</string>
+    <string name="fullscreen_hint">想写多少就写多少…</string>
+    <string name="fullscreen_footer">支持 Markdown · 关闭此视图后草稿会保留</string>
+
+    <!-- Custom reasoning -->
+    <string name="reasoning_custom_title">自定义推理</string>
+    <string name="reasoning_custom_desc">可以发送符号化的力度等级，也可以发送明确的思考令牌预算。</string>
+    <string name="reasoning_custom_value_hint">数值</string>
+    <string name="reasoning_custom_budget_note">预算模式接受 0 – 32,768 个令牌。</string>
+
+    <!-- Reasoning effort -->
+    <string name="eff_model">模型</string>
+    <string name="model_meta_vision">OpenAI · 200k 上下文 · 视觉</string>
+    <string name="eff_title">推理力度</string>
+    <string name="eff_level_high">高</string>
+    <string name="eff_desc">力度越高，在第一个可见字之前消耗的思考令牌就越多。</string>
+    <string name="eff_level_off">关闭</string>
+    <string name="eff_level_auto">自动</string>
+    <string name="eff_level_minimal">极低</string>
+    <string name="eff_level_low">低</string>
+    <string name="eff_level_medium">中</string>
+    <string name="eff_level_xhigh">很高</string>
+    <string name="eff_level_max">最高</string>
+    <string name="eff_level_ultra">极限</string>
+    <string name="eff_budget_unset">未设置 · 由力度推导</string>
+    <string name="cd_custom_reasoning_value">自定义推理数值</string>
+    <string name="eff_footer">更改将在下一轮生效。</string>
+
+    <!-- Chat list items -->
+    <string name="suggestion_summarize">总结这段会话</string>
+    <string name="suggestion_review_dock">检查输入栏</string>
+    <string name="suggestion_devlog">写开发日志</string>
+    <string name="cd_copy_code">复制代码</string>
+    <string name="divider_today">今天 · 23:41</string>
+    <string name="tool_read_files">读取 · 3 个文件</string>
+    <string name="status_completed">已完成</string>
+
+    <!-- Model rows -->
+    <string name="model_meta_context">OpenAI · 200k 上下文</string>
+    <string name="model_desc_flagship">旗舰级推理、工具与视觉。</string>
+    <string name="model_tier_flagship">旗舰</string>
+
+    <!-- Attachments sheet -->
+    <string name="cd_go_back">返回</string>
+    <string name="attach_title">添加到聊天</string>
+    <string name="attach_subtitle">会话 04 · Design 文件夹</string>
+    <string name="cd_close">关闭</string>
+
+    <!-- Attachment page -->
+    <string name="attach_media">媒体</string>
+    <string name="attach_image">图片</string>
+    <string name="attach_image_desc">PNG、JPG、WebP · 最大 20 MB</string>
+    <string name="attach_video">视频</string>
+    <string name="attach_video_desc">MP4、WebM · 最长 60 秒</string>
+    <string name="attach_file">上传文件</string>
+    <string name="attach_file_desc">文本、代码、压缩包 · 100 MB</string>
+    <string name="attach_camera">相机</string>
+    <string name="attach_camera_desc">拍一张照片或白板</string>
+    <string name="attach_context">上下文</string>
+    <string name="attach_drafts">草稿</string>
+    <string name="attach_drafts_desc">3 条未发送的草稿</string>
+    <string name="attach_web_search">网页搜索</string>
+    <string name="attach_web_search_desc">Tavily · 5 条结果</string>
+    <string name="attach_compress">压缩会话历史</string>
+    <string name="attach_compress_desc">上次压缩于 2 小时前 · 已用 68%</string>
+    <string name="attach_workspace">工作区与工作目录</string>
+    <string name="attach_features">展开功能管理</string>
+    <string name="attach_features_desc">已启用 6 个工具 · 2 个扩展</string>
+
+    <!-- Compress page -->
+    <string name="compress_intro">把这段会话较早的部分折叠成一条紧凑摘要，最近的消息保持原样。</string>
+    <string name="compress_level_title">压缩强度</string>
+    <string name="compress_level_light">轻</string>
+    <string name="compress_level_balanced">均衡</string>
+    <string name="compress_level_aggressive">激进</string>
+    <string name="compress_keep_title">保留最近消息</string>
+    <string name="compress_result_title">预计结果</string>
+    <string name="compress_result_body">18 条消息 → 1 条摘要\n节省约 22,400 令牌 · 保留最近 12 条消息</string>
+    <string name="compress_action">压缩会话</string>
+
+    <!-- Drafts page -->
+    <string name="drafts_intro">保存在本地。草稿只在你发送后才会离开设备。</string>
+    <string name="draft_one_title">输入栏对齐笔记</string>
+    <string name="draft_one_preview">输入框应在六行处停下，之后在内部滚动。全屏入口只在…</string>
+    <string name="draft_one_meta">2 小时前 · 312 字</string>
+    <string name="cd_delete_draft">删除草稿</string>
+    <string name="draft_two_title">截图清单</string>
+    <string name="draft_two_preview">在浅色模式下截取聊天、地图、任务、用量、两个面板和全屏输入框…</string>
+    <string name="draft_two_meta">昨天 · 204 字</string>
+    <string name="drafts_new">新建草稿</string>
+    <string name="drafts_tip">提示：长按草稿即可置顶。</string>
+
+    <!-- Features page -->
+    <string name="features_intro">为这个会话开启能力。它们会被并入系统提示词并占用上下文。</string>
+    <string name="feature_vision">视觉</string>
+    <string name="feature_vision_desc">读取截图与图片</string>
+    <string name="feature_tools">工具调用</string>
+    <string name="feature_tools_desc">在工作区内读写与执行</string>
+    <string name="feature_memory">记忆</string>
+    <string name="feature_memory_desc">把笔记带入下一个会话</string>
+    <string name="feature_research">深度研究</string>
+    <string name="feature_research_desc">长时间的多页浏览</string>
+    <string name="features_extensions">扩展</string>
+    <string name="ext_android">Android</string>
+    <string name="ext_git">Git</string>
+    <string name="ext_web">网页</string>
+    <string name="ext_files">文件</string>
+    <string name="features_footer">工具访问限定在已绑定的文件夹内。Shell 命令会在会话沙箱中运行。</string>
+
+    <!-- Web page -->
+    <string name="web_enable">启用网页搜索</string>
+    <string name="web_enable_desc">让 Neko 在对话需要时联网查找</string>
+    <string name="web_safe">安全搜索</string>
+    <string name="web_safe_desc">过滤提供方返回的敏感结果</string>
+    <string name="web_provider">提供方</string>
+    <string name="web_max_results">最大结果数</string>
+    <string name="web_footer">搜索结果会作为工具消息注入，并按输入令牌计费。</string>
+
+    <!-- Workspace page -->
+    <string name="workspace_dirs_title">工作目录</string>
+    <string name="workspace_dirs_desc">工具只能在已绑定的目录内读写。</string>
+    <string name="status_active">使用中</string>
+    <string name="status_read_only">只读</string>
+    <string name="workspace_bind_folder">绑定文件夹</string>
+
+    <!-- Reasoning sheet -->
+    <string name="reasoning_title">推理与模型</string>
+    <string name="reasoning_subtitle">力度、预算，以及这一轮背后的模型</string>
+
+    <!-- Sidebar -->
+    <string name="sidebar_identity_name">Neko Studio</string>
+    <string name="sidebar_identity_meta">andyer@local · 1 个工作区</string>
+    <string name="sidebar_action_new_session">新建会话</string>
+    <string name="sidebar_sessions">会话</string>
+    <string name="sidebar_sessions_count">今晚 4 个</string>
+    <string name="session_item_one_title">深夜重构</string>
+    <string name="session_item_one_preview">输入栏应该在六行处停下…</string>
+    <string name="session_item_one_meta">现在 · 24 轮 · 86.4k 令牌</string>
+    <string name="session_item_two_title">面板动效研究</string>
+    <string name="session_item_two_meta">2 小时前 · 8 轮</string>
+    <string name="session_item_three_title">配色梳理</string>
+    <string name="session_item_three_meta">昨天 · 16 轮</string>
+    <string name="session_item_four_title">4 月 12 日 · 构建日志</string>
+    <string name="session_item_four_meta">4 月 12 日 · 41 轮</string>
+    <string name="sidebar_action_settings">设置</string>
+    <string name="sidebar_footer_version">Neko Chat 1.0.0 · MD3 演示</string>
+
+    <!-- Top notice -->
+    <string name="notice_action_dismiss">忽略</string>
+</resources>

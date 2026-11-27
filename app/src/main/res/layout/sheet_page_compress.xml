@@ -35,7 +35,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
             android:gravity="center"
-            android:text="Fold the older part of this thread into one compact summary. Recent messages stay verbatim."
+            android:text="@string/compress_intro"
             android:textAppearance="?attr/textAppearanceBodyMedium"
             android:textColor="?attr/colorOnSurfaceVariant" />
 
@@ -43,7 +43,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="18dp"
-            android:text="Compression level"
+            android:text="@string/compress_level_title"
             android:textAppearance="?attr/textAppearanceTitleSmall"
             android:textColor="?attr/colorOnSurface" />
 
@@ -60,20 +60,20 @@
                 style="@style/Widget.Material3.Chip.Filter"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Light" />
+                android:text="@string/compress_level_light" />
 
             <com.google.android.material.chip.Chip
                 style="@style/Widget.Material3.Chip.Filter"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:checked="true"
-                android:text="Balanced" />
+                android:text="@string/compress_level_balanced" />
 
             <com.google.android.material.chip.Chip
                 style="@style/Widget.Material3.Chip.Filter"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Aggressive" />
+                android:text="@string/compress_level_aggressive" />
         </com.google.android.material.chip.ChipGroup>
 
         <LinearLayout
@@ -87,7 +87,7 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="Keep recent messages"
+                android:text="@string/compress_keep_title"
                 android:textAppearance="?attr/textAppearanceBodyLarge"
                 android:textColor="?attr/colorOnSurface" />
 
@@ -145,7 +145,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginStart="7dp"
                         android:layout_weight="1"
-                        android:text="Estimated result"
+                        android:text="@string/compress_result_title"
                         android:textAppearance="?attr/textAppearanceLabelLarge"
                         android:textColor="?attr/colorOnSurface" />
                 </LinearLayout>
@@ -154,7 +154,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="8dp"
-                    android:text="18 messages → 1 summary\nSaves ≈ 22,400 tokens · keeps the last 12 messages"
+                    android:text="@string/compress_result_body"
                     android:textAppearance="?attr/textAppearanceBodySmall"
                     android:textColor="?attr/colorOnSurfaceVariant" />
             </LinearLayout>
@@ -166,7 +166,7 @@
             android:layout_width="match_parent"
             android:layout_height="52dp"
             android:layout_marginTop="16dp"
-            android:text="Compress session"
+            android:text="@string/compress_action"
             app:icon="@drawable/ic_compress"
             app:iconGravity="textStart" />
     </LinearLayout>

@@ -24,7 +24,7 @@
             android:insetBottom="0dp"
             android:layout_width="40dp"
             android:layout_height="40dp"
-            android:contentDescription="Close full screen input"
+            android:contentDescription="@string/cd_close_fullscreen"
             app:icon="@drawable/ic_close"
             app:iconSize="20dp" />
 
@@ -38,14 +38,14 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Compose"
+                android:text="@string/fullscreen_title"
                 android:textAppearance="?attr/textAppearanceTitleLarge"
                 android:textColor="?attr/colorOnSurface" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Dock refactor · GPT-5.4"
+                android:text="@string/fullscreen_subtitle"
                 android:textAppearance="?attr/textAppearanceLabelSmall"
                 android:textColor="?attr/colorOnSurfaceVariant" />
         </LinearLayout>
@@ -63,7 +63,7 @@
             android:paddingBottom="12dp"
             android:layout_width="44dp"
             android:layout_height="44dp"
-            android:contentDescription="Send message"
+            android:contentDescription="@string/cd_send"
             app:icon="@drawable/ic_send" />
     </LinearLayout>
 
@@ -81,7 +81,7 @@
         android:layout_marginTop="12dp"
         android:layout_marginEnd="12dp"
         android:layout_weight="1"
-        android:hint="Write as much as you need…"
+        android:hint="@string/fullscreen_hint"
         app:boxBackgroundColor="?attr/colorSurfaceContainerLow"
         app:boxStrokeWidth="0dp"
         app:boxStrokeWidthFocused="0dp"
@@ -106,7 +106,7 @@
         android:paddingTop="10dp"
         android:paddingEnd="20dp"
         android:paddingBottom="18dp"
-        android:text="Markdown supported · the draft is kept when you close this view"
+        android:text="@string/fullscreen_footer"
         android:textAppearance="?attr/textAppearanceLabelSmall"
         android:textColor="?attr/colorOnSurfaceVariant" />
 </LinearLayout>

@@ -65,7 +65,6 @@ public class ReasoningSheet extends BottomSheetDialogFragment implements Reasoni
     private static final String ARG_MODEL_NAME = "model_name";
     private static final String ARG_MODEL_META = "model_meta";
     private static final String ARG_EFFORT = "effort";
-    private static final String EFFORT_SUBTITLE = "Effort, budget and the model behind the turn";
 
     public static int iconForEffort(int index) {
         int i = Math.max(0, Math.min(EFFORT_ICONS.length - 1, index));
@@ -214,12 +213,12 @@ public class ReasoningSheet extends BottomSheetDialogFragment implements Reasoni
             return;
         }
         if (onModels) {
-            title.setText("Model selection");
+            title.setText(R.string.reasoning_models_title);
             subtitle.setText(modelsSubtitle);
             backButton.setVisibility(View.VISIBLE);
         } else {
-            title.setText("Reasoning & model");
-            subtitle.setText(EFFORT_SUBTITLE);
+            title.setText(R.string.reasoning_page_title);
+            subtitle.setText(R.string.reasoning_page_subtitle);
             backButton.setVisibility(View.INVISIBLE);
         }
     }
@@ -262,7 +261,7 @@ public class ReasoningSheet extends BottomSheetDialogFragment implements Reasoni
                                 @NonNull String providerName, int count) {
         selectedProvider = providerIndex;
         selectedGroup = group;
-        modelsSubtitle = providerName + " · " + count + " models";
+        modelsSubtitle = getString(R.string.reasoning_models_count, providerName, count);
         if (onModels && subtitle != null) {
             subtitle.setText(modelsSubtitle);
         }
@@ -284,8 +283,8 @@ public class ReasoningSheet extends BottomSheetDialogFragment implements Reasoni
         View.OnClickListener modeListener = v -> {
             boolean isBudget = budgetMode.isChecked();
             valueLayout.setHelperText(isBudget
-                    ? "0 – 32,768 tokens"
-                    : "off · auto · minimal · low · medium · high · xhigh · max · ultra");
+                    ? R.string.reasoning_custom_helper_budget
+                    : R.string.reasoning_custom_helper_effort);
             value.setText(isBudget
                     ? String.valueOf(budget > 0 ? budget : 12288)
                     : EFFORT_NAMES[effortIndex].toLowerCase(Locale.US));
@@ -296,8 +295,8 @@ public class ReasoningSheet extends BottomSheetDialogFragment implements Reasoni
 
         MaterialAlertDialogBuilder builder = new MaterialAlertDialogBuilder(requireContext())
                 .setView(content)
-                .setNegativeButton("Cancel", null)
-                .setPositiveButton("Apply", null);
+                .setNegativeButton(R.string.action_cancel, null)
+                .setPositiveButton(R.string.action_apply, null);
         AlertDialog dialog = builder.create();
         dialog.setOnShowListener(d -> dialog.getButton(AlertDialog.BUTTON_POSITIVE)
                 .setOnClickListener(v -> {
@@ -307,11 +306,11 @@ public class ReasoningSheet extends BottomSheetDialogFragment implements Reasoni
                         try {
                             tokens = Integer.parseInt(raw.replace(",", "").replace("_", ""));
                         } catch (NumberFormatException e) {
-                            valueLayout.setError("Enter a number");
+                            valueLayout.setError(getString(R.string.reasoning_custom_number));
                             return;
                         }
                         if (tokens < 0 || tokens > 32768) {
-                            valueLayout.setError("0 – 32,768");
+                            valueLayout.setError(getString(R.string.reasoning_custom_range));
                             return;
                         }
                         budget = tokens;
@@ -323,12 +322,12 @@ public class ReasoningSheet extends BottomSheetDialogFragment implements Reasoni
 
                     int index = parseEffort(raw);
                     if (index < 0) {
-                        valueLayout.setError("Unknown effort");
+                        valueLayout.setError(getString(R.string.reasoning_custom_unknown));
                         return;
                     }
                     effortIndex = index;
                     budget = -1;
-                    syncEffortPage(index, "not set · derived from effort");
+                    syncEffortPage(index, getString(R.string.reasoning_budget_unset));
                     notifyEffort();
                     valueLayout.setError(null);
                     dialog.dismiss();
@@ -357,11 +356,12 @@ public class ReasoningSheet extends BottomSheetDialogFragment implements Reasoni
     }
 
     private String budgetLabel() {
-        return String.format(Locale.US, "%,d tokens · custom", budget);
+        return getString(R.string.reasoning_budget_custom,
+                String.format(Locale.US, "%,d", budget));
     }
 
     private String budgetLabelText() {
-        return budget > 0 ? budgetLabel() : "not set · derived from effort";
+        return budget > 0 ? budgetLabel() : getString(R.string.reasoning_budget_unset);
     }
 
     private int parseEffort(String raw) {

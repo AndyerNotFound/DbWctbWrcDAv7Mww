@@ -2,6 +2,7 @@ package dev.neko.chatdemo;
 
 import android.animation.ValueAnimator;
 import android.content.Context;
+import android.content.Intent;
 import android.content.res.ColorStateList;
 import android.content.res.Configuration;
 import android.graphics.Color;
@@ -48,19 +49,15 @@ import java.util.Locale;
 
 import dev.neko.chatdemo.sheet.AttachmentsSheet;
 import dev.neko.chatdemo.sheet.ReasoningSheet;
-import dev.neko.chatdemo.sheet.SidebarSheet;
 import dev.neko.chatdemo.ui.ChatFragment;
 import dev.neko.chatdemo.ui.FullscreenInputDialog;
 import dev.neko.chatdemo.ui.MapFragment;
 import dev.neko.chatdemo.ui.MissionFragment;
+import dev.neko.chatdemo.ui.UiTransitions;
 import dev.neko.chatdemo.ui.UsageFragment;
 
 public class MainActivity extends AppCompatActivity implements ReasoningSheet.Listener {
 
-    private static final String[] TAB_TITLES = {"Chat", "Map", "Mission", "Usage"};
-    private static final String[] FOLDERS = {"Design", "Research", "Personal"};
-    private static final String[] PRESETS = {"Balanced", "Creative", "Precise", "Debug"};
-    private static final String[] STATUS = {"Active", "Paused", "Complete"};
     private static final int[] STATUS_ICONS = {
             R.drawable.ic_check_circle, R.drawable.ic_schedule, R.drawable.ic_check_circle
     };
@@ -69,13 +66,18 @@ public class MainActivity extends AppCompatActivity implements ReasoningSheet.Li
             com.google.android.material.R.attr.colorTertiary,
             com.google.android.material.R.attr.colorOutline
     };
-    private static final String[] INTERPOLATIONS = {"Smooth", "Linear", "Adaptive"};
     private static final String[] REPLIES = {
             "I folded that into the dock. The six-line cap is in place, and the sheet now walks back with the system key.",
             "Noted. I would keep the split button bound to the reasoning level and let the label carry the model name.",
             "Then the last piece is the screenshot pass: Chat, Map, Mission, Usage, both sheets. Light mode first.",
             "Done. The wavy bar only comes alive while tokens are moving; the determinate fill returns when it settles."
     };
+
+    private String[] tabTitles;
+    private String[] folders;
+    private String[] presets;
+    private String[] sessionStates;
+    private String[] interpolations;
 
     private View root;
     private View topBar;
@@ -129,6 +131,7 @@ public class MainActivity extends AppCompatActivity implements ReasoningSheet.Li
         getWindow().setNavigationBarColor(Color.TRANSPARENT);
 
         setContentView(R.layout.activity_main);
+        loadLabels();
 
         bindViews();
         updateSystemBarAppearance();
@@ -141,6 +144,29 @@ public class MainActivity extends AppCompatActivity implements ReasoningSheet.Li
         updateContextIndicator(false);
         updateModelChip();
         updateInputState();
+    }
+
+    private void loadLabels() {
+        tabTitles = new String[]{
+                getString(R.string.tab_chat), getString(R.string.tab_map),
+                getString(R.string.tab_mission), getString(R.string.tab_usage)
+        };
+        folders = new String[]{
+                getString(R.string.folder_design), getString(R.string.folder_research),
+                getString(R.string.folder_personal)
+        };
+        presets = new String[]{
+                getString(R.string.preset_balanced), getString(R.string.preset_creative),
+                getString(R.string.preset_precise), getString(R.string.preset_debug)
+        };
+        sessionStates = new String[]{
+                getString(R.string.state_active), getString(R.string.state_paused),
+                getString(R.string.state_complete)
+        };
+        interpolations = new String[]{
+                getString(R.string.interp_smooth), getString(R.string.interp_linear),
+                getString(R.string.interp_adaptive)
+        };
     }
 
     private void bindViews() {
@@ -218,7 +244,7 @@ public class MainActivity extends AppCompatActivity implements ReasoningSheet.Li
         });
         pager.setOffscreenPageLimit(3);
         new TabLayoutMediator(tabs, pager, (tab, position) ->
-                tab.setText(TAB_TITLES[position])).attach();
+                tab.setText(tabTitles[position])).attach();
 
         pager.registerOnPageChangeCallback(new ViewPager2.OnPageChangeCallback() {
             @Override
@@ -231,15 +257,16 @@ public class MainActivity extends AppCompatActivity implements ReasoningSheet.Li
 
     private void setupTopBar() {
         findViewById(R.id.btn_sidebar).setOnClickListener(v ->
-                new SidebarSheet(this).show());
+                UiTransitions.start(this, new Intent(this, SidebarActivity.class), false));
 
         folderButton.setOnClickListener(v -> showFolderMenu(v));
 
         sessionButton.setOnClickListener(v -> {
-            statusIndex = (statusIndex + 1) % STATUS.length;
+            statusIndex = (statusIndex + 1) % sessionStates.length;
             sessionButton.setIconResource(STATUS_ICONS[statusIndex]);
             sessionButton.setIconTint(ColorStateList.valueOf(color(STATUS_TINTS[statusIndex])));
-            showNotice(STATUS_ICONS[statusIndex], "Session status · " + STATUS[statusIndex]);
+            showNotice(STATUS_ICONS[statusIndex],
+                    getString(R.string.notice_session_state, sessionStates[statusIndex]));
         });
 
         presetButton.setOnClickListener(this::showPresetMenu);
@@ -247,10 +274,10 @@ public class MainActivity extends AppCompatActivity implements ReasoningSheet.Li
             if (chatFragment != null) {
                 chatFragment.resetConversation();
             }
-            sessionButton.setText("New chat");
+            sessionButton.setText(R.string.new_chat_title);
             contextPercent = 4;
             updateContextIndicator(true);
-            showNotice(R.drawable.ic_add_comment, "New chat · context reset");
+            showNotice(R.drawable.ic_add_comment, getString(R.string.notice_new_chat));
         });
         findViewById(R.id.btn_menu).setOnClickListener(this::showSessionMenu);
 
@@ -258,13 +285,13 @@ public class MainActivity extends AppCompatActivity implements ReasoningSheet.Li
 
     private void showFolderMenu(View anchor) {
         PopupMenu popup = new PopupMenu(this, anchor, Gravity.END);
-        for (int i = 0; i < FOLDERS.length; i++) {
-            popup.getMenu().add(0, i, i, FOLDERS[i]);
+        for (int i = 0; i < folders.length; i++) {
+            popup.getMenu().add(0, i, i, folders[i]);
         }
         popup.setOnMenuItemClickListener(item -> {
-            folderButton.setText(FOLDERS[item.getItemId() % FOLDERS.length]);
-            showNotice(R.drawable.ic_folder,
-                    "Session folder · " + FOLDERS[item.getItemId() % FOLDERS.length]);
+            String folder = folders[item.getItemId() % folders.length];
+            folderButton.setText(folder);
+            showNotice(R.drawable.ic_folder, getString(R.string.notice_folder, folder));
             return true;
         });
         popup.show();
@@ -273,8 +300,8 @@ public class MainActivity extends AppCompatActivity implements ReasoningSheet.Li
     private void showPresetMenu(View anchor) {
         PopupMenu popup = new PopupMenu(this, anchor, Gravity.END);
         popup.getMenu().setGroupCheckable(0, true, true);
-        for (int i = 0; i < PRESETS.length; i++) {
-            popup.getMenu().add(0, i, i, PRESETS[i])
+        for (int i = 0; i < presets.length; i++) {
+            popup.getMenu().add(0, i, i, presets[i])
                     .setCheckable(true)
                     .setChecked(i == presetIndex);
         }
@@ -286,7 +313,7 @@ public class MainActivity extends AppCompatActivity implements ReasoningSheet.Li
                     ? androidx.appcompat.R.attr.colorPrimary
                     : com.google.android.material.R.attr.colorOnSurfaceVariant;
             presetButton.setIconTint(ColorStateList.valueOf(color(tint)));
-            showNotice(R.drawable.ic_tune, "Preset · " + PRESETS[presetIndex]);
+            showNotice(R.drawable.ic_tune, getString(R.string.notice_preset, presets[presetIndex]));
             return true;
         });
         popup.show();
@@ -294,20 +321,21 @@ public class MainActivity extends AppCompatActivity implements ReasoningSheet.Li
 
     private void showSessionMenu(View anchor) {
         PopupMenu popup = new PopupMenu(this, anchor, Gravity.END);
-        popup.getMenu().add(0, 0, 0, "Rename session");
-        popup.getMenu().add(0, 1, 1, "Export transcript");
-        popup.getMenu().add(0, 2, 2, "Compress history");
-        popup.getMenu().add(0, 3, 3, "Session settings");
+        popup.getMenu().add(0, 0, 0, getString(R.string.menu_rename));
+        popup.getMenu().add(0, 1, 1, getString(R.string.menu_export));
+        popup.getMenu().add(0, 2, 2, getString(R.string.menu_compress));
+        popup.getMenu().add(0, 3, 3, getString(R.string.menu_settings));
         popup.setOnMenuItemClickListener(item -> {
             switch (item.getItemId()) {
                 case 2:
                     new AttachmentsSheet(this).show();
                     break;
                 case 3:
-                    showNotice(R.drawable.ic_settings, "Session settings · demo");
+                    UiTransitions.start(this, new Intent(this, SettingsActivity.class), true);
                     break;
                 default:
-                    showNotice(R.drawable.ic_more_vert, item.getTitle() + " · demo");
+                    showNotice(R.drawable.ic_more_vert,
+                            getString(R.string.notice_menu_demo, item.getTitle()));
                     break;
             }
             return true;
@@ -362,20 +390,21 @@ public class MainActivity extends AppCompatActivity implements ReasoningSheet.Li
             input.setText(quick);
             input.setSelection(quick.length());
             input.requestFocus();
-            showNotice(R.drawable.ic_bolt, "Quick message inserted");
+            showNotice(R.drawable.ic_bolt, getString(R.string.notice_quick));
         });
         modelButton.setOnClickListener(v -> openReasoning(false));
         interpolationButton.setOnClickListener(v -> {
-            interpolationIndex = (interpolationIndex + 1) % INTERPOLATIONS.length;
+            interpolationIndex = (interpolationIndex + 1) % interpolations.length;
             int tint = interpolationIndex == 2
                     ? com.google.android.material.R.attr.colorTertiary
                     : com.google.android.material.R.attr.colorOnSurfaceVariant;
             interpolationButton.setIconTint(ColorStateList.valueOf(color(tint)));
-            showNotice(R.drawable.ic_animation, "Interpolation · " + INTERPOLATIONS[interpolationIndex]);
+            showNotice(R.drawable.ic_animation,
+                    getString(R.string.notice_interpolation, interpolations[interpolationIndex]));
         });
-        interpolationButton.setTooltipText("Interpolation");
-        recordButton.setTooltipText("Record");
-        sendButton.setTooltipText("Send");
+        interpolationButton.setTooltipText(getString(R.string.cd_interpolation));
+        recordButton.setTooltipText(getString(R.string.cd_record));
+        sendButton.setTooltipText(getString(R.string.cd_send));
     }
 
     private void updateInputState() {
@@ -444,7 +473,7 @@ public class MainActivity extends AppCompatActivity implements ReasoningSheet.Li
         }
         String text = input.getText() == null ? "" : input.getText().toString().trim();
         if (text.isEmpty()) {
-            showNotice(R.drawable.ic_error, "Write something first");
+            showNotice(R.drawable.ic_error, getString(R.string.notice_empty_input));
             input.requestFocus();
             return;
         }
@@ -466,7 +495,7 @@ public class MainActivity extends AppCompatActivity implements ReasoningSheet.Li
         if (chatFragment != null) {
             chatFragment.addAssistantMessage("Stopped where you asked. The partial thought is still in the thread.");
         }
-        showNotice(R.drawable.ic_stop, "Generation stopped");
+        showNotice(R.drawable.ic_stop, getString(R.string.notice_stopped));
     }
 
     private void setGenerating(boolean value) {
@@ -500,7 +529,8 @@ public class MainActivity extends AppCompatActivity implements ReasoningSheet.Li
             }
             contextPercent = Math.min(99, contextPercent + 1);
             setGenerating(false);
-            showNotice(R.drawable.ic_psychology, "Neko answered · context " + contextPercent + "%");
+            showNotice(R.drawable.ic_psychology,
+                    getString(R.string.notice_answered, contextPercent));
         };
 
         scrollTicker = new Runnable() {
@@ -568,7 +598,7 @@ public class MainActivity extends AppCompatActivity implements ReasoningSheet.Li
             contextLabel.setText(String.format(Locale.US, "REC %02d:%02d", minutes, seconds));
             contextLabel.setTextColor(color(androidx.appcompat.R.attr.colorError));
         } else if (generating) {
-            contextLabel.setText("writing…");
+            contextLabel.setText(R.string.state_writing);
             contextLabel.setTextColor(color(com.google.android.material.R.attr.colorTertiary));
         } else {
             contextLabel.setText(contextPercent + "%");
@@ -589,9 +619,9 @@ public class MainActivity extends AppCompatActivity implements ReasoningSheet.Li
         if (value) {
             recordSeconds = 0;
             handler.post(recordingRunnable);
-            showNotice(R.drawable.ic_mic, "Recording · tap again to stop");
+            showNotice(R.drawable.ic_mic, getString(R.string.notice_recording));
         } else {
-            showNotice(R.drawable.ic_mic, "Voice note discarded · demo");
+            showNotice(R.drawable.ic_mic, getString(R.string.notice_recording_discarded));
         }
         updateContextIndicator(false);
     }
@@ -711,7 +741,7 @@ public class MainActivity extends AppCompatActivity implements ReasoningSheet.Li
     }
 
     private void showNotice(int iconRes, String message) {
-        showNotice(iconRes, message, "Dismiss", null);
+        showNotice(iconRes, message, getString(R.string.notice_dismiss), null);
     }
 
     private void showNotice(int iconRes, String message, String actionLabel, Runnable action) {

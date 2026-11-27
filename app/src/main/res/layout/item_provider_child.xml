@@ -9,6 +9,6 @@
     android:maxLines="1"
     android:paddingStart="18dp"
     android:paddingEnd="6dp"
-    android:text="Flagship"
+    android:text="@string/model_tier_flagship"
     android:textAppearance="?attr/textAppearanceBodySmall"
     android:textColor="?attr/colorOnSurfaceVariant" />

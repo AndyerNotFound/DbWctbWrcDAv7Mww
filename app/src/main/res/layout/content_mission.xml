@@ -19,7 +19,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Workspace · night session"
+            android:text="@string/mission_eyebrow"
             android:textAppearance="@style/TextAppearance.Neko.Eyebrow"
             android:textColor="?attr/colorPrimary" />
 
@@ -34,7 +34,7 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="Mission control"
+                android:text="@string/mission_title"
                 android:textAppearance="?attr/textAppearanceHeadlineSmall"
                 android:textColor="?attr/colorOnSurface" />
 
@@ -46,7 +46,7 @@
                 android:paddingTop="4dp"
                 android:paddingEnd="10dp"
                 android:paddingBottom="4dp"
-                android:text="LIVE"
+                android:text="@string/status_live"
                 android:textAppearance="?attr/textAppearanceLabelSmall"
                 android:textColor="?attr/colorOnPrimaryContainer" />
         </LinearLayout>
@@ -55,7 +55,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="3dp"
-            android:text="One session, one working directory, one cat keeping an eye on the build."
+            android:text="@string/mission_intro"
             android:textAppearance="?attr/textAppearanceBodyMedium"
             android:textColor="?attr/colorOnSurfaceVariant" />
 
@@ -104,14 +104,14 @@
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="Active mission"
+                            android:text="@string/mission_active"
                             android:textAppearance="?attr/textAppearanceLabelMedium"
                             android:textColor="?attr/colorOnPrimaryContainer" />
 
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="MD3 chat shell"
+                            android:text="@string/mission_card_title"
                             android:textAppearance="?attr/textAppearanceTitleLarge"
                             android:textColor="?attr/colorOnPrimaryContainer" />
                     </LinearLayout>
@@ -143,14 +143,14 @@
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:text="9 of 14 steps"
+                        android:text="@string/mission_steps"
                         android:textAppearance="?attr/textAppearanceBodySmall"
                         android:textColor="?attr/colorOnPrimaryContainer" />
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="1h 42m elapsed"
+                        android:text="@string/mission_elapsed"
                         android:textAppearance="?attr/textAppearanceBodySmall"
                         android:textColor="?attr/colorOnPrimaryContainer" />
                 </LinearLayout>
@@ -168,14 +168,14 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="Plan"
+                android:text="@string/mission_plan"
                 android:textAppearance="?attr/textAppearanceTitleMedium"
                 android:textColor="?attr/colorOnSurface" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="2 remaining"
+                android:text="@string/mission_plan_remaining"
                 android:textAppearance="?attr/textAppearanceLabelMedium"
                 android:textColor="?attr/colorOnSurfaceVariant" />
         </LinearLayout>
@@ -225,14 +225,14 @@
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="Design tokens &amp; theme"
+                            android:text="@string/plan_item_tokens"
                             android:textAppearance="?attr/textAppearanceBodyLarge"
                             android:textColor="?attr/colorOnSurface" />
 
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="Teal / clay palette in light and dark"
+                            android:text="@string/plan_item_tokens_desc"
                             android:textAppearance="?attr/textAppearanceBodySmall"
                             android:textColor="?attr/colorOnSurfaceVariant" />
                     </LinearLayout>
@@ -245,7 +245,7 @@
                         android:paddingTop="3dp"
                         android:paddingEnd="9dp"
                         android:paddingBottom="3dp"
-                        android:text="done"
+                        android:text="@string/status_done"
                         android:textAppearance="?attr/textAppearanceLabelSmall"
                         android:textColor="?attr/colorOnPrimaryContainer" />
                 </LinearLayout>
@@ -280,14 +280,14 @@
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="Conversation map"
+                            android:text="@string/conversation_map"
                             android:textAppearance="?attr/textAppearanceBodyLarge"
                             android:textColor="?attr/colorOnSurface" />
 
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="Bezier branches with a pulsing head"
+                            android:text="@string/plan_item_map_desc"
                             android:textAppearance="?attr/textAppearanceBodySmall"
                             android:textColor="?attr/colorOnSurfaceVariant" />
                     </LinearLayout>
@@ -300,7 +300,7 @@
                         android:paddingTop="3dp"
                         android:paddingEnd="9dp"
                         android:paddingBottom="3dp"
-                        android:text="done"
+                        android:text="@string/status_done"
                         android:textAppearance="?attr/textAppearanceLabelSmall"
                         android:textColor="?attr/colorOnPrimaryContainer" />
                 </LinearLayout>
@@ -335,14 +335,14 @@
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="Bottom sheets"
+                            android:text="@string/plan_item_sheets"
                             android:textAppearance="?attr/textAppearanceBodyLarge"
                             android:textColor="?attr/colorOnSurface" />
 
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="Shared axis X with a back stack"
+                            android:text="@string/plan_item_sheets_desc"
                             android:textAppearance="?attr/textAppearanceBodySmall"
                             android:textColor="?attr/colorOnSurfaceVariant" />
                     </LinearLayout>
@@ -355,7 +355,7 @@
                         android:paddingTop="3dp"
                         android:paddingEnd="9dp"
                         android:paddingBottom="3dp"
-                        android:text="now"
+                        android:text="@string/status_now"
                         android:textAppearance="?attr/textAppearanceLabelSmall"
                         android:textColor="?attr/colorOnTertiaryContainer" />
                 </LinearLayout>
@@ -390,14 +390,14 @@
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="Screenshot pass"
+                            android:text="@string/plan_item_screens"
                             android:textAppearance="?attr/textAppearanceBodyLarge"
                             android:textColor="?attr/colorOnSurface" />
 
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="Capture light and dark frames in CI"
+                            android:text="@string/plan_item_screens_desc"
                             android:textAppearance="?attr/textAppearanceBodySmall"
                             android:textColor="?attr/colorOnSurfaceVariant" />
                     </LinearLayout>
@@ -410,7 +410,7 @@
                         android:paddingTop="3dp"
                         android:paddingEnd="9dp"
                         android:paddingBottom="3dp"
-                        android:text="next"
+                        android:text="@string/status_next"
                         android:textAppearance="?attr/textAppearanceLabelSmall"
                         android:textColor="?attr/colorOnSurfaceVariant" />
                 </LinearLayout>
@@ -428,14 +428,14 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="Workspace"
+                android:text="@string/workspace_title"
                 android:textAppearance="?attr/textAppearanceTitleMedium"
                 android:textColor="?attr/colorOnSurface" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="bound"
+                android:text="@string/status_bound"
                 android:textAppearance="?attr/textAppearanceLabelMedium"
                 android:textColor="?attr/colorPrimary" />
         </LinearLayout>
@@ -538,7 +538,7 @@
                         android:paddingTop="3dp"
                         android:paddingEnd="9dp"
                         android:paddingBottom="3dp"
-                        android:text="3.4 GB free"
+                        android:text="@string/workspace_free_space"
                         android:textAppearance="?attr/textAppearanceLabelSmall"
                         android:textColor="?attr/colorOnSurfaceVariant" />
 
@@ -551,7 +551,7 @@
                         android:paddingTop="3dp"
                         android:paddingEnd="9dp"
                         android:paddingBottom="3dp"
-                        android:text="git clean"
+                        android:text="@string/status_git_clean"
                         android:textAppearance="?attr/textAppearanceLabelSmall"
                         android:textColor="?attr/colorOnSurfaceVariant" />
 
@@ -565,7 +565,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="40dp"
                         android:minWidth="0dp"
-                        android:text="Change"
+                        android:text="@string/action_change"
                         android:textSize="12sp" />
                 </LinearLayout>
             </LinearLayout>
@@ -582,14 +582,14 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="Activity"
+                android:text="@string/activity_title"
                 android:textAppearance="?attr/textAppearanceTitleMedium"
                 android:textColor="?attr/colorOnSurface" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="last 20 min"
+                android:text="@string/activity_window"
                 android:textAppearance="?attr/textAppearanceLabelMedium"
                 android:textColor="?attr/colorOnSurfaceVariant" />
         </LinearLayout>
@@ -629,7 +629,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginStart="10dp"
                         android:layout_weight="1"
-                        android:text="Neko edited 4 files"
+                        android:text="@string/activity_edit_files"
                         android:textAppearance="?attr/textAppearanceBodyMedium"
                         android:textColor="?attr/colorOnSurface" />
 
@@ -658,7 +658,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginStart="10dp"
                         android:layout_weight="1"
-                        android:text="Ran a layout inspection"
+                        android:text="@string/activity_inspection"
                         android:textAppearance="?attr/textAppearanceBodyMedium"
                         android:textColor="?attr/colorOnSurface" />
 
@@ -687,7 +687,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginStart="10dp"
                         android:layout_weight="1"
-                        android:text="Compressed 6 messages into a summary"
+                        android:text="@string/activity_compression"
                         android:textAppearance="?attr/textAppearanceBodyMedium"
                         android:textColor="?attr/colorOnSurface" />
 
