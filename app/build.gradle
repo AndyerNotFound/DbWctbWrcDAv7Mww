@@ -2,6 +2,13 @@ plugins {
     id 'com.android.application'
 }
 
+// A stable signing key keeps every CI build installable over the previous one. The keystore is
+// restored from repository secrets; when it is absent (local builds, forks) we fall back to the
+// auto-generated debug key.
+def keystorePath = System.getenv("NEKO_KEYSTORE_FILE")
+def keystoreFile = keystorePath ? file(keystorePath) : null
+def hasStableKey = keystoreFile != null && keystoreFile.exists()
+
 android {
     namespace 'dev.neko.chatdemo'
     compileSdk 36
@@ -15,6 +22,18 @@ android {
 
         vectorDrawables {
             useSupportLibrary true
+        }
+    }
+
+    signingConfigs {
+        debug {
+            if (hasStableKey) {
+                storeFile keystoreFile
+                storeType "PKCS12"
+                storePassword System.getenv("NEKO_STORE_PASSWORD")
+                keyAlias System.getenv("NEKO_KEY_ALIAS") ?: "neko-demo"
+                keyPassword System.getenv("NEKO_KEY_PASSWORD")
+            }
         }
     }
 

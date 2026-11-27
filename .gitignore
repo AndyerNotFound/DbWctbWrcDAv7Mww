@@ -11,3 +11,7 @@ tmpicons/
 *.aab
 shots*/
 out/
+*.p12
+*.jks
+*.keystore
+!debug.keystore
