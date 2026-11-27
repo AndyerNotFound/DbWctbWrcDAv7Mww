@@ -297,9 +297,11 @@ public class SettingsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
             one.setVisibility(row.actions ? View.VISIBLE : View.GONE);
             two.setVisibility(row.actions ? View.VISIBLE : View.GONE);
             one.setIconResource(R.drawable.ic_upload_file);
-            one.setContentDescription(R.string.settings_import_provider);
+            one.setContentDescription(itemView.getContext()
+                    .getString(R.string.settings_import_provider));
             two.setIconResource(R.drawable.ic_add);
-            two.setContentDescription(R.string.settings_add_provider);
+            two.setContentDescription(itemView.getContext()
+                    .getString(R.string.settings_add_provider));
             one.setOnClickListener(v -> callbacks.onImportProvider());
             two.setOnClickListener(v -> callbacks.onAddProvider());
         }

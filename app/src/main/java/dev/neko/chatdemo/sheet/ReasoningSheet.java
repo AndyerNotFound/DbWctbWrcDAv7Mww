@@ -282,9 +282,9 @@ public class ReasoningSheet extends BottomSheetDialogFragment implements Reasoni
 
         View.OnClickListener modeListener = v -> {
             boolean isBudget = budgetMode.isChecked();
-            valueLayout.setHelperText(isBudget
+            valueLayout.setHelperText(getString(isBudget
                     ? R.string.reasoning_custom_helper_budget
-                    : R.string.reasoning_custom_helper_effort);
+                    : R.string.reasoning_custom_helper_effort));
             value.setText(isBudget
                     ? String.valueOf(budget > 0 ? budget : 12288)
                     : EFFORT_NAMES[effortIndex].toLowerCase(Locale.US));
