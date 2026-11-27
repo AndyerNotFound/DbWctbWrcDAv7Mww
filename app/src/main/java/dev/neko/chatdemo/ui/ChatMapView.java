@@ -253,7 +253,7 @@ public class ChatMapView extends View {
         // Corner caption.
         captionPaint.setTextAlign(Paint.Align.LEFT);
         captionPaint.setColor(colorOnSurfaceVariant);
-        canvas.drawText("drag to pan · tap a node to inspect", dp * 18f, h - dp * 24f, captionPaint);
+        canvas.drawText("read-only graph · the live head keeps pulsing", dp * 18f, h - dp * 24f, captionPaint);
         captionPaint.setTextAlign(Paint.Align.CENTER);
 
         if (isAttachedToWindow()) {

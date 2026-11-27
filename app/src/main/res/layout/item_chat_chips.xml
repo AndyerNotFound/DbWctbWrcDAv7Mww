@@ -31,7 +31,8 @@
         android:layout_marginStart="8dp"
         android:layout_weight="1"
         app:chipSpacingHorizontal="6dp"
-        app:singleLine="true">
+        app:chipSpacingVertical="6dp"
+        app:singleLine="false">
 
         <com.google.android.material.chip.Chip
             style="@style/Widget.Neko.Chip"

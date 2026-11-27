@@ -51,6 +51,7 @@ jobs:
           emulator-options: -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -camera-back none
           script: |
             adb install -r app/build/outputs/apk/debug/app-debug.apk
+            adb logcat -c
             python3 scripts/capture_screens.py shots
 
       - name: Upload screenshots

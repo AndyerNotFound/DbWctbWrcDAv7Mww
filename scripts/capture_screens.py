@@ -91,9 +91,26 @@ def tap_desc(desc):
     tap_node(node, desc)
 
 
-def tab(x):
-    adb("shell", "input", "tap", str(x), "273")
-    wait(1.4)
+TAB_XY = {}
+
+
+def cache_tabs():
+    root = dump()
+    for name in ("Chat", "Map", "Mission", "Usage"):
+        node = find(root, text=name)
+        if node is not None:
+            TAB_XY[name] = center(node)
+    print("tabs:", TAB_XY)
+
+
+def tab(name):
+    if name in TAB_XY:
+        x, y = TAB_XY[name]
+    else:
+        x, y = {"Chat": (135, 360), "Map": (405, 360),
+                "Mission": (675, 360), "Usage": (945, 360)}[name]
+    adb("shell", "input", "tap", str(x), str(y))
+    wait(1.6)
 
 
 def back():
@@ -103,20 +120,24 @@ def back():
 
 print("launch")
 adb("shell", "am", "start", "-W", "-n", "dev.neko.chatdemo/.MainActivity")
-wait(4)
+wait(5)
+print(adb("shell", "wm", "size", text=True).stdout.strip())
+print(adb("shell", "wm", "density", text=True).stdout.strip())
+print(adb("shell", "logcat", "-d", "-s", "NekoInsets:I", text=True).stdout)
+cache_tabs()
 shot("01-chat.png")
 
-# Tabs: fixed geometry is more reliable here, the map keeps animating.
-tab(405)
+# Tabs: use the tab bounds captured before the map starts animating.
+tab("Map")
 wait(2)
 shot("02-map.png")
-tab(675)
-wait(1.5)
+tab("Mission")
+wait(1.6)
 shot("03-mission.png")
-tab(945)
-wait(1.5)
+tab("Usage")
+wait(1.6)
 shot("04-usage.png")
-tab(135)
+tab("Chat")
 wait(1.5)
 
 # Attachments sheet.
@@ -167,10 +188,10 @@ wait(1.2)
 adb("shell", "cmd", "uimode", "night", "yes")
 wait(3.5)
 shot("13-dark-chat.png")
-tab(675)
-wait(1.5)
+tab("Mission")
+wait(1.6)
 shot("14-dark-mission.png")
-tab(135)
+tab("Chat")
 wait(1.0)
 
 print("done")

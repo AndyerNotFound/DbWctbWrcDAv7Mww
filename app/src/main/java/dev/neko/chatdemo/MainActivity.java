@@ -165,6 +165,7 @@ public class MainActivity extends AppCompatActivity {
         interpolationButton = findViewById(R.id.btn_interpolation);
         contextProgress = findViewById(R.id.context_progress);
         contextLabel = findViewById(R.id.context_label);
+        contextProgress.setWaveAmplitude(0);
         pager = findViewById(R.id.pager);
         tabs = findViewById(R.id.tabs);
         modelChevronId = modelChevron.getId();
@@ -190,6 +191,17 @@ public class MainActivity extends AppCompatActivity {
             Insets ime = insets.getInsets(WindowInsetsCompat.Type.ime());
             topBar.setPadding(bars.left, bars.top, bars.right, topBar.getPaddingBottom());
             inputDock.setPadding(bars.left, 0, bars.right, Math.max(bars.bottom, ime.bottom));
+            android.util.Log.i("NekoInsets", "density="
+                    + getResources().getDisplayMetrics().density + " top=" + bars.top
+                    + " bottom=" + bars.bottom + " ime=" + ime.bottom);
+            root.post(() -> {
+                int[] pos = new int[2];
+                View toolbar = findViewById(R.id.toolbar_row);
+                toolbar.getLocationOnScreen(pos);
+                android.util.Log.i("NekoInsets", "toolbarY=" + pos[1]
+                        + " topBarPadTop=" + topBar.getPaddingTop()
+                        + " rootTop=" + root.getTop());
+            });
             return insets;
         });
         ViewCompat.requestApplyInsets(root);
@@ -433,8 +445,12 @@ public class MainActivity extends AppCompatActivity {
 
     private void setGenerating(boolean value) {
         generating = value;
+        if (value) {
+            contextProgress.setWaveAmplitude((int) (2.5f * getResources().getDisplayMetrics().density));
+        }
         contextProgress.setIndeterminate(value);
         if (!value) {
+            contextProgress.setWaveAmplitude(0);
             contextProgress.setProgressCompat(contextPercent, true);
             handler.removeCallbacks(scrollTicker);
         } else {

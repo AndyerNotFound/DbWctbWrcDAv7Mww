@@ -32,7 +32,13 @@ public class ChatFragment extends Fragment {
         adapter = new ChatAdapter();
         list.setAdapter(adapter);
         adapter.submit(seed());
-        list.scrollToPosition(adapter.getItemCount() - 1);
+        list.post(() -> {
+            LinearLayoutManager manager = (LinearLayoutManager) list.getLayoutManager();
+            if (manager != null) {
+                manager.scrollToPositionWithOffset(6,
+                        (int) (4 * getResources().getDisplayMetrics().density));
+            }
+        });
     }
 
     private List<ChatItem> seed() {

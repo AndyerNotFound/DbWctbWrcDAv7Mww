@@ -41,7 +41,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Late night refactor · GPT-5.4"
+                android:text="Dock refactor · GPT-5.4"
                 android:textAppearance="?attr/textAppearanceLabelSmall"
                 android:textColor="?attr/colorOnSurfaceVariant" />
         </LinearLayout>
@@ -70,6 +70,7 @@
         android:layout_marginTop="12dp"
         android:layout_marginEnd="12dp"
         android:layout_weight="1"
+        android:hint="Write as much as you need…"
         app:boxBackgroundColor="?attr/colorSurfaceContainerLow"
         app:boxStrokeWidth="0dp"
         app:boxStrokeWidthFocused="0dp"
@@ -81,7 +82,6 @@
             android:layout_height="match_parent"
             android:background="@null"
             android:gravity="top|start"
-            android:hint="Write as much as you need…"
             android:inputType="textCapSentences|textMultiLine"
             android:lineSpacingExtra="3dp"
             android:paddingTop="16dp"

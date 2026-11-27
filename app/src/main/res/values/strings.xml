@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">Neko Chat</string>
-    <string name="session_title">Late night refactor</string>
+    <string name="session_title">Dock refactor</string>
     <string name="message_hint">Message Neko…</string>
     <string name="cd_expand_sidebar">Expand sidebar</string>
     <string name="cd_preset">Session preset</string>
