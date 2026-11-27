@@ -138,4 +138,21 @@
     <string name="group_earlier">Earlier</string>
     <string name="settings_preferences_sub">Theme, notifications, UI and general settings</string>
     <string name="settings_providers_sub">Configure AI providers and models</string>
+    <!-- Settings options -->
+    <string name="settings_models_group">Models &amp; services</string>
+    <string name="settings_data_group">Data</string>
+    <string name="settings_about_group">About</string>
+    <string name="settings_language">Language</string>
+    <string name="settings_follow_system_value">Follow system</string>
+    <string name="settings_default_model">Default model and prompt</string>
+    <string name="settings_search_service">Search service</string>
+    <string name="settings_speech">Speech service</string>
+    <string name="settings_speech_sub">Speech synthesis and recognition providers</string>
+    <string name="settings_backup">Backup</string>
+    <string name="settings_backup_sub">Back up and restore app data</string>
+    <string name="settings_storage">Storage</string>
+    <string name="settings_storage_value">12 files · 4.8 MB</string>
+    <string name="settings_about_app">About this app</string>
+    <string name="settings_docs">Documentation</string>
+    <string name="settings_docs_sub">Read the usage guide</string>
 </resources>

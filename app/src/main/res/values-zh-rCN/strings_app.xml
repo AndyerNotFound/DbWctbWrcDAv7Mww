@@ -138,4 +138,21 @@
     <string name="group_earlier">更早</string>
     <string name="settings_preferences_sub">主题、通知、界面和常规设置</string>
     <string name="settings_providers_sub">配置 AI 服务商与模型</string>
+    <!-- Settings options -->
+    <string name="settings_models_group">模型与服务</string>
+    <string name="settings_data_group">数据设置</string>
+    <string name="settings_about_group">关于</string>
+    <string name="settings_language">语言</string>
+    <string name="settings_follow_system_value">跟随系统</string>
+    <string name="settings_default_model">默认模型和提示词</string>
+    <string name="settings_search_service">搜索服务</string>
+    <string name="settings_speech">语音服务</string>
+    <string name="settings_speech_sub">语音合成与语音识别服务</string>
+    <string name="settings_backup">数据备份</string>
+    <string name="settings_backup_sub">备份和恢复应用数据</string>
+    <string name="settings_storage">存储管理</string>
+    <string name="settings_storage_value">12 个文件 · 4.8 MB</string>
+    <string name="settings_about_app">关于本应用</string>
+    <string name="settings_docs">使用文档</string>
+    <string name="settings_docs_sub">查看应用使用说明</string>
 </resources>

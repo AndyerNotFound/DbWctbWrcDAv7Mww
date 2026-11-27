@@ -96,6 +96,6 @@ public class SettingsDetailActivity extends AppCompatActivity {
             SettingsUi.switchRow(this, group, row[1], getString(row[0]), row[2] == 1,
                     container, onContainer);
         }
-        SettingsUi.layoutGroup(group);
+        SettingsUi.finishGroup(group);
     }
 }

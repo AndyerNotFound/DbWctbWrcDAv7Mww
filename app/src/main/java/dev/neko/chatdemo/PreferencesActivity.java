@@ -29,7 +29,7 @@ public class PreferencesActivity extends SettingsPageActivity {
         int onPrimary = SettingsUi.color(content,
                 com.google.android.material.R.attr.colorOnPrimaryContainer);
 
-        LinearLayout group = SettingsUi.group(this, content, R.string.settings_preferences);
+        LinearLayout group = SettingsUi.group(this, content, (CharSequence) null);
         addRow(group, R.drawable.ic_tune, R.string.settings_theme, R.string.settings_theme_sub,
                 "theme", primary, onPrimary);
         addRow(group, R.drawable.ic_settings, R.string.settings_general, R.string.settings_general_sub,
@@ -40,7 +40,7 @@ public class PreferencesActivity extends SettingsPageActivity {
                 R.string.settings_notifications_sub, "notifications", primary, onPrimary);
         addRow(group, R.drawable.ic_cloud, R.string.settings_network, R.string.settings_network_sub,
                 "network", primary, onPrimary);
-        SettingsUi.layoutGroup(group);
+        SettingsUi.finishGroup(group);
     }
 
     private void addRow(LinearLayout group, int icon, int title, int subtitle, String key,
