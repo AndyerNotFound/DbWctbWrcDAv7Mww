@@ -335,7 +335,7 @@ public class MainActivity extends AppCompatActivity implements ReasoningSheet.Li
                     new AttachmentsSheet(this).show();
                     break;
                 case 3:
-                    SettingsActivity.start(this);
+                    SettingsActivity.startFrom(this, anchor);
                     break;
                 default:
                     showNotice(R.drawable.ic_more_vert,

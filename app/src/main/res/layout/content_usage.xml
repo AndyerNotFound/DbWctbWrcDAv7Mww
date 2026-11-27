@@ -1,538 +1,562 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<!-- Collapsing title over the scrolling page; the toolbar stays pinned while the title shrinks. -->
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="?attr/colorSurface"
-    android:fillViewport="true"
-    android:scrollbars="none">
+    android:background="?attr/colorSurface">
 
-    <LinearLayout
+    <com.google.android.material.appbar.AppBarLayout
+        android:id="@+id/usage_app_bar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:paddingStart="16dp"
-        android:paddingTop="14dp"
-        android:paddingEnd="16dp"
-        android:paddingBottom="28dp">
+        android:background="?attr/colorSurface"
+        app:elevation="0dp">
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/usage_eyebrow"
-            android:textAppearance="@style/TextAppearance.Neko.Eyebrow"
-            android:textColor="?attr/colorPrimary" />
+        <com.google.android.material.appbar.CollapsingToolbarLayout
+            android:id="@+id/usage_collapsing"
+            android:layout_width="match_parent"
+            android:layout_height="112dp"
+            app:collapsedTitleGravity="center_vertical|start"
+            app:contentScrim="?attr/colorSurface"
+            app:expandedTitleGravity="bottom|start"
+            app:expandedTitleMarginBottom="14dp"
+            app:expandedTitleMarginStart="20dp"
+            app:layout_scrollFlags="scroll|exitUntilCollapsed"
+            app:title="@string/usage_title"
+            app:titleEnabled="true">
+
+            <com.google.android.material.appbar.MaterialToolbar
+                android:id="@+id/usage_toolbar"
+                android:layout_width="match_parent"
+                android:layout_height="?attr/actionBarSize"
+                android:background="@android:color/transparent"
+                app:layout_collapseMode="pin" />
+        </com.google.android.material.appbar.CollapsingToolbarLayout>
+    </com.google.android.material.appbar.AppBarLayout>
+
+    <androidx.core.widget.NestedScrollView
+        android:id="@+id/usage_scroll"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:clipToPadding="false"
+        android:fillViewport="true"
+        android:scrollbars="none"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="4dp"
-            android:gravity="center_vertical"
-            android:orientation="horizontal">
+            android:orientation="vertical"
+            android:paddingStart="16dp"
+            android:paddingTop="6dp"
+            android:paddingEnd="16dp"
+            android:paddingBottom="28dp">
 
             <TextView
-                android:layout_width="0dp"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="@string/usage_title"
-                android:textAppearance="?attr/textAppearanceHeadlineSmall"
-                android:textColor="?attr/colorOnSurface" />
+                android:paddingBottom="6dp"
+                android:text="@string/usage_eyebrow"
+                android:textAppearance="@style/TextAppearance.Neko.Eyebrow"
+                android:textColor="?attr/colorPrimary" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:background="@drawable/bg_pill"
                 android:paddingStart="10dp"
+                android:layout_marginBottom="10dp"
                 android:paddingTop="4dp"
                 android:paddingEnd="10dp"
                 android:paddingBottom="4dp"
                 android:text="@string/usage_resets"
                 android:textAppearance="?attr/textAppearanceLabelSmall"
                 android:textColor="?attr/colorOnSurfaceVariant" />
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="14dp"
-            android:baselineAligned="false"
-            android:orientation="horizontal">
-
-            <LinearLayout
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginEnd="5dp"
-                android:layout_weight="1"
-                android:background="@drawable/bg_stat_tile"
-                android:minHeight="102dp"
-                android:orientation="vertical"
-                android:padding="14dp">
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/usage_tokens"
-                    android:textAppearance="?attr/textAppearanceLabelMedium"
-                    android:textColor="?attr/colorOnSurfaceVariant" />
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="3dp"
-                    android:text="86.4k"
-                    android:textAppearance="@style/TextAppearance.Neko.Number"
-                    android:textColor="?attr/colorOnSurface" />
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="1dp"
-                    android:text="@string/usage_tokens_today"
-                    android:textAppearance="?attr/textAppearanceLabelSmall"
-                    android:textColor="?attr/colorPrimary" />
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="5dp"
-                android:layout_weight="1"
-                android:background="@drawable/bg_stat_tile"
-                android:minHeight="102dp"
-                android:orientation="vertical"
-                android:padding="14dp">
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/usage_cost"
-                    android:textAppearance="?attr/textAppearanceLabelMedium"
-                    android:textColor="?attr/colorOnSurfaceVariant" />
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="3dp"
-                    android:text="$1.28"
-                    android:textAppearance="@style/TextAppearance.Neko.Number"
-                    android:textColor="?attr/colorOnSurface" />
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="1dp"
-                    android:text="@string/usage_cost_per_turn"
-                    android:textAppearance="?attr/textAppearanceLabelSmall"
-                    android:textColor="?attr/colorTertiary" />
-            </LinearLayout>
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
-            android:baselineAligned="false"
-            android:orientation="horizontal">
-
-            <LinearLayout
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginEnd="5dp"
-                android:layout_weight="1"
-                android:background="@drawable/bg_stat_tile"
-                android:minHeight="102dp"
-                android:orientation="vertical"
-                android:padding="14dp">
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/usage_turns"
-                    android:textAppearance="?attr/textAppearanceLabelMedium"
-                    android:textColor="?attr/colorOnSurfaceVariant" />
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="3dp"
-                    android:text="24"
-                    android:textAppearance="@style/TextAppearance.Neko.Number"
-                    android:textColor="?attr/colorOnSurface" />
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="1dp"
-                    android:text="@string/usage_turns_breakdown"
-                    android:textAppearance="?attr/textAppearanceLabelSmall"
-                    android:textColor="?attr/colorOnSurfaceVariant" />
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="5dp"
-                android:layout_weight="1"
-                android:background="@drawable/bg_stat_tile"
-                android:minHeight="102dp"
-                android:orientation="vertical"
-                android:padding="14dp">
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/usage_cache_hit"
-                    android:textAppearance="?attr/textAppearanceLabelMedium"
-                    android:textColor="?attr/colorOnSurfaceVariant" />
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="3dp"
-                    android:text="92%"
-                    android:textAppearance="@style/TextAppearance.Neko.Number"
-                    android:textColor="?attr/colorOnSurface" />
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="1dp"
-                    android:text="@string/usage_cache_saved"
-                    android:textAppearance="?attr/textAppearanceLabelSmall"
-                    android:textColor="?attr/colorSecondary" />
-            </LinearLayout>
-        </LinearLayout>
-
-        <com.google.android.material.card.MaterialCardView
-            style="?attr/materialCardViewOutlinedStyle"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
-            app:cardBackgroundColor="?attr/colorSurfaceContainerLow"
-            app:cardCornerRadius="20dp"
-            app:cardElevation="0dp"
-            app:strokeColor="?attr/colorOutlineVariant"
-            app:strokeWidth="1dp">
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:padding="16dp">
+                android:layout_marginTop="14dp"
+                android:baselineAligned="false"
+                android:orientation="horizontal">
 
                 <LinearLayout
-                    android:layout_width="match_parent"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:gravity="center_vertical"
-                    android:orientation="horizontal">
-
-                    <TextView
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:text="@string/usage_context_window"
-                        android:textAppearance="?attr/textAppearanceTitleSmall"
-                        android:textColor="?attr/colorOnSurface" />
+                    android:layout_marginEnd="5dp"
+                    android:layout_weight="1"
+                    android:background="@drawable/bg_stat_tile"
+                    android:minHeight="102dp"
+                    android:orientation="vertical"
+                    android:padding="14dp">
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="86.4k / 128k"
+                        android:text="@string/usage_tokens"
                         android:textAppearance="?attr/textAppearanceLabelMedium"
                         android:textColor="?attr/colorOnSurfaceVariant" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="3dp"
+                        android:text="86.4k"
+                        android:textAppearance="@style/TextAppearance.Neko.Number"
+                        android:textColor="?attr/colorOnSurface" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="1dp"
+                        android:text="@string/usage_tokens_today"
+                        android:textAppearance="?attr/textAppearanceLabelSmall"
+                        android:textColor="?attr/colorPrimary" />
                 </LinearLayout>
 
                 <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="14dp"
-                    android:layout_marginTop="12dp"
-                    android:background="@drawable/bg_segment_track"
-                    android:clipToOutline="true"
-                    android:orientation="horizontal"
-                    android:padding="2dp">
-
-                    <View
-                        android:layout_width="0dp"
-                        android:layout_height="match_parent"
-                        android:layout_weight="22"
-                        android:background="?attr/colorSecondary" />
-
-                    <View
-                        android:layout_width="0dp"
-                        android:layout_height="match_parent"
-                        android:layout_marginStart="1dp"
-                        android:layout_weight="11"
-                        android:background="?attr/colorTertiary" />
-
-                    <View
-                        android:layout_width="0dp"
-                        android:layout_height="match_parent"
-                        android:layout_marginStart="1dp"
-                        android:layout_weight="67"
-                        android:background="?attr/colorPrimary" />
-                </LinearLayout>
-
-                <LinearLayout
-                    android:layout_width="match_parent"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="10dp"
-                    android:orientation="horizontal">
-
-                    <View
-                        android:layout_width="7dp"
-                        android:layout_height="7dp"
-                        android:background="@drawable/bg_dot_secondary" />
-
-                    <TextView
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_marginStart="5dp"
-                        android:layout_weight="1"
-                        android:text="@string/usage_context_system"
-                        android:textAppearance="?attr/textAppearanceLabelSmall"
-                        android:textColor="?attr/colorOnSurfaceVariant" />
-
-                    <View
-                        android:layout_width="7dp"
-                        android:layout_height="7dp"
-                        android:background="@drawable/bg_dot_tertiary" />
+                    android:layout_marginStart="5dp"
+                    android:layout_weight="1"
+                    android:background="@drawable/bg_stat_tile"
+                    android:minHeight="102dp"
+                    android:orientation="vertical"
+                    android:padding="14dp">
 
                     <TextView
-                        android:layout_width="0dp"
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginStart="5dp"
-                        android:layout_weight="1"
-                        android:text="@string/usage_context_tools"
-                        android:textAppearance="?attr/textAppearanceLabelSmall"
+                        android:text="@string/usage_cost"
+                        android:textAppearance="?attr/textAppearanceLabelMedium"
                         android:textColor="?attr/colorOnSurfaceVariant" />
-
-                    <View
-                        android:layout_width="7dp"
-                        android:layout_height="7dp"
-                        android:background="@drawable/bg_dot" />
 
                     <TextView
-                        android:layout_width="0dp"
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginStart="5dp"
-                        android:layout_weight="1"
-                        android:text="@string/usage_context_messages"
+                        android:layout_marginTop="3dp"
+                        android:text="$1.28"
+                        android:textAppearance="@style/TextAppearance.Neko.Number"
+                        android:textColor="?attr/colorOnSurface" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="1dp"
+                        android:text="@string/usage_cost_per_turn"
                         android:textAppearance="?attr/textAppearanceLabelSmall"
-                        android:textColor="?attr/colorOnSurfaceVariant" />
+                        android:textColor="?attr/colorTertiary" />
                 </LinearLayout>
             </LinearLayout>
-        </com.google.android.material.card.MaterialCardView>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="22dp"
-            android:gravity="center_vertical"
-            android:orientation="horizontal">
-
-            <TextView
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="@string/usage_throughput"
-                android:textAppearance="?attr/textAppearanceTitleMedium"
-                android:textColor="?attr/colorOnSurface" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/usage_throughput_peak"
-                android:textAppearance="?attr/textAppearanceLabelMedium"
-                android:textColor="?attr/colorOnSurfaceVariant" />
-        </LinearLayout>
-
-        <com.google.android.material.card.MaterialCardView
-            style="?attr/materialCardViewFilledStyle"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            app:cardBackgroundColor="?attr/colorSurfaceContainerLow"
-            app:cardCornerRadius="20dp"
-            app:cardElevation="0dp"
-            app:strokeWidth="0dp">
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:paddingStart="14dp"
-                android:paddingTop="14dp"
-                android:paddingEnd="14dp"
-                android:paddingBottom="10dp">
+                android:layout_marginTop="10dp"
+                android:baselineAligned="false"
+                android:orientation="horizontal">
 
-                <dev.neko.chatdemo.ui.UsageChartView
-                    android:id="@+id/usage_chart"
-                    android:layout_width="match_parent"
-                    android:layout_height="132dp" />
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="5dp"
+                    android:layout_weight="1"
+                    android:background="@drawable/bg_stat_tile"
+                    android:minHeight="102dp"
+                    android:orientation="vertical"
+                    android:padding="14dp">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/usage_turns"
+                        android:textAppearance="?attr/textAppearanceLabelMedium"
+                        android:textColor="?attr/colorOnSurfaceVariant" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="3dp"
+                        android:text="24"
+                        android:textAppearance="@style/TextAppearance.Neko.Number"
+                        android:textColor="?attr/colorOnSurface" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="1dp"
+                        android:text="@string/usage_turns_breakdown"
+                        android:textAppearance="?attr/textAppearanceLabelSmall"
+                        android:textColor="?attr/colorOnSurfaceVariant" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="5dp"
+                    android:layout_weight="1"
+                    android:background="@drawable/bg_stat_tile"
+                    android:minHeight="102dp"
+                    android:orientation="vertical"
+                    android:padding="14dp">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/usage_cache_hit"
+                        android:textAppearance="?attr/textAppearanceLabelMedium"
+                        android:textColor="?attr/colorOnSurfaceVariant" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="3dp"
+                        android:text="92%"
+                        android:textAppearance="@style/TextAppearance.Neko.Number"
+                        android:textColor="?attr/colorOnSurface" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="1dp"
+                        android:text="@string/usage_cache_saved"
+                        android:textAppearance="?attr/textAppearanceLabelSmall"
+                        android:textColor="?attr/colorSecondary" />
+                </LinearLayout>
+            </LinearLayout>
+
+            <com.google.android.material.card.MaterialCardView
+                style="?attr/materialCardViewOutlinedStyle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                app:cardBackgroundColor="?attr/colorSurfaceContainerLow"
+                app:cardCornerRadius="20dp"
+                app:cardElevation="0dp"
+                app:strokeColor="?attr/colorOutlineVariant"
+                app:strokeWidth="1dp">
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="4dp"
-                    android:orientation="horizontal">
+                    android:orientation="vertical"
+                    android:padding="16dp">
 
-                    <TextView
-                        android:layout_width="0dp"
+                    <LinearLayout
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:text="@string/time_30_min_ago"
-                        android:textAppearance="?attr/textAppearanceLabelSmall"
-                        android:textColor="?attr/colorOnSurfaceVariant" />
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal">
 
-                    <TextView
-                        android:layout_width="0dp"
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text="@string/usage_context_window"
+                            android:textAppearance="?attr/textAppearanceTitleSmall"
+                            android:textColor="?attr/colorOnSurface" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="86.4k / 128k"
+                            android:textAppearance="?attr/textAppearanceLabelMedium"
+                            android:textColor="?attr/colorOnSurfaceVariant" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="14dp"
+                        android:layout_marginTop="12dp"
+                        android:background="@drawable/bg_segment_track"
+                        android:clipToOutline="true"
+                        android:orientation="horizontal"
+                        android:padding="2dp">
+
+                        <View
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:layout_weight="22"
+                            android:background="?attr/colorSecondary" />
+
+                        <View
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:layout_marginStart="1dp"
+                            android:layout_weight="11"
+                            android:background="?attr/colorTertiary" />
+
+                        <View
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:layout_marginStart="1dp"
+                            android:layout_weight="67"
+                            android:background="?attr/colorPrimary" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:gravity="end"
-                        android:text="@string/time_now"
-                        android:textAppearance="?attr/textAppearanceLabelSmall"
-                        android:textColor="?attr/colorOnSurfaceVariant" />
+                        android:layout_marginTop="10dp"
+                        android:orientation="horizontal">
+
+                        <View
+                            android:layout_width="7dp"
+                            android:layout_height="7dp"
+                            android:background="@drawable/bg_dot_secondary" />
+
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="5dp"
+                            android:layout_weight="1"
+                            android:text="@string/usage_context_system"
+                            android:textAppearance="?attr/textAppearanceLabelSmall"
+                            android:textColor="?attr/colorOnSurfaceVariant" />
+
+                        <View
+                            android:layout_width="7dp"
+                            android:layout_height="7dp"
+                            android:background="@drawable/bg_dot_tertiary" />
+
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="5dp"
+                            android:layout_weight="1"
+                            android:text="@string/usage_context_tools"
+                            android:textAppearance="?attr/textAppearanceLabelSmall"
+                            android:textColor="?attr/colorOnSurfaceVariant" />
+
+                        <View
+                            android:layout_width="7dp"
+                            android:layout_height="7dp"
+                            android:background="@drawable/bg_dot" />
+
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="5dp"
+                            android:layout_weight="1"
+                            android:text="@string/usage_context_messages"
+                            android:textAppearance="?attr/textAppearanceLabelSmall"
+                            android:textColor="?attr/colorOnSurfaceVariant" />
+                    </LinearLayout>
                 </LinearLayout>
-            </LinearLayout>
-        </com.google.android.material.card.MaterialCardView>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="22dp"
-            android:gravity="center_vertical"
-            android:orientation="horizontal">
-
-            <TextView
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="@string/usage_model_mix"
-                android:textAppearance="?attr/textAppearanceTitleMedium"
-                android:textColor="?attr/colorOnSurface" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/usage_models_active"
-                android:textAppearance="?attr/textAppearanceLabelMedium"
-                android:textColor="?attr/colorOnSurfaceVariant" />
-        </LinearLayout>
-
-        <com.google.android.material.card.MaterialCardView
-            style="?attr/materialCardViewFilledStyle"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            app:cardBackgroundColor="?attr/colorSurfaceContainerLow"
-            app:cardCornerRadius="20dp"
-            app:cardElevation="0dp"
-            app:strokeWidth="0dp">
+            </com.google.android.material.card.MaterialCardView>
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:padding="16dp">
+                android:layout_marginTop="22dp"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
 
-                <LinearLayout
-                    android:layout_width="match_parent"
+                <TextView
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:orientation="horizontal">
+                    android:layout_weight="1"
+                    android:text="@string/usage_throughput"
+                    android:textAppearance="?attr/textAppearanceTitleMedium"
+                    android:textColor="?attr/colorOnSurface" />
 
-                    <TextView
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:text="GPT-5.4"
-                        android:textAppearance="?attr/textAppearanceBodyMedium"
-                        android:textColor="?attr/colorOnSurface" />
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="54.2k · 63%"
-                        android:textAppearance="?attr/textAppearanceLabelSmall"
-                        android:textColor="?attr/colorOnSurfaceVariant" />
-                </LinearLayout>
-
-                <com.google.android.material.progressindicator.LinearProgressIndicator
-                    style="@style/Widget.Neko.ThinProgressIndicator"
-                    android:layout_width="match_parent"
+                <TextView
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="7dp"
-                    android:progress="63"
-                    app:indicatorColor="?attr/colorPrimary" />
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="13dp"
-                    android:orientation="horizontal">
-
-                    <TextView
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:text="Claude Sonnet 4.5"
-                        android:textAppearance="?attr/textAppearanceBodyMedium"
-                        android:textColor="?attr/colorOnSurface" />
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="21.8k · 25%"
-                        android:textAppearance="?attr/textAppearanceLabelSmall"
-                        android:textColor="?attr/colorOnSurfaceVariant" />
-                </LinearLayout>
-
-                <com.google.android.material.progressindicator.LinearProgressIndicator
-                    style="@style/Widget.Neko.ThinProgressIndicator"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="7dp"
-                    android:progress="25"
-                    app:indicatorColor="?attr/colorSecondary" />
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="13dp"
-                    android:orientation="horizontal">
-
-                    <TextView
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:text="Neko-8B · local"
-                        android:textAppearance="?attr/textAppearanceBodyMedium"
-                        android:textColor="?attr/colorOnSurface" />
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="10.4k · 12%"
-                        android:textAppearance="?attr/textAppearanceLabelSmall"
-                        android:textColor="?attr/colorOnSurfaceVariant" />
-                </LinearLayout>
-
-                <com.google.android.material.progressindicator.LinearProgressIndicator
-                    style="@style/Widget.Neko.ThinProgressIndicator"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="7dp"
-                    android:progress="12"
-                    app:indicatorColor="?attr/colorTertiary" />
+                    android:text="@string/usage_throughput_peak"
+                    android:textAppearance="?attr/textAppearanceLabelMedium"
+                    android:textColor="?attr/colorOnSurfaceVariant" />
             </LinearLayout>
-        </com.google.android.material.card.MaterialCardView>
 
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
-            android:gravity="center"
-            android:text="@string/usage_footer"
-            android:textAppearance="?attr/textAppearanceLabelSmall"
-            android:textColor="?attr/colorOnSurfaceVariant" />
-    </LinearLayout>
-</androidx.core.widget.NestedScrollView>
+            <com.google.android.material.card.MaterialCardView
+                style="?attr/materialCardViewFilledStyle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                app:cardBackgroundColor="?attr/colorSurfaceContainerLow"
+                app:cardCornerRadius="20dp"
+                app:cardElevation="0dp"
+                app:strokeWidth="0dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:paddingStart="14dp"
+                    android:paddingTop="14dp"
+                    android:paddingEnd="14dp"
+                    android:paddingBottom="10dp">
+
+                    <dev.neko.chatdemo.ui.UsageChartView
+                        android:id="@+id/usage_chart"
+                        android:layout_width="match_parent"
+                        android:layout_height="132dp" />
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="4dp"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text="@string/time_30_min_ago"
+                            android:textAppearance="?attr/textAppearanceLabelSmall"
+                            android:textColor="?attr/colorOnSurfaceVariant" />
+
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:gravity="end"
+                            android:text="@string/time_now"
+                            android:textAppearance="?attr/textAppearanceLabelSmall"
+                            android:textColor="?attr/colorOnSurfaceVariant" />
+                    </LinearLayout>
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="22dp"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="@string/usage_model_mix"
+                    android:textAppearance="?attr/textAppearanceTitleMedium"
+                    android:textColor="?attr/colorOnSurface" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/usage_models_active"
+                    android:textAppearance="?attr/textAppearanceLabelMedium"
+                    android:textColor="?attr/colorOnSurfaceVariant" />
+            </LinearLayout>
+
+            <com.google.android.material.card.MaterialCardView
+                style="?attr/materialCardViewFilledStyle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                app:cardBackgroundColor="?attr/colorSurfaceContainerLow"
+                app:cardCornerRadius="20dp"
+                app:cardElevation="0dp"
+                app:strokeWidth="0dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:padding="16dp">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text="GPT-5.4"
+                            android:textAppearance="?attr/textAppearanceBodyMedium"
+                            android:textColor="?attr/colorOnSurface" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="54.2k · 63%"
+                            android:textAppearance="?attr/textAppearanceLabelSmall"
+                            android:textColor="?attr/colorOnSurfaceVariant" />
+                    </LinearLayout>
+
+                    <com.google.android.material.progressindicator.LinearProgressIndicator
+                        style="@style/Widget.Neko.ThinProgressIndicator"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="7dp"
+                        android:progress="63"
+                        app:indicatorColor="?attr/colorPrimary" />
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="13dp"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text="Claude Sonnet 4.5"
+                            android:textAppearance="?attr/textAppearanceBodyMedium"
+                            android:textColor="?attr/colorOnSurface" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="21.8k · 25%"
+                            android:textAppearance="?attr/textAppearanceLabelSmall"
+                            android:textColor="?attr/colorOnSurfaceVariant" />
+                    </LinearLayout>
+
+                    <com.google.android.material.progressindicator.LinearProgressIndicator
+                        style="@style/Widget.Neko.ThinProgressIndicator"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="7dp"
+                        android:progress="25"
+                        app:indicatorColor="?attr/colorSecondary" />
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="13dp"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text="Neko-8B · local"
+                            android:textAppearance="?attr/textAppearanceBodyMedium"
+                            android:textColor="?attr/colorOnSurface" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="10.4k · 12%"
+                            android:textAppearance="?attr/textAppearanceLabelSmall"
+                            android:textColor="?attr/colorOnSurfaceVariant" />
+                    </LinearLayout>
+
+                    <com.google.android.material.progressindicator.LinearProgressIndicator
+                        style="@style/Widget.Neko.ThinProgressIndicator"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="7dp"
+                        android:progress="12"
+                        app:indicatorColor="?attr/colorTertiary" />
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:gravity="center"
+                android:text="@string/usage_footer"
+                android:textAppearance="?attr/textAppearanceLabelSmall"
+                android:textColor="?attr/colorOnSurfaceVariant" />
+        </LinearLayout>
+    </androidx.core.widget.NestedScrollView>
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

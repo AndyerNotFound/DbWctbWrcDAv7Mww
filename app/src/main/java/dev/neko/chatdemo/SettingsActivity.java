@@ -21,8 +21,14 @@ public class SettingsActivity extends SettingsPageActivity {
     public static final String PREFS = "neko_prefs";
     public static final String KEY_COLOR_MODE = "color_mode";
 
+    /** Plain push, for entry points that have no source view to grow out of. */
     public static void start(Activity from) {
         UiTransitions.start(from, new Intent(from, SettingsActivity.class), true);
+    }
+
+    /** Grows the page out of {@code source} and shrinks it back into it on return. */
+    public static void startFrom(Activity from, View source) {
+        UiTransitions.startMorph(from, source, new Intent(from, SettingsActivity.class));
     }
 
     @Override
@@ -53,7 +59,7 @@ public class SettingsActivity extends SettingsPageActivity {
         View preferences = SettingsUi.row(this, general, R.drawable.ic_tune,
                 getString(R.string.settings_preferences), getString(R.string.settings_preferences_sub),
                 primary, onPrimary);
-        preferences.setOnClickListener(v -> PreferencesActivity.start(this));
+        preferences.setOnClickListener(v -> PreferencesActivity.startFrom(this, v));
 
         View language = SettingsUi.row(this, general, R.drawable.ic_language,
                 getString(R.string.settings_language), null, primary, onPrimary);
@@ -70,7 +76,7 @@ public class SettingsActivity extends SettingsPageActivity {
         View providers = SettingsUi.row(this, models, R.drawable.ic_cloud,
                 getString(R.string.settings_providers), getString(R.string.settings_providers_sub),
                 tertiary, onTertiary);
-        providers.setOnClickListener(v -> ProvidersActivity.start(this));
+        providers.setOnClickListener(v -> ProvidersActivity.startFrom(this, v));
 
         View search = SettingsUi.row(this, models, R.drawable.ic_search,
                 getString(R.string.settings_search_service), null, tertiary, onTertiary);

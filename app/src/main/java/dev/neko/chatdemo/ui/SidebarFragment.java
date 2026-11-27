@@ -1,6 +1,7 @@
 package dev.neko.chatdemo.ui;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -15,36 +16,46 @@ import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 import androidx.fragment.app.Fragment;
+import androidx.transition.Transition;
+import androidx.transition.TransitionListenerAdapter;
+import androidx.transition.TransitionManager;
 
+import com.google.android.material.appbar.CollapsingToolbarLayout;
 import com.google.android.material.appbar.MaterialToolbar;
 import com.google.android.material.card.MaterialCardView;
 import com.google.android.material.color.MaterialColors;
-import com.google.android.material.transition.Hold;
 import com.google.android.material.transition.MaterialContainerTransform;
 
 import dev.neko.chatdemo.R;
 
 /**
- * Sidebar panel: collapse control and title, the pinned quick entries as one full width column,
- * then the chat history. Each day group is a card, and tapping one grows it into
- * {@link SidebarGroupFragment} with a container transform instead of expanding it in place.
+ * Sidebar panel: a collapsing title, the pinned quick entries as one full width column, then the
+ * chat history. Tapping a day group grows that card into {@link SidebarGroupFragment} inside this
+ * panel — the group page is a child fragment, so expanding and collapsing never swaps pages.
+ *
+ * <p>A collapse asked for mid expansion is queued and played once the expansion finishes, so the
+ * transform always retraces its own path instead of cutting.
  */
 public class SidebarFragment extends Fragment {
 
-    /** Shared element name carried from a group card to the group page. */
-    static final String SHARED_GROUP = "sidebar_group_container";
-
-    private static final String STATE_OPEN_GROUP = "open_group";
-    private static final String BACK_STACK_GROUP = "SidebarFragment::group";
     private static final String TAG_GROUP = "SidebarGroupFragment";
-
-    private final Hold holdTransition = new Hold();
-
-    /** Group whose page is on top; its card keeps the shared name so the return can land on it. */
-    private int openGroup = -1;
+    private static final String STATE_GROUP = "expanded_group";
 
     @Nullable
     private Callbacks callbacks;
+
+    @Nullable
+    private View root;
+    @Nullable
+    private View groupHost;
+    @Nullable
+    private MaterialCardView expandedCard;
+
+    private int expandedGroup = -1;
+    private boolean transforming;
+    private boolean pendingCollapse;
+    private boolean collapsing;
+    private int morphToken;
 
     public interface Callbacks {
         void onCollapseSidebar();
@@ -60,12 +71,8 @@ public class SidebarFragment extends Fragment {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (savedInstanceState != null) {
-            openGroup = savedInstanceState.getInt(STATE_OPEN_GROUP, -1);
+            expandedGroup = savedInstanceState.getInt(STATE_GROUP, -1);
         }
-        // Keep the panel on screen while the group page grows over it, and again while it shrinks
-        // back, so the morph always has a container underneath.
-        holdTransition.addTarget(R.id.sidebar_start_root);
-        setExitTransition(holdTransition);
     }
 
     @Override
@@ -83,7 +90,7 @@ public class SidebarFragment extends Fragment {
     @Override
     public void onSaveInstanceState(@NonNull Bundle outState) {
         super.onSaveInstanceState(outState);
-        outState.putInt(STATE_OPEN_GROUP, openGroup);
+        outState.putInt(STATE_GROUP, expandedGroup);
     }
 
     @Nullable
@@ -96,19 +103,24 @@ public class SidebarFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        root = view;
+        groupHost = view.findViewById(R.id.sidebar_group_host);
 
-        View header = view.findViewById(R.id.sidebar_header);
+        View appBar = view.findViewById(R.id.sidebar_app_bar);
         View scroll = view.findViewById(R.id.sidebar_scroll);
         ViewCompat.setOnApplyWindowInsetsListener(view, (v, insets) -> {
             Insets bars = insets.getInsets(WindowInsetsCompat.Type.systemBars()
                     | WindowInsetsCompat.Type.displayCutout());
-            header.setPadding(header.getPaddingLeft(), bars.top,
-                    header.getPaddingRight(), header.getPaddingBottom());
+            appBar.setPadding(appBar.getPaddingLeft(), bars.top,
+                    appBar.getPaddingRight(), appBar.getPaddingBottom());
             scroll.setPadding(scroll.getPaddingLeft(), scroll.getPaddingTop(),
                     scroll.getPaddingRight(), bars.bottom);
             return insets;
         });
         ViewCompat.requestApplyInsets(view);
+
+        CollapsingToolbarLayout collapsing = view.findViewById(R.id.sidebar_collapsing);
+        SettingsUi.setTitle(collapsing, getString(R.string.sidebar_title));
 
         MaterialToolbar toolbar = view.findViewById(R.id.sidebar_toolbar);
         toolbar.setNavigationOnClickListener(v -> {
@@ -134,6 +146,19 @@ public class SidebarFragment extends Fragment {
         });
 
         buildHistory(view.findViewById(R.id.sidebar_history));
+
+        if (expandedGroup >= 0) {
+            // Rebuilt after a configuration change: restore the open group page without animating.
+            showGroupInstantly(expandedGroup);
+        }
+    }
+
+    @Override
+    public void onDestroyView() {
+        root = null;
+        groupHost = null;
+        expandedCard = null;
+        super.onDestroyView();
     }
 
     private void buildHistory(LinearLayout host) {
@@ -154,48 +179,163 @@ public class SidebarFragment extends Fragment {
             ((TextView) card.findViewById(R.id.group_label)).setText(SidebarData.titleRes(group));
             ((TextView) card.findViewById(R.id.group_count)).setText(
                     getString(R.string.sidebar_group_count, SidebarData.sessions(group).length));
-            if (group == openGroup) {
-                // Recreated after a pop, so the return transform still has a landing spot: the
-                // source name has to match what the transaction recorded.
-                ViewCompat.setTransitionName(card, sourceName(group));
+            if (group == expandedGroup) {
+                card.setVisibility(View.INVISIBLE);
+                expandedCard = card;
             }
             int index = group;
-            card.setOnClickListener(v -> openGroupPage(v, index));
+            card.setOnClickListener(v -> expand(v, index));
             host.addView(card);
         }
     }
 
-    private static String sourceName(int group) {
-        return SHARED_GROUP + "_source_" + group;
-    }
+    // ---------------------------------------------------------------- expand / collapse
 
-    /** Grows the tapped card into its day page; the return shrinks the page back onto the card. */
-    private void openGroupPage(View card, int group) {
-        // Source and target names differ, so only this card takes part in the transform.
-        ViewCompat.setTransitionName(card, sourceName(group));
-        openGroup = group;
+    /** Grows the tapped card into its day page, inside this panel. */
+    private void expand(View card, int group) {
+        if (transforming || expandedGroup >= 0 || groupHost == null) {
+            return;
+        }
+        expandedGroup = group;
+        expandedCard = (MaterialCardView) card;
 
         SidebarGroupFragment page = SidebarGroupFragment.newInstance(group);
-        int surface = MaterialColors.getColor(card,
-                com.google.android.material.R.attr.colorSurface);
-
-        MaterialContainerTransform enter = new MaterialContainerTransform(requireContext(), true);
-        enter.setDrawingViewId(R.id.sidebar_end_root);
-        enter.setAllContainerColors(surface);
-        page.setSharedElementEnterTransition(enter);
-        holdTransition.setDuration(enter.getDuration());
-
-        MaterialContainerTransform back = new MaterialContainerTransform(requireContext(), false);
-        back.setDrawingViewId(R.id.sidebar_start_root);
-        back.setAllContainerColors(surface);
-        page.setSharedElementReturnTransition(back);
-
-        getParentFragmentManager().beginTransaction()
+        getChildFragmentManager().beginTransaction()
                 .setReorderingAllowed(true)
-                .addSharedElement(card, SHARED_GROUP)
-                .replace(R.id.sidebar_container, page, TAG_GROUP)
-                .addToBackStack(BACK_STACK_GROUP)
-                .commit();
+                .replace(R.id.sidebar_group_host, page, TAG_GROUP)
+                .commitNow();
+
+        // The host is invisible but laid out, so the transform has real end bounds right away.
+        morph(card, groupHost, true, () -> {
+            card.setVisibility(View.INVISIBLE);
+            groupHost.setVisibility(View.VISIBLE);
+        });
+    }
+
+    /** Shrinks the day page back into the card it came from. */
+    public void collapseGroup() {
+        if (expandedGroup < 0) {
+            return;
+        }
+        if (transforming) {
+            // Let the expansion finish first, then retrace it instead of cutting it.
+            pendingCollapse = true;
+            return;
+        }
+        View card = expandedCard;
+        if (card == null || groupHost == null || root == null) {
+            finishCollapse();
+            return;
+        }
+        // Set before the transform starts: onMorphDone reads it to know this was a collapse.
+        collapsing = true;
+        morph(groupHost, card, false, () -> {
+            card.setVisibility(View.VISIBLE);
+            groupHost.setVisibility(View.INVISIBLE);
+        });
+    }
+
+    private void finishCollapse() {
+        if (expandedCard != null) {
+            expandedCard.setVisibility(View.VISIBLE);
+        }
+        if (groupHost != null) {
+            groupHost.setVisibility(View.INVISIBLE);
+        }
+        expandedGroup = -1;
+        expandedCard = null;
+        collapsing = false;
+        removeGroupPage();
+    }
+
+    private void removeGroupPage() {
+        if (!isAdded()) {
+            return;
+        }
+        Fragment page = getChildFragmentManager().findFragmentByTag(TAG_GROUP);
+        if (page != null) {
+            getChildFragmentManager().beginTransaction()
+                    .setReorderingAllowed(true)
+                    .remove(page)
+                    .commitAllowingStateLoss();
+        }
+    }
+
+    private void showGroupInstantly(int group) {
+        if (groupHost == null) {
+            return;
+        }
+        SidebarGroupFragment page = SidebarGroupFragment.newInstance(group);
+        getChildFragmentManager().beginTransaction()
+                .setReorderingAllowed(true)
+                .replace(R.id.sidebar_group_host, page, TAG_GROUP)
+                .commitNow();
+        groupHost.setVisibility(View.VISIBLE);
+    }
+
+    /** True while a day page sits on top of the panel, so back closes it first. */
+    public boolean isGroupOpen() {
+        return expandedGroup >= 0;
+    }
+
+    // ---------------------------------------------------------------- transform plumbing
+
+    private void morph(View start, View end, boolean entering, Runnable swap) {
+        if (root == null) {
+            swap.run();
+            return;
+        }
+        MaterialContainerTransform transform =
+                new MaterialContainerTransform(requireContext(), entering);
+        transform.setDrawingViewId(R.id.sidebar_start_root);
+        transform.setScrimColor(Color.TRANSPARENT);
+        transform.setAllContainerColors(MaterialColors.getColor(root,
+                com.google.android.material.R.attr.colorSurface));
+        transform.setStartView(start);
+        transform.setEndView(end);
+        // A single target keeps the transform off the start view.
+        transform.addTarget(end);
+
+        final int token = ++morphToken;
+        transforming = true;
+        transform.addListener(new TransitionListenerAdapter() {
+            @Override
+            public void onTransitionEnd(Transition transition) {
+                transition.removeListener(this);
+                onMorphDone(token);
+            }
+
+            @Override
+            public void onTransitionCancel(Transition transition) {
+                transition.removeListener(this);
+                onMorphDone(token);
+            }
+        });
+
+        TransitionManager.beginDelayedTransition((ViewGroup) root, transform);
+        swap.run();
+
+        // Safety net: if the transition never reports back (no animator, cancelled scene), the
+        // panel would stay locked out of further taps.
+        root.postDelayed(() -> onMorphDone(token), 1200);
+    }
+
+    private void onMorphDone(int token) {
+        if (token != morphToken || !transforming) {
+            return;
+        }
+        transforming = false;
+        if (collapsing) {
+            // The collapse finished: the group page has served its purpose.
+            collapsing = false;
+            expandedGroup = -1;
+            expandedCard = null;
+            removeGroupPage();
+        }
+        if (pendingCollapse) {
+            pendingCollapse = false;
+            collapseGroup();
+        }
     }
 
     private int dp(int value) {

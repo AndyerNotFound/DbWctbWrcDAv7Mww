@@ -1,59 +1,59 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<!-- One settings sub page: collapsing title over a single card group of switches. -->
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/detail_root"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="?attr/colorSurface"
-    android:orientation="vertical">
+    android:background="?attr/colorSurface">
 
-    <LinearLayout
-        android:id="@+id/detail_top_bar"
+    <com.google.android.material.appbar.AppBarLayout
+        android:id="@+id/detail_app_bar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:minHeight="56dp"
-        android:gravity="center_vertical"
-        android:orientation="horizontal"
-        android:paddingStart="8dp"
-        android:paddingEnd="8dp">
+        android:background="?attr/colorSurface"
+        app:elevation="0dp">
 
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/detail_back"
-            style="?attr/materialIconButtonStyle"
-            android:insetLeft="0dp"
-            android:insetTop="0dp"
-            android:insetRight="0dp"
-            android:insetBottom="0dp"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
-            android:contentDescription="@string/cd_back"
-            app:icon="@drawable/ic_arrow_back" />
+        <com.google.android.material.appbar.CollapsingToolbarLayout
+            android:id="@+id/detail_collapsing"
+            android:layout_width="match_parent"
+            android:layout_height="112dp"
+            app:collapsedTitleGravity="center_vertical|start"
+            app:contentScrim="?attr/colorSurface"
+            app:expandedTitleGravity="bottom|start"
+            app:expandedTitleMarginBottom="14dp"
+            app:expandedTitleMarginStart="20dp"
+            app:layout_scrollFlags="scroll|exitUntilCollapsed"
+            app:titleEnabled="true">
 
-        <TextView
-            android:id="@+id/detail_title"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="6dp"
-            android:layout_weight="1"
-            android:ellipsize="end"
-            android:maxLines="1"
-            android:textAppearance="?attr/textAppearanceTitleLarge"
-            android:textColor="?attr/colorOnSurface" />
-    </LinearLayout>
+            <com.google.android.material.appbar.MaterialToolbar
+                android:id="@+id/detail_toolbar"
+                android:layout_width="match_parent"
+                android:layout_height="?attr/actionBarSize"
+                android:background="@android:color/transparent"
+                app:layout_collapseMode="pin"
+                app:navigationContentDescription="@string/cd_back"
+                app:navigationIcon="@drawable/ic_arrow_back"
+                app:titleMarginStart="56dp" />
+        </com.google.android.material.appbar.CollapsingToolbarLayout>
+    </com.google.android.material.appbar.AppBarLayout>
 
     <androidx.core.widget.NestedScrollView
         android:id="@+id/detail_scroll"
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1"
+        android:layout_height="match_parent"
         android:clipToPadding="false"
-        android:scrollbars="none">
+        android:scrollbars="none"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
         <LinearLayout
             android:id="@+id/detail_content"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
+            android:paddingStart="16dp"
+            android:paddingTop="4dp"
+            android:paddingEnd="16dp"
             android:paddingBottom="28dp" />
     </androidx.core.widget.NestedScrollView>
-</LinearLayout>
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

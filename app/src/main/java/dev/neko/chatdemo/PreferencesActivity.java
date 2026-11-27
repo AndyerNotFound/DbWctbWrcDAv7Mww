@@ -17,6 +17,11 @@ public class PreferencesActivity extends SettingsPageActivity {
         UiTransitions.start(from, new Intent(from, PreferencesActivity.class), true);
     }
 
+    /** Grows the page out of the row that was tapped. */
+    public static void startFrom(Activity from, View source) {
+        UiTransitions.startMorph(from, source, new Intent(from, PreferencesActivity.class));
+    }
+
     @Override
     protected int titleRes() {
         return R.string.settings_preferences;
@@ -47,6 +52,6 @@ public class PreferencesActivity extends SettingsPageActivity {
                         int container, int onContainer) {
         View row = SettingsUi.row(this, group, icon,
                 getString(title), getString(subtitle), container, onContainer);
-        row.setOnClickListener(v -> SettingsDetailActivity.start(this, key));
+        row.setOnClickListener(v -> SettingsDetailActivity.startFrom(this, v, key));
     }
 }

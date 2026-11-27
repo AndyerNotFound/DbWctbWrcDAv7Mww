@@ -1,75 +1,77 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- Day group page: the end container of the container transform out of a group card. -->
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<!--
+  One day group, shown inside the sidebar panel: collapsing title, the session count and the
+  sessions. It is a child fragment of the panel, so opening it never leaves the page.
+-->
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/sidebar_end_root"
+    android:id="@+id/sidebar_group_root"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="?attr/colorSurface">
 
-    <LinearLayout
+    <com.google.android.material.appbar.AppBarLayout
+        android:id="@+id/sidebar_group_app_bar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="?attr/colorSurface"
+        app:elevation="0dp">
+
+        <com.google.android.material.appbar.CollapsingToolbarLayout
+            android:id="@+id/sidebar_group_collapsing"
+            android:layout_width="match_parent"
+            android:layout_height="112dp"
+            app:collapsedTitleGravity="center_vertical|start"
+            app:contentScrim="?attr/colorSurface"
+            app:expandedTitleGravity="bottom|start"
+            app:expandedTitleMarginBottom="14dp"
+            app:expandedTitleMarginStart="20dp"
+            app:layout_scrollFlags="scroll|exitUntilCollapsed"
+            app:titleEnabled="true">
+
+            <com.google.android.material.appbar.MaterialToolbar
+                android:id="@+id/sidebar_group_toolbar"
+                android:layout_width="match_parent"
+                android:layout_height="?attr/actionBarSize"
+                android:background="@android:color/transparent"
+                app:layout_collapseMode="pin"
+                app:navigationContentDescription="@string/cd_back"
+                app:navigationIcon="@drawable/ic_arrow_back"
+                app:titleMarginStart="56dp" />
+        </com.google.android.material.appbar.CollapsingToolbarLayout>
+    </com.google.android.material.appbar.AppBarLayout>
+
+    <androidx.core.widget.NestedScrollView
+        android:id="@+id/sidebar_group_scroll"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical">
+        android:clipToPadding="false"
+        android:scrollbars="none"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
         <LinearLayout
-            android:id="@+id/sidebar_group_header"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:gravity="center_vertical"
-            android:orientation="horizontal"
-            android:paddingStart="8dp"
-            android:paddingEnd="16dp">
+            android:orientation="vertical"
+            android:paddingStart="16dp"
+            android:paddingTop="4dp"
+            android:paddingEnd="16dp"
+            android:paddingBottom="112dp">
 
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/sidebar_group_back"
-                style="?attr/materialIconButtonStyle"
-                android:layout_width="40dp"
-                android:layout_height="40dp"
-                android:contentDescription="@string/cd_back"
-                android:insetLeft="0dp"
-                android:insetTop="0dp"
-                android:insetRight="0dp"
-                android:insetBottom="0dp"
-                app:icon="@drawable/ic_arrow_back" />
-        </LinearLayout>
-
-        <TextView
-            android:id="@+id/sidebar_group_title"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="20dp"
-            android:layout_marginEnd="20dp"
-            android:textAppearance="?attr/textAppearanceHeadlineSmall"
-            android:textColor="?attr/colorOnSurface" />
-
-        <TextView
-            android:id="@+id/sidebar_group_meta"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="20dp"
-            android:layout_marginTop="4dp"
-            android:layout_marginEnd="20dp"
-            android:layout_marginBottom="12dp"
-            android:textColor="?attr/colorOnSurfaceVariant"
-            android:textSize="12sp" />
-
-        <androidx.core.widget.NestedScrollView
-            android:id="@+id/sidebar_group_scroll"
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1"
-            android:clipToPadding="false"
-            android:scrollbars="none">
+            <TextView
+                android:id="@+id/sidebar_group_meta"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingStart="4dp"
+                android:paddingBottom="6dp"
+                android:textColor="?attr/colorOnSurfaceVariant"
+                android:textSize="12sp" />
 
             <LinearLayout
                 android:id="@+id/sidebar_group_list"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:paddingStart="16dp"
-                android:paddingEnd="16dp"
-                android:paddingBottom="112dp" />
-        </androidx.core.widget.NestedScrollView>
-    </LinearLayout>
-</FrameLayout>
+                android:orientation="vertical" />
+        </LinearLayout>
+    </androidx.core.widget.NestedScrollView>
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

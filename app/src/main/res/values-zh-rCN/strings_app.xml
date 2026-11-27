@@ -70,7 +70,7 @@
     <string name="sidebar_recent">会话</string>
     <string name="sidebar_tonight">今晚 4 个</string>
     <string name="sidebar_settings">设置</string>
-    <string name="sidebar_version">Neko Chat 1.1.1 · MD3 演示</string>
+    <string name="sidebar_version">Neko Chat 1.1.2 · MD3 演示</string>
     <string name="sidebar_workspace">Neko Studio</string>
     <string name="sidebar_workspace_meta">andyer@local · 1 个工作区</string>
     <string name="sidebar_notice_new">演示：新建会话</string>

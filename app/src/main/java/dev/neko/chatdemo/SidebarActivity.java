@@ -18,8 +18,9 @@ import dev.neko.chatdemo.ui.SidebarFragment;
 import dev.neko.chatdemo.ui.UiTransitions;
 
 /**
- * Host of the sidebar panel. The panel itself is a fragment, so a day group can grow out of its
- * card with a container transform; the FAB stays on the host and opens settings.
+ * Host of the sidebar panel. The panel is one fragment and a day group is a child of it, so
+ * expanding and collapsing a group never leaves this page. The FAB grows into Settings with a
+ * container transform.
  */
 public class SidebarActivity extends AppCompatActivity implements SidebarFragment.Callbacks {
 
@@ -31,7 +32,7 @@ public class SidebarActivity extends AppCompatActivity implements SidebarFragmen
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         SettingsUi.setupWindow(this);
-        // Matches the launch in MainActivity: the panel is the page to the left of the chat.
+        // The panel is the page to the left of the chat, so it enters and leaves on that side.
         UiTransitions.incoming(this, false);
         setContentView(R.layout.activity_sidebar);
         root = findViewById(R.id.sidebar_root);
@@ -59,27 +60,27 @@ public class SidebarActivity extends AppCompatActivity implements SidebarFragmen
                     .commit();
         }
 
-        fab.setOnClickListener(v -> SettingsActivity.start(this));
+        fab.setOnClickListener(v -> SettingsActivity.startFrom(this, v));
 
-        // Back closes the group page first and only then leaves the panel, and leaving always
-        // goes through the shared axis X return instead of a plain finish.
         getOnBackPressedDispatcher().addCallback(this, new OnBackPressedCallback(true) {
             @Override
             public void handleOnBackPressed() {
-                FragmentManager fragments = getSupportFragmentManager();
-                if (fragments.getBackStackEntryCount() > 0) {
-                    fragments.popBackStack();
+                SidebarFragment panel =
+                        (SidebarFragment) getSupportFragmentManager().findFragmentByTag(TAG_PANEL);
+                if (panel != null && panel.isGroupOpen()) {
+                    // Collapse the group first: same page, same transform in reverse.
+                    panel.collapseGroup();
                     return;
                 }
                 setEnabled(false);
-                finishAfterTransition();
+                UiTransitions.close(SidebarActivity.this);
             }
         });
     }
 
     @Override
     public void onCollapseSidebar() {
-        finishAfterTransition();
+        UiTransitions.close(this);
     }
 
     @Override

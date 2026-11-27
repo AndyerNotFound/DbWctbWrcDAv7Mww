@@ -1,42 +1,65 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<!-- Collapsing title over the scrolling page; the toolbar stays pinned while the title shrinks. -->
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="?attr/colorSurface"
-    android:fillViewport="true"
-    android:scrollbars="none">
+    android:background="?attr/colorSurface">
 
-    <LinearLayout
+    <com.google.android.material.appbar.AppBarLayout
+        android:id="@+id/mission_app_bar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:paddingStart="16dp"
-        android:paddingTop="14dp"
-        android:paddingEnd="16dp"
-        android:paddingBottom="28dp">
+        android:background="?attr/colorSurface"
+        app:elevation="0dp">
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/mission_eyebrow"
-            android:textAppearance="@style/TextAppearance.Neko.Eyebrow"
-            android:textColor="?attr/colorPrimary" />
+        <com.google.android.material.appbar.CollapsingToolbarLayout
+            android:id="@+id/mission_collapsing"
+            android:layout_width="match_parent"
+            android:layout_height="112dp"
+            app:collapsedTitleGravity="center_vertical|start"
+            app:contentScrim="?attr/colorSurface"
+            app:expandedTitleGravity="bottom|start"
+            app:expandedTitleMarginBottom="14dp"
+            app:expandedTitleMarginStart="20dp"
+            app:layout_scrollFlags="scroll|exitUntilCollapsed"
+            app:title="@string/mission_title"
+            app:titleEnabled="true">
+
+            <com.google.android.material.appbar.MaterialToolbar
+                android:id="@+id/mission_toolbar"
+                android:layout_width="match_parent"
+                android:layout_height="?attr/actionBarSize"
+                android:background="@android:color/transparent"
+                app:layout_collapseMode="pin" />
+        </com.google.android.material.appbar.CollapsingToolbarLayout>
+    </com.google.android.material.appbar.AppBarLayout>
+
+    <androidx.core.widget.NestedScrollView
+        android:id="@+id/mission_scroll"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:clipToPadding="false"
+        android:fillViewport="true"
+        android:scrollbars="none"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="4dp"
-            android:gravity="center_vertical"
-            android:orientation="horizontal">
+            android:orientation="vertical"
+            android:paddingStart="16dp"
+            android:paddingTop="6dp"
+            android:paddingEnd="16dp"
+            android:paddingBottom="28dp">
 
             <TextView
-                android:layout_width="0dp"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="@string/mission_title"
-                android:textAppearance="?attr/textAppearanceHeadlineSmall"
-                android:textColor="?attr/colorOnSurface" />
+                android:paddingBottom="6dp"
+                android:text="@string/mission_eyebrow"
+                android:textAppearance="@style/TextAppearance.Neko.Eyebrow"
+                android:textColor="?attr/colorPrimary" />
 
             <TextView
                 android:layout_width="wrap_content"
@@ -49,656 +72,656 @@
                 android:text="@string/status_live"
                 android:textAppearance="?attr/textAppearanceLabelSmall"
                 android:textColor="?attr/colorOnPrimaryContainer" />
-        </LinearLayout>
 
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="3dp"
-            android:text="@string/mission_intro"
-            android:textAppearance="?attr/textAppearanceBodyMedium"
-            android:textColor="?attr/colorOnSurfaceVariant" />
-
-        <com.google.android.material.card.MaterialCardView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
-            app:cardBackgroundColor="?attr/colorPrimaryContainer"
-            app:cardCornerRadius="24dp"
-            app:cardElevation="0dp"
-            app:strokeWidth="0dp">
-
-            <LinearLayout
+            <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:padding="18dp">
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:gravity="center_vertical"
-                    android:orientation="horizontal">
-
-                    <FrameLayout
-                        android:layout_width="42dp"
-                        android:layout_height="42dp"
-                        android:background="@drawable/bg_icon_circle">
-
-                        <ImageView
-                            android:layout_width="22dp"
-                            android:layout_height="22dp"
-                            android:layout_gravity="center"
-                            android:contentDescription="@null"
-                            android:src="@drawable/ic_flag"
-                            app:tint="?attr/colorOnPrimaryContainer" />
-                    </FrameLayout>
-
-                    <LinearLayout
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_marginStart="12dp"
-                        android:layout_weight="1"
-                        android:orientation="vertical">
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="@string/mission_active"
-                            android:textAppearance="?attr/textAppearanceLabelMedium"
-                            android:textColor="?attr/colorOnPrimaryContainer" />
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="@string/mission_card_title"
-                            android:textAppearance="?attr/textAppearanceTitleLarge"
-                            android:textColor="?attr/colorOnPrimaryContainer" />
-                    </LinearLayout>
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="64%"
-                        android:textAppearance="?attr/textAppearanceHeadlineSmall"
-                        android:textColor="?attr/colorOnPrimaryContainer" />
-                </LinearLayout>
-
-                <com.google.android.material.progressindicator.LinearProgressIndicator
-                    style="@style/Widget.Neko.ThinProgressIndicator"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="16dp"
-                    android:progress="64"
-                    app:indicatorColor="?attr/colorOnPrimaryContainer"
-                    app:trackColor="@color/neko_on_primary_container_track" />
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="11dp"
-                    android:orientation="horizontal">
-
-                    <TextView
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:text="@string/mission_steps"
-                        android:textAppearance="?attr/textAppearanceBodySmall"
-                        android:textColor="?attr/colorOnPrimaryContainer" />
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/mission_elapsed"
-                        android:textAppearance="?attr/textAppearanceBodySmall"
-                        android:textColor="?attr/colorOnPrimaryContainer" />
-                </LinearLayout>
-            </LinearLayout>
-        </com.google.android.material.card.MaterialCardView>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="22dp"
-            android:gravity="center_vertical"
-            android:orientation="horizontal">
-
-            <TextView
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="@string/mission_plan"
-                android:textAppearance="?attr/textAppearanceTitleMedium"
-                android:textColor="?attr/colorOnSurface" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/mission_plan_remaining"
-                android:textAppearance="?attr/textAppearanceLabelMedium"
+                android:layout_marginTop="3dp"
+                android:text="@string/mission_intro"
+                android:textAppearance="?attr/textAppearanceBodyMedium"
                 android:textColor="?attr/colorOnSurfaceVariant" />
-        </LinearLayout>
 
-        <com.google.android.material.card.MaterialCardView
-            style="?attr/materialCardViewOutlinedStyle"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            app:cardBackgroundColor="?attr/colorSurfaceContainerLow"
-            app:cardCornerRadius="20dp"
-            app:cardElevation="0dp"
-            app:strokeColor="?attr/colorOutlineVariant"
-            app:strokeWidth="1dp">
+            <com.google.android.material.card.MaterialCardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                app:cardBackgroundColor="?attr/colorPrimaryContainer"
+                app:cardCornerRadius="24dp"
+                app:cardElevation="0dp"
+                app:strokeWidth="0dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:padding="18dp">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal">
+
+                        <FrameLayout
+                            android:layout_width="42dp"
+                            android:layout_height="42dp"
+                            android:background="@drawable/bg_icon_circle">
+
+                            <ImageView
+                                android:layout_width="22dp"
+                                android:layout_height="22dp"
+                                android:layout_gravity="center"
+                                android:contentDescription="@null"
+                                android:src="@drawable/ic_flag"
+                                app:tint="?attr/colorOnPrimaryContainer" />
+                        </FrameLayout>
+
+                        <LinearLayout
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="12dp"
+                            android:layout_weight="1"
+                            android:orientation="vertical">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="@string/mission_active"
+                                android:textAppearance="?attr/textAppearanceLabelMedium"
+                                android:textColor="?attr/colorOnPrimaryContainer" />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="@string/mission_card_title"
+                                android:textAppearance="?attr/textAppearanceTitleLarge"
+                                android:textColor="?attr/colorOnPrimaryContainer" />
+                        </LinearLayout>
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="64%"
+                            android:textAppearance="?attr/textAppearanceHeadlineSmall"
+                            android:textColor="?attr/colorOnPrimaryContainer" />
+                    </LinearLayout>
+
+                    <com.google.android.material.progressindicator.LinearProgressIndicator
+                        style="@style/Widget.Neko.ThinProgressIndicator"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="16dp"
+                        android:progress="64"
+                        app:indicatorColor="?attr/colorOnPrimaryContainer"
+                        app:trackColor="@color/neko_on_primary_container_track" />
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="11dp"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text="@string/mission_steps"
+                            android:textAppearance="?attr/textAppearanceBodySmall"
+                            android:textColor="?attr/colorOnPrimaryContainer" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/mission_elapsed"
+                            android:textAppearance="?attr/textAppearanceBodySmall"
+                            android:textColor="?attr/colorOnPrimaryContainer" />
+                    </LinearLayout>
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:paddingStart="16dp"
-                android:paddingTop="4dp"
-                android:paddingEnd="16dp"
-                android:paddingBottom="4dp">
+                android:layout_marginTop="22dp"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
 
-                <LinearLayout
-                    android:layout_width="match_parent"
+                <TextView
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:gravity="center_vertical"
-                    android:orientation="horizontal"
-                    android:paddingTop="12dp"
-                    android:paddingBottom="12dp">
+                    android:layout_weight="1"
+                    android:text="@string/mission_plan"
+                    android:textAppearance="?attr/textAppearanceTitleMedium"
+                    android:textColor="?attr/colorOnSurface" />
 
-                    <ImageView
-                        android:layout_width="20dp"
-                        android:layout_height="20dp"
-                        android:contentDescription="@null"
-                        android:src="@drawable/ic_check_circle"
-                        app:tint="?attr/colorPrimary" />
-
-                    <LinearLayout
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_marginStart="12dp"
-                        android:layout_weight="1"
-                        android:orientation="vertical">
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="@string/plan_item_tokens"
-                            android:textAppearance="?attr/textAppearanceBodyLarge"
-                            android:textColor="?attr/colorOnSurface" />
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="@string/plan_item_tokens_desc"
-                            android:textAppearance="?attr/textAppearanceBodySmall"
-                            android:textColor="?attr/colorOnSurfaceVariant" />
-                    </LinearLayout>
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:background="@drawable/bg_pill_primary"
-                        android:paddingStart="9dp"
-                        android:paddingTop="3dp"
-                        android:paddingEnd="9dp"
-                        android:paddingBottom="3dp"
-                        android:text="@string/status_done"
-                        android:textAppearance="?attr/textAppearanceLabelSmall"
-                        android:textColor="?attr/colorOnPrimaryContainer" />
-                </LinearLayout>
-
-                <View
-                    android:layout_width="match_parent"
-                    android:layout_height="1dp"
-                    android:background="?attr/colorOutlineVariant" />
-
-                <LinearLayout
-                    android:layout_width="match_parent"
+                <TextView
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:gravity="center_vertical"
-                    android:orientation="horizontal"
-                    android:paddingTop="12dp"
-                    android:paddingBottom="12dp">
-
-                    <ImageView
-                        android:layout_width="20dp"
-                        android:layout_height="20dp"
-                        android:contentDescription="@null"
-                        android:src="@drawable/ic_check_circle"
-                        app:tint="?attr/colorPrimary" />
-
-                    <LinearLayout
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_marginStart="12dp"
-                        android:layout_weight="1"
-                        android:orientation="vertical">
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="@string/conversation_map"
-                            android:textAppearance="?attr/textAppearanceBodyLarge"
-                            android:textColor="?attr/colorOnSurface" />
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="@string/plan_item_map_desc"
-                            android:textAppearance="?attr/textAppearanceBodySmall"
-                            android:textColor="?attr/colorOnSurfaceVariant" />
-                    </LinearLayout>
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:background="@drawable/bg_pill_primary"
-                        android:paddingStart="9dp"
-                        android:paddingTop="3dp"
-                        android:paddingEnd="9dp"
-                        android:paddingBottom="3dp"
-                        android:text="@string/status_done"
-                        android:textAppearance="?attr/textAppearanceLabelSmall"
-                        android:textColor="?attr/colorOnPrimaryContainer" />
-                </LinearLayout>
-
-                <View
-                    android:layout_width="match_parent"
-                    android:layout_height="1dp"
-                    android:background="?attr/colorOutlineVariant" />
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:gravity="center_vertical"
-                    android:orientation="horizontal"
-                    android:paddingTop="12dp"
-                    android:paddingBottom="12dp">
-
-                    <ImageView
-                        android:layout_width="20dp"
-                        android:layout_height="20dp"
-                        android:contentDescription="@null"
-                        android:src="@drawable/ic_radio_button_checked"
-                        app:tint="?attr/colorTertiary" />
-
-                    <LinearLayout
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_marginStart="12dp"
-                        android:layout_weight="1"
-                        android:orientation="vertical">
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="@string/plan_item_sheets"
-                            android:textAppearance="?attr/textAppearanceBodyLarge"
-                            android:textColor="?attr/colorOnSurface" />
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="@string/plan_item_sheets_desc"
-                            android:textAppearance="?attr/textAppearanceBodySmall"
-                            android:textColor="?attr/colorOnSurfaceVariant" />
-                    </LinearLayout>
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:background="@drawable/bg_pill_tertiary"
-                        android:paddingStart="9dp"
-                        android:paddingTop="3dp"
-                        android:paddingEnd="9dp"
-                        android:paddingBottom="3dp"
-                        android:text="@string/status_now"
-                        android:textAppearance="?attr/textAppearanceLabelSmall"
-                        android:textColor="?attr/colorOnTertiaryContainer" />
-                </LinearLayout>
-
-                <View
-                    android:layout_width="match_parent"
-                    android:layout_height="1dp"
-                    android:background="?attr/colorOutlineVariant" />
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:gravity="center_vertical"
-                    android:orientation="horizontal"
-                    android:paddingTop="12dp"
-                    android:paddingBottom="12dp">
-
-                    <ImageView
-                        android:layout_width="20dp"
-                        android:layout_height="20dp"
-                        android:contentDescription="@null"
-                        android:src="@drawable/ic_schedule"
-                        app:tint="?attr/colorOnSurfaceVariant" />
-
-                    <LinearLayout
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_marginStart="12dp"
-                        android:layout_weight="1"
-                        android:orientation="vertical">
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="@string/plan_item_screens"
-                            android:textAppearance="?attr/textAppearanceBodyLarge"
-                            android:textColor="?attr/colorOnSurface" />
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="@string/plan_item_screens_desc"
-                            android:textAppearance="?attr/textAppearanceBodySmall"
-                            android:textColor="?attr/colorOnSurfaceVariant" />
-                    </LinearLayout>
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:background="@drawable/bg_pill"
-                        android:paddingStart="9dp"
-                        android:paddingTop="3dp"
-                        android:paddingEnd="9dp"
-                        android:paddingBottom="3dp"
-                        android:text="@string/status_next"
-                        android:textAppearance="?attr/textAppearanceLabelSmall"
-                        android:textColor="?attr/colorOnSurfaceVariant" />
-                </LinearLayout>
+                    android:text="@string/mission_plan_remaining"
+                    android:textAppearance="?attr/textAppearanceLabelMedium"
+                    android:textColor="?attr/colorOnSurfaceVariant" />
             </LinearLayout>
-        </com.google.android.material.card.MaterialCardView>
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="22dp"
-            android:gravity="center_vertical"
-            android:orientation="horizontal">
-
-            <TextView
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="@string/workspace_title"
-                android:textAppearance="?attr/textAppearanceTitleMedium"
-                android:textColor="?attr/colorOnSurface" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/status_bound"
-                android:textAppearance="?attr/textAppearanceLabelMedium"
-                android:textColor="?attr/colorPrimary" />
-        </LinearLayout>
-
-        <com.google.android.material.card.MaterialCardView
-            style="?attr/materialCardViewFilledStyle"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            app:cardBackgroundColor="?attr/colorSurfaceContainerLow"
-            app:cardCornerRadius="20dp"
-            app:cardElevation="0dp"
-            app:strokeWidth="0dp">
-
-            <LinearLayout
+            <com.google.android.material.card.MaterialCardView
+                style="?attr/materialCardViewOutlinedStyle"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical">
+                android:layout_marginTop="8dp"
+                app:cardBackgroundColor="?attr/colorSurfaceContainerLow"
+                app:cardCornerRadius="20dp"
+                app:cardElevation="0dp"
+                app:strokeColor="?attr/colorOutlineVariant"
+                app:strokeWidth="1dp">
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:gravity="center_vertical"
-                    android:orientation="horizontal"
-                    android:padding="16dp">
-
-                    <FrameLayout
-                        android:layout_width="44dp"
-                        android:layout_height="44dp"
-                        android:background="@drawable/bg_icon_circle_primary">
-
-                        <ImageView
-                            android:layout_width="23dp"
-                            android:layout_height="23dp"
-                            android:layout_gravity="center"
-                            android:contentDescription="@null"
-                            android:src="@drawable/ic_folder_managed"
-                            app:tint="?attr/colorOnPrimaryContainer" />
-                    </FrameLayout>
-
-                    <LinearLayout
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_marginStart="12dp"
-                        android:layout_weight="1"
-                        android:orientation="vertical">
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="neko-studio"
-                            android:textAppearance="?attr/textAppearanceTitleSmall"
-                            android:textColor="?attr/colorOnSurface" />
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginTop="1dp"
-                            android:fontFamily="monospace"
-                            android:text="/WorkSpace/DbWctbWrcDAv7Mww"
-                            android:textAppearance="?attr/textAppearanceBodySmall"
-                            android:textColor="?attr/colorOnSurfaceVariant" />
-                    </LinearLayout>
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:background="@drawable/bg_pill"
-                        android:drawableStart="@drawable/ic_branch_small"
-                        android:drawablePadding="4dp"
-                        android:paddingStart="8dp"
-                        android:paddingTop="4dp"
-                        android:paddingEnd="8dp"
-                        android:paddingBottom="4dp"
-                        android:text="main"
-                        android:textAppearance="?attr/textAppearanceLabelSmall"
-                        android:textColor="?attr/colorOnSurfaceVariant" />
-                </LinearLayout>
-
-                <View
-                    android:layout_width="match_parent"
-                    android:layout_height="1dp"
-                    android:background="?attr/colorOutlineVariant" />
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:gravity="center_vertical"
-                    android:orientation="horizontal"
+                    android:orientation="vertical"
                     android:paddingStart="16dp"
-                    android:paddingTop="8dp"
-                    android:paddingEnd="10dp"
-                    android:paddingBottom="8dp">
+                    android:paddingTop="4dp"
+                    android:paddingEnd="16dp"
+                    android:paddingBottom="4dp">
 
-                    <TextView
-                        android:layout_width="wrap_content"
+                    <LinearLayout
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:background="@drawable/bg_pill_outline"
-                        android:paddingStart="9dp"
-                        android:paddingTop="3dp"
-                        android:paddingEnd="9dp"
-                        android:paddingBottom="3dp"
-                        android:text="@string/workspace_free_space"
-                        android:textAppearance="?attr/textAppearanceLabelSmall"
-                        android:textColor="?attr/colorOnSurfaceVariant" />
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal"
+                        android:paddingTop="12dp"
+                        android:paddingBottom="12dp">
 
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginStart="6dp"
-                        android:background="@drawable/bg_pill_outline"
-                        android:paddingStart="9dp"
-                        android:paddingTop="3dp"
-                        android:paddingEnd="9dp"
-                        android:paddingBottom="3dp"
-                        android:text="@string/status_git_clean"
-                        android:textAppearance="?attr/textAppearanceLabelSmall"
-                        android:textColor="?attr/colorOnSurfaceVariant" />
+                        <ImageView
+                            android:layout_width="20dp"
+                            android:layout_height="20dp"
+                            android:contentDescription="@null"
+                            android:src="@drawable/ic_check_circle"
+                            app:tint="?attr/colorPrimary" />
 
-                    <Space
-                        android:layout_width="0dp"
+                        <LinearLayout
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="12dp"
+                            android:layout_weight="1"
+                            android:orientation="vertical">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="@string/plan_item_tokens"
+                                android:textAppearance="?attr/textAppearanceBodyLarge"
+                                android:textColor="?attr/colorOnSurface" />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="@string/plan_item_tokens_desc"
+                                android:textAppearance="?attr/textAppearanceBodySmall"
+                                android:textColor="?attr/colorOnSurfaceVariant" />
+                        </LinearLayout>
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:background="@drawable/bg_pill_primary"
+                            android:paddingStart="9dp"
+                            android:paddingTop="3dp"
+                            android:paddingEnd="9dp"
+                            android:paddingBottom="3dp"
+                            android:text="@string/status_done"
+                            android:textAppearance="?attr/textAppearanceLabelSmall"
+                            android:textColor="?attr/colorOnPrimaryContainer" />
+                    </LinearLayout>
+
+                    <View
+                        android:layout_width="match_parent"
                         android:layout_height="1dp"
-                        android:layout_weight="1" />
+                        android:background="?attr/colorOutlineVariant" />
 
-                    <com.google.android.material.button.MaterialButton
-                        style="@style/Widget.Material3Expressive.Button.TextButton"
-                        android:layout_width="wrap_content"
-                        android:layout_height="40dp"
-                        android:minWidth="0dp"
-                        android:text="@string/action_change"
-                        android:textSize="12sp" />
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal"
+                        android:paddingTop="12dp"
+                        android:paddingBottom="12dp">
+
+                        <ImageView
+                            android:layout_width="20dp"
+                            android:layout_height="20dp"
+                            android:contentDescription="@null"
+                            android:src="@drawable/ic_check_circle"
+                            app:tint="?attr/colorPrimary" />
+
+                        <LinearLayout
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="12dp"
+                            android:layout_weight="1"
+                            android:orientation="vertical">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="@string/conversation_map"
+                                android:textAppearance="?attr/textAppearanceBodyLarge"
+                                android:textColor="?attr/colorOnSurface" />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="@string/plan_item_map_desc"
+                                android:textAppearance="?attr/textAppearanceBodySmall"
+                                android:textColor="?attr/colorOnSurfaceVariant" />
+                        </LinearLayout>
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:background="@drawable/bg_pill_primary"
+                            android:paddingStart="9dp"
+                            android:paddingTop="3dp"
+                            android:paddingEnd="9dp"
+                            android:paddingBottom="3dp"
+                            android:text="@string/status_done"
+                            android:textAppearance="?attr/textAppearanceLabelSmall"
+                            android:textColor="?attr/colorOnPrimaryContainer" />
+                    </LinearLayout>
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:background="?attr/colorOutlineVariant" />
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal"
+                        android:paddingTop="12dp"
+                        android:paddingBottom="12dp">
+
+                        <ImageView
+                            android:layout_width="20dp"
+                            android:layout_height="20dp"
+                            android:contentDescription="@null"
+                            android:src="@drawable/ic_radio_button_checked"
+                            app:tint="?attr/colorTertiary" />
+
+                        <LinearLayout
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="12dp"
+                            android:layout_weight="1"
+                            android:orientation="vertical">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="@string/plan_item_sheets"
+                                android:textAppearance="?attr/textAppearanceBodyLarge"
+                                android:textColor="?attr/colorOnSurface" />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="@string/plan_item_sheets_desc"
+                                android:textAppearance="?attr/textAppearanceBodySmall"
+                                android:textColor="?attr/colorOnSurfaceVariant" />
+                        </LinearLayout>
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:background="@drawable/bg_pill_tertiary"
+                            android:paddingStart="9dp"
+                            android:paddingTop="3dp"
+                            android:paddingEnd="9dp"
+                            android:paddingBottom="3dp"
+                            android:text="@string/status_now"
+                            android:textAppearance="?attr/textAppearanceLabelSmall"
+                            android:textColor="?attr/colorOnTertiaryContainer" />
+                    </LinearLayout>
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:background="?attr/colorOutlineVariant" />
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal"
+                        android:paddingTop="12dp"
+                        android:paddingBottom="12dp">
+
+                        <ImageView
+                            android:layout_width="20dp"
+                            android:layout_height="20dp"
+                            android:contentDescription="@null"
+                            android:src="@drawable/ic_schedule"
+                            app:tint="?attr/colorOnSurfaceVariant" />
+
+                        <LinearLayout
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="12dp"
+                            android:layout_weight="1"
+                            android:orientation="vertical">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="@string/plan_item_screens"
+                                android:textAppearance="?attr/textAppearanceBodyLarge"
+                                android:textColor="?attr/colorOnSurface" />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="@string/plan_item_screens_desc"
+                                android:textAppearance="?attr/textAppearanceBodySmall"
+                                android:textColor="?attr/colorOnSurfaceVariant" />
+                        </LinearLayout>
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:background="@drawable/bg_pill"
+                            android:paddingStart="9dp"
+                            android:paddingTop="3dp"
+                            android:paddingEnd="9dp"
+                            android:paddingBottom="3dp"
+                            android:text="@string/status_next"
+                            android:textAppearance="?attr/textAppearanceLabelSmall"
+                            android:textColor="?attr/colorOnSurfaceVariant" />
+                    </LinearLayout>
                 </LinearLayout>
-            </LinearLayout>
-        </com.google.android.material.card.MaterialCardView>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="22dp"
-            android:gravity="center_vertical"
-            android:orientation="horizontal">
-
-            <TextView
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="@string/activity_title"
-                android:textAppearance="?attr/textAppearanceTitleMedium"
-                android:textColor="?attr/colorOnSurface" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/activity_window"
-                android:textAppearance="?attr/textAppearanceLabelMedium"
-                android:textColor="?attr/colorOnSurfaceVariant" />
-        </LinearLayout>
-
-        <com.google.android.material.card.MaterialCardView
-            style="?attr/materialCardViewFilledStyle"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            app:cardBackgroundColor="?attr/colorSurfaceContainerLow"
-            app:cardCornerRadius="20dp"
-            app:cardElevation="0dp"
-            app:strokeWidth="0dp">
+            </com.google.android.material.card.MaterialCardView>
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:paddingStart="16dp"
-                android:paddingTop="14dp"
-                android:paddingEnd="16dp"
-                android:paddingBottom="14dp">
+                android:layout_marginTop="22dp"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
 
-                <LinearLayout
-                    android:layout_width="match_parent"
+                <TextView
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:orientation="horizontal">
+                    android:layout_weight="1"
+                    android:text="@string/workspace_title"
+                    android:textAppearance="?attr/textAppearanceTitleMedium"
+                    android:textColor="?attr/colorOnSurface" />
 
-                    <View
-                        android:layout_width="8dp"
-                        android:layout_height="8dp"
-                        android:layout_marginTop="5dp"
-                        android:background="@drawable/bg_dot" />
-
-                    <TextView
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_marginStart="10dp"
-                        android:layout_weight="1"
-                        android:text="@string/activity_edit_files"
-                        android:textAppearance="?attr/textAppearanceBodyMedium"
-                        android:textColor="?attr/colorOnSurface" />
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="12m"
-                        android:textAppearance="?attr/textAppearanceLabelSmall"
-                        android:textColor="?attr/colorOnSurfaceVariant" />
-                </LinearLayout>
-
-                <LinearLayout
-                    android:layout_width="match_parent"
+                <TextView
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="12dp"
-                    android:orientation="horizontal">
-
-                    <View
-                        android:layout_width="8dp"
-                        android:layout_height="8dp"
-                        android:layout_marginTop="5dp"
-                        android:background="@drawable/bg_dot_tertiary" />
-
-                    <TextView
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_marginStart="10dp"
-                        android:layout_weight="1"
-                        android:text="@string/activity_inspection"
-                        android:textAppearance="?attr/textAppearanceBodyMedium"
-                        android:textColor="?attr/colorOnSurface" />
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="8m"
-                        android:textAppearance="?attr/textAppearanceLabelSmall"
-                        android:textColor="?attr/colorOnSurfaceVariant" />
-                </LinearLayout>
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="12dp"
-                    android:orientation="horizontal">
-
-                    <View
-                        android:layout_width="8dp"
-                        android:layout_height="8dp"
-                        android:layout_marginTop="5dp"
-                        android:background="@drawable/bg_dot_secondary" />
-
-                    <TextView
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_marginStart="10dp"
-                        android:layout_weight="1"
-                        android:text="@string/activity_compression"
-                        android:textAppearance="?attr/textAppearanceBodyMedium"
-                        android:textColor="?attr/colorOnSurface" />
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="2m"
-                        android:textAppearance="?attr/textAppearanceLabelSmall"
-                        android:textColor="?attr/colorOnSurfaceVariant" />
-                </LinearLayout>
+                    android:text="@string/status_bound"
+                    android:textAppearance="?attr/textAppearanceLabelMedium"
+                    android:textColor="?attr/colorPrimary" />
             </LinearLayout>
-        </com.google.android.material.card.MaterialCardView>
-    </LinearLayout>
-</androidx.core.widget.NestedScrollView>
+
+            <com.google.android.material.card.MaterialCardView
+                style="?attr/materialCardViewFilledStyle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                app:cardBackgroundColor="?attr/colorSurfaceContainerLow"
+                app:cardCornerRadius="20dp"
+                app:cardElevation="0dp"
+                app:strokeWidth="0dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal"
+                        android:padding="16dp">
+
+                        <FrameLayout
+                            android:layout_width="44dp"
+                            android:layout_height="44dp"
+                            android:background="@drawable/bg_icon_circle_primary">
+
+                            <ImageView
+                                android:layout_width="23dp"
+                                android:layout_height="23dp"
+                                android:layout_gravity="center"
+                                android:contentDescription="@null"
+                                android:src="@drawable/ic_folder_managed"
+                                app:tint="?attr/colorOnPrimaryContainer" />
+                        </FrameLayout>
+
+                        <LinearLayout
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="12dp"
+                            android:layout_weight="1"
+                            android:orientation="vertical">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="neko-studio"
+                                android:textAppearance="?attr/textAppearanceTitleSmall"
+                                android:textColor="?attr/colorOnSurface" />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="1dp"
+                                android:fontFamily="monospace"
+                                android:text="/WorkSpace/DbWctbWrcDAv7Mww"
+                                android:textAppearance="?attr/textAppearanceBodySmall"
+                                android:textColor="?attr/colorOnSurfaceVariant" />
+                        </LinearLayout>
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:background="@drawable/bg_pill"
+                            android:drawableStart="@drawable/ic_branch_small"
+                            android:drawablePadding="4dp"
+                            android:paddingStart="8dp"
+                            android:paddingTop="4dp"
+                            android:paddingEnd="8dp"
+                            android:paddingBottom="4dp"
+                            android:text="main"
+                            android:textAppearance="?attr/textAppearanceLabelSmall"
+                            android:textColor="?attr/colorOnSurfaceVariant" />
+                    </LinearLayout>
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:background="?attr/colorOutlineVariant" />
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal"
+                        android:paddingStart="16dp"
+                        android:paddingTop="8dp"
+                        android:paddingEnd="10dp"
+                        android:paddingBottom="8dp">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:background="@drawable/bg_pill_outline"
+                            android:paddingStart="9dp"
+                            android:paddingTop="3dp"
+                            android:paddingEnd="9dp"
+                            android:paddingBottom="3dp"
+                            android:text="@string/workspace_free_space"
+                            android:textAppearance="?attr/textAppearanceLabelSmall"
+                            android:textColor="?attr/colorOnSurfaceVariant" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="6dp"
+                            android:background="@drawable/bg_pill_outline"
+                            android:paddingStart="9dp"
+                            android:paddingTop="3dp"
+                            android:paddingEnd="9dp"
+                            android:paddingBottom="3dp"
+                            android:text="@string/status_git_clean"
+                            android:textAppearance="?attr/textAppearanceLabelSmall"
+                            android:textColor="?attr/colorOnSurfaceVariant" />
+
+                        <Space
+                            android:layout_width="0dp"
+                            android:layout_height="1dp"
+                            android:layout_weight="1" />
+
+                        <com.google.android.material.button.MaterialButton
+                            style="@style/Widget.Material3Expressive.Button.TextButton"
+                            android:layout_width="wrap_content"
+                            android:layout_height="40dp"
+                            android:minWidth="0dp"
+                            android:text="@string/action_change"
+                            android:textSize="12sp" />
+                    </LinearLayout>
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="22dp"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="@string/activity_title"
+                    android:textAppearance="?attr/textAppearanceTitleMedium"
+                    android:textColor="?attr/colorOnSurface" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/activity_window"
+                    android:textAppearance="?attr/textAppearanceLabelMedium"
+                    android:textColor="?attr/colorOnSurfaceVariant" />
+            </LinearLayout>
+
+            <com.google.android.material.card.MaterialCardView
+                style="?attr/materialCardViewFilledStyle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                app:cardBackgroundColor="?attr/colorSurfaceContainerLow"
+                app:cardCornerRadius="20dp"
+                app:cardElevation="0dp"
+                app:strokeWidth="0dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:paddingStart="16dp"
+                    android:paddingTop="14dp"
+                    android:paddingEnd="16dp"
+                    android:paddingBottom="14dp">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal">
+
+                        <View
+                            android:layout_width="8dp"
+                            android:layout_height="8dp"
+                            android:layout_marginTop="5dp"
+                            android:background="@drawable/bg_dot" />
+
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="10dp"
+                            android:layout_weight="1"
+                            android:text="@string/activity_edit_files"
+                            android:textAppearance="?attr/textAppearanceBodyMedium"
+                            android:textColor="?attr/colorOnSurface" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="12m"
+                            android:textAppearance="?attr/textAppearanceLabelSmall"
+                            android:textColor="?attr/colorOnSurfaceVariant" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="12dp"
+                        android:orientation="horizontal">
+
+                        <View
+                            android:layout_width="8dp"
+                            android:layout_height="8dp"
+                            android:layout_marginTop="5dp"
+                            android:background="@drawable/bg_dot_tertiary" />
+
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="10dp"
+                            android:layout_weight="1"
+                            android:text="@string/activity_inspection"
+                            android:textAppearance="?attr/textAppearanceBodyMedium"
+                            android:textColor="?attr/colorOnSurface" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="8m"
+                            android:textAppearance="?attr/textAppearanceLabelSmall"
+                            android:textColor="?attr/colorOnSurfaceVariant" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="12dp"
+                        android:orientation="horizontal">
+
+                        <View
+                            android:layout_width="8dp"
+                            android:layout_height="8dp"
+                            android:layout_marginTop="5dp"
+                            android:background="@drawable/bg_dot_secondary" />
+
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="10dp"
+                            android:layout_weight="1"
+                            android:text="@string/activity_compression"
+                            android:textAppearance="?attr/textAppearanceBodyMedium"
+                            android:textColor="?attr/colorOnSurface" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="2m"
+                            android:textAppearance="?attr/textAppearanceLabelSmall"
+                            android:textColor="?attr/colorOnSurfaceVariant" />
+                    </LinearLayout>
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
+        </LinearLayout>
+    </androidx.core.widget.NestedScrollView>
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

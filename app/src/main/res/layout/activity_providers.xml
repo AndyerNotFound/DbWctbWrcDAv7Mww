@@ -1,77 +1,49 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<!-- Providers page: collapsing title with the import / add actions pinned in the toolbar. -->
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/providers_root"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="?attr/colorSurface"
-    android:orientation="vertical">
+    android:background="?attr/colorSurface">
 
-    <LinearLayout
-        android:id="@+id/providers_top_bar"
+    <com.google.android.material.appbar.AppBarLayout
+        android:id="@+id/providers_app_bar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:gravity="center_vertical"
-        android:minHeight="56dp"
-        android:orientation="horizontal"
-        android:paddingStart="8dp"
-        android:paddingEnd="8dp">
+        android:background="?attr/colorSurface"
+        app:elevation="0dp">
 
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/providers_back"
-            style="?attr/materialIconButtonStyle"
-            android:insetLeft="0dp"
-            android:insetTop="0dp"
-            android:insetRight="0dp"
-            android:insetBottom="0dp"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
-            android:contentDescription="@string/cd_back"
-            app:icon="@drawable/ic_arrow_back" />
+        <com.google.android.material.appbar.CollapsingToolbarLayout
+            android:id="@+id/providers_collapsing"
+            android:layout_width="match_parent"
+            android:layout_height="112dp"
+            app:collapsedTitleGravity="center_vertical|start"
+            app:contentScrim="?attr/colorSurface"
+            app:expandedTitleGravity="bottom|start"
+            app:expandedTitleMarginBottom="14dp"
+            app:expandedTitleMarginStart="20dp"
+            app:layout_scrollFlags="scroll|exitUntilCollapsed"
+            app:titleEnabled="true">
 
-        <TextView
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="6dp"
-            android:layout_weight="1"
-            android:ellipsize="end"
-            android:maxLines="1"
-            android:text="@string/settings_providers"
-            android:textAppearance="?attr/textAppearanceTitleLarge"
-            android:textColor="?attr/colorOnSurface" />
-
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/providers_import"
-            style="?attr/materialIconButtonStyle"
-            android:insetLeft="0dp"
-            android:insetTop="0dp"
-            android:insetRight="0dp"
-            android:insetBottom="0dp"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
-            android:contentDescription="@string/settings_import_provider"
-            app:icon="@drawable/ic_upload_file" />
-
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/providers_add"
-            style="?attr/materialIconButtonStyle"
-            android:insetLeft="0dp"
-            android:insetTop="0dp"
-            android:insetRight="0dp"
-            android:insetBottom="0dp"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
-            android:layout_marginStart="4dp"
-            android:contentDescription="@string/settings_add_provider"
-            app:icon="@drawable/ic_add" />
-    </LinearLayout>
+            <com.google.android.material.appbar.MaterialToolbar
+                android:id="@+id/providers_toolbar"
+                android:layout_width="match_parent"
+                android:layout_height="?attr/actionBarSize"
+                android:background="@android:color/transparent"
+                app:layout_collapseMode="pin"
+                app:navigationContentDescription="@string/cd_back"
+                app:navigationIcon="@drawable/ic_arrow_back"
+                app:titleMarginStart="56dp" />
+        </com.google.android.material.appbar.CollapsingToolbarLayout>
+    </com.google.android.material.appbar.AppBarLayout>
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/providers_list"
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1"
+        android:layout_height="match_parent"
         android:clipToPadding="false"
         android:paddingBottom="24dp"
-        android:scrollbars="none" />
-</LinearLayout>
+        android:scrollbars="none"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior" />
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

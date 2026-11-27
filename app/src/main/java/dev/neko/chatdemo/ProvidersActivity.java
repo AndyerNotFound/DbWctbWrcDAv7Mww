@@ -11,6 +11,8 @@ import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.android.material.appbar.CollapsingToolbarLayout;
+import com.google.android.material.appbar.MaterialToolbar;
 import com.google.android.material.snackbar.Snackbar;
 
 import java.util.ArrayList;
@@ -20,27 +22,53 @@ import dev.neko.chatdemo.ui.ProvidersAdapter;
 import dev.neko.chatdemo.ui.SettingsUi;
 import dev.neko.chatdemo.ui.UiTransitions;
 
-/** Provider management: import/add in the top bar, search, collapsible cards, drag ordering. */
+/** Provider management: import/add pinned in the toolbar, search, collapsible cards, drag order. */
 public class ProvidersActivity extends AppCompatActivity implements ProvidersAdapter.Callbacks {
 
     public static void start(Activity from) {
         UiTransitions.start(from, new Intent(from, ProvidersActivity.class), true);
     }
 
+    /** Grows the page out of the row that was tapped. */
+    public static void startFrom(Activity from, View source) {
+        UiTransitions.startMorph(from, source, new Intent(from, ProvidersActivity.class));
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        // Must run before super.onCreate so the shared element callback is installed before the
+        // content view is attached.
+        boolean morphing = UiTransitions.prepareMorph(this);
         super.onCreate(savedInstanceState);
         SettingsUi.setupWindow(this);
-        UiTransitions.incoming(this, true);
         setContentView(R.layout.activity_providers);
-        SettingsUi.applyInsets(findViewById(R.id.providers_root),
-                findViewById(R.id.providers_top_bar), findViewById(R.id.providers_list));
+        if (morphing) {
+            UiTransitions.enterMorph(this);
+        } else {
+            UiTransitions.incoming(this, true);
+        }
 
-        findViewById(R.id.providers_back).setOnClickListener(v -> finishAfterTransition());
-        findViewById(R.id.providers_import).setOnClickListener(v ->
-                notice(getString(R.string.settings_notice_import)));
-        findViewById(R.id.providers_add).setOnClickListener(v ->
-                notice(getString(R.string.settings_notice_add)));
+        SettingsUi.applyInsets(findViewById(R.id.providers_root),
+                findViewById(R.id.providers_app_bar), findViewById(R.id.providers_list));
+
+        CollapsingToolbarLayout collapsing = findViewById(R.id.providers_collapsing);
+        SettingsUi.setTitle(collapsing, getString(R.string.settings_providers));
+
+        MaterialToolbar toolbar = findViewById(R.id.providers_toolbar);
+        toolbar.setNavigationOnClickListener(v -> UiTransitions.close(this));
+        toolbar.inflateMenu(R.menu.providers);
+        toolbar.setOnMenuItemClickListener(item -> {
+            int id = item.getItemId();
+            if (id == R.id.action_import) {
+                notice(getString(R.string.settings_notice_import));
+                return true;
+            }
+            if (id == R.id.action_add) {
+                notice(getString(R.string.settings_notice_add));
+                return true;
+            }
+            return false;
+        });
 
         List<ProvidersAdapter.ProviderItem> providers = buildProviders();
         RecyclerView list = findViewById(R.id.providers_list);
@@ -72,7 +100,7 @@ public class ProvidersActivity extends AppCompatActivity implements ProvidersAda
 
     @Override
     public void onBackPressed() {
-        finishAfterTransition();
+        UiTransitions.close(this);
     }
 
     private void notice(String message) {

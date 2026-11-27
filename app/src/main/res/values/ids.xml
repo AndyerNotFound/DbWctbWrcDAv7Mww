@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Per-window transition bookkeeping: whether the entrance began, whether it finished, and
+         whether an exit is already waiting behind it. -->
+    <item name="neko_enter_started" type="id" />
+    <item name="neko_enter_done" type="id" />
+    <item name="neko_exit_queued" type="id" />
+</resources>

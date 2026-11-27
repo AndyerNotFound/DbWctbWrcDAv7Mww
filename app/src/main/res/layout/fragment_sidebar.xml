@@ -1,147 +1,171 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- Sidebar panel: collapse control and title, the pinned quick entries, then the history. -->
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<!--
+  Sidebar panel: collapsing title, the pinned quick entries, then the history. The group host is a
+  measured-but-invisible layer that a day group page grows into, so opening a group never leaves
+  this page.
+-->
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/sidebar_start_root"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="?attr/colorSurface"
-    android:orientation="vertical">
+    android:background="?attr/colorSurface">
 
-    <LinearLayout
-        android:id="@+id/sidebar_header"
+    <com.google.android.material.appbar.AppBarLayout
+        android:id="@+id/sidebar_app_bar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:paddingStart="8dp"
-        android:paddingEnd="16dp">
+        android:background="?attr/colorSurface"
+        app:elevation="0dp">
 
-        <com.google.android.material.appbar.MaterialToolbar
-            android:id="@+id/sidebar_toolbar"
+        <com.google.android.material.appbar.CollapsingToolbarLayout
+            android:id="@+id/sidebar_collapsing"
             android:layout_width="match_parent"
-            android:layout_height="?attr/actionBarSize"
-            android:background="@android:color/transparent"
-            app:navigationContentDescription="@string/sidebar_collapse"
-            app:navigationIcon="@drawable/ic_keyboard_double_arrow_left" />
+            android:layout_height="112dp"
+            app:collapsedTitleGravity="center_vertical|start"
+            app:contentScrim="?attr/colorSurface"
+            app:expandedTitleGravity="bottom|start"
+            app:expandedTitleMarginBottom="14dp"
+            app:expandedTitleMarginStart="20dp"
+            app:layout_scrollFlags="scroll|exitUntilCollapsed"
+            app:titleEnabled="true">
 
-        <TextView
-            android:id="@+id/sidebar_title"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="12dp"
-            android:layout_marginBottom="12dp"
-            android:ellipsize="end"
-            android:maxLines="1"
-            android:text="@string/sidebar_title"
-            android:textAppearance="?attr/textAppearanceHeadlineSmall"
-            android:textColor="?attr/colorOnSurface" />
-    </LinearLayout>
+            <com.google.android.material.appbar.MaterialToolbar
+                android:id="@+id/sidebar_toolbar"
+                android:layout_width="match_parent"
+                android:layout_height="?attr/actionBarSize"
+                android:background="@android:color/transparent"
+                app:layout_collapseMode="pin"
+                app:navigationContentDescription="@string/sidebar_collapse"
+                app:navigationIcon="@drawable/ic_keyboard_double_arrow_left"
+                app:titleMarginStart="56dp" />
+        </com.google.android.material.appbar.CollapsingToolbarLayout>
+    </com.google.android.material.appbar.AppBarLayout>
 
-    <!-- Quick entries: pinned, one per row, all the same width. -->
     <LinearLayout
-        android:id="@+id/sidebar_functions_block"
+        android:id="@+id/sidebar_body"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:orientation="vertical"
-        android:paddingStart="16dp"
-        android:paddingEnd="16dp">
+        app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
-        <TextView
-            android:id="@+id/sidebar_functions_title"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:fontFamily="sans-serif-medium"
-            android:paddingStart="4dp"
-            android:paddingTop="2dp"
-            android:paddingEnd="4dp"
-            android:paddingBottom="8dp"
-            android:text="@string/sidebar_quick_actions"
-            android:textColor="?attr/colorOnSurfaceVariant"
-            android:textSize="12sp" />
-
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/sidebar_function_new"
-            style="?attr/materialButtonOutlinedStyle"
-            android:layout_width="match_parent"
-            android:layout_height="44dp"
-            android:insetTop="0dp"
-            android:insetBottom="0dp"
-            android:gravity="start|center_vertical"
-            android:minWidth="0dp"
-            android:paddingStart="12dp"
-            android:paddingEnd="16dp"
-            android:text="@string/sidebar_new_session"
-            android:textAlignment="viewStart"
-            android:textSize="13sp"
-            app:icon="@drawable/ic_add_comment"
-            app:iconGravity="textStart"
-            app:iconPadding="10dp"
-            app:iconSize="16dp" />
-
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/sidebar_function_search"
-            style="?attr/materialButtonOutlinedStyle"
-            android:layout_width="match_parent"
-            android:layout_height="44dp"
-            android:layout_marginTop="8dp"
-            android:insetTop="0dp"
-            android:insetBottom="0dp"
-            android:gravity="start|center_vertical"
-            android:minWidth="0dp"
-            android:paddingStart="12dp"
-            android:paddingEnd="16dp"
-            android:text="@string/sidebar_search"
-            android:textAlignment="viewStart"
-            android:textSize="13sp"
-            app:icon="@drawable/ic_search"
-            app:iconGravity="textStart"
-            app:iconPadding="10dp"
-            app:iconSize="16dp" />
-
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/sidebar_function_folders"
-            style="?attr/materialButtonOutlinedStyle"
-            android:layout_width="match_parent"
-            android:layout_height="44dp"
-            android:layout_marginTop="8dp"
-            android:insetTop="0dp"
-            android:insetBottom="0dp"
-            android:gravity="start|center_vertical"
-            android:minWidth="0dp"
-            android:paddingStart="12dp"
-            android:paddingEnd="16dp"
-            android:text="@string/sidebar_folders"
-            android:textAlignment="viewStart"
-            android:textSize="13sp"
-            app:icon="@drawable/ic_folder"
-            app:iconGravity="textStart"
-            app:iconPadding="10dp"
-            app:iconSize="16dp" />
-    </LinearLayout>
-
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:layout_marginTop="12dp"
-        android:background="?attr/colorOutlineVariant" />
-
-    <!-- History: the only scrolling part of the panel. -->
-    <androidx.core.widget.NestedScrollView
-        android:id="@+id/sidebar_scroll"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1"
-        android:clipToPadding="false"
-        android:scrollbars="none">
-
+        <!-- Quick entries: pinned, one per row, all the same width. -->
         <LinearLayout
-            android:id="@+id/sidebar_history"
+            android:id="@+id/sidebar_functions_block"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
             android:paddingStart="16dp"
-            android:paddingTop="12dp"
-            android:paddingEnd="16dp"
-            android:paddingBottom="112dp" />
-    </androidx.core.widget.NestedScrollView>
-</LinearLayout>
+            android:paddingTop="2dp"
+            android:paddingEnd="16dp">
+
+            <TextView
+                android:id="@+id/sidebar_functions_title"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:fontFamily="sans-serif-medium"
+                android:paddingStart="4dp"
+                android:paddingTop="2dp"
+                android:paddingEnd="4dp"
+                android:paddingBottom="8dp"
+                android:text="@string/sidebar_quick_actions"
+                android:textColor="?attr/colorOnSurfaceVariant"
+                android:textSize="12sp" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/sidebar_function_new"
+                style="?attr/materialButtonOutlinedStyle"
+                android:layout_width="match_parent"
+                android:layout_height="44dp"
+                android:insetTop="0dp"
+                android:insetBottom="0dp"
+                android:gravity="start|center_vertical"
+                android:minWidth="0dp"
+                android:paddingStart="12dp"
+                android:paddingEnd="16dp"
+                android:text="@string/sidebar_new_session"
+                android:textAlignment="viewStart"
+                android:textSize="13sp"
+                app:icon="@drawable/ic_add_comment"
+                app:iconGravity="textStart"
+                app:iconPadding="10dp"
+                app:iconSize="16dp" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/sidebar_function_search"
+                style="?attr/materialButtonOutlinedStyle"
+                android:layout_width="match_parent"
+                android:layout_height="44dp"
+                android:layout_marginTop="8dp"
+                android:insetTop="0dp"
+                android:insetBottom="0dp"
+                android:gravity="start|center_vertical"
+                android:minWidth="0dp"
+                android:paddingStart="12dp"
+                android:paddingEnd="16dp"
+                android:text="@string/sidebar_search"
+                android:textAlignment="viewStart"
+                android:textSize="13sp"
+                app:icon="@drawable/ic_search"
+                app:iconGravity="textStart"
+                app:iconPadding="10dp"
+                app:iconSize="16dp" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/sidebar_function_folders"
+                style="?attr/materialButtonOutlinedStyle"
+                android:layout_width="match_parent"
+                android:layout_height="44dp"
+                android:layout_marginTop="8dp"
+                android:insetTop="0dp"
+                android:insetBottom="0dp"
+                android:gravity="start|center_vertical"
+                android:minWidth="0dp"
+                android:paddingStart="12dp"
+                android:paddingEnd="16dp"
+                android:text="@string/sidebar_folders"
+                android:textAlignment="viewStart"
+                android:textSize="13sp"
+                app:icon="@drawable/ic_folder"
+                app:iconGravity="textStart"
+                app:iconPadding="10dp"
+                app:iconSize="16dp" />
+        </LinearLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginTop="12dp"
+            android:background="?attr/colorOutlineVariant" />
+
+        <!-- History: the only scrolling part of the panel, and what collapses the title. -->
+        <androidx.core.widget.NestedScrollView
+            android:id="@+id/sidebar_scroll"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:clipToPadding="false"
+            android:scrollbars="none">
+
+            <LinearLayout
+                android:id="@+id/sidebar_history"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:paddingStart="16dp"
+                android:paddingTop="12dp"
+                android:paddingEnd="16dp"
+                android:paddingBottom="112dp" />
+        </androidx.core.widget.NestedScrollView>
+    </LinearLayout>
+
+    <!--
+      Group page layer: laid out while invisible so the container transform has real end bounds,
+      then shown in place. The page itself is a child fragment of the panel.
+    -->
+    <FrameLayout
+        android:id="@+id/sidebar_group_host"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="invisible" />
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

@@ -21,10 +21,14 @@ context budget bar.
 - **Reasoning sheet** — effort slider with nine ticks (Off → Ultra), custom
   `reasoning_effort` / `thinking_budget` dialog, and a two-column model picker with
   foldable providers and rich model cards.
-- **Sidebar** — a full page session panel: a collapse chevron plus the Neko Chat title on top,
-  three pinned quick actions stacked as one full width column, and the chat history scrolling
-  on its own underneath. Each day group is a card that grows into its own page with a
-  `MaterialContainerTransform` fragment transition, and the bottom left FAB opens Settings.
+- **Sidebar** — a full page session panel with a collapsing title: a collapse chevron, three
+  pinned quick actions stacked as one full width column, and the chat history scrolling on its
+  own underneath. A day group card grows into its group page with a
+  `MaterialContainerTransform`, and the group page is a child fragment of the panel, so
+  expanding and collapsing never switches page. The bottom left FAB grows into Settings the
+  same way.
+- **Chrome** — every titled scrolling page (settings, preferences, providers, settings detail,
+  sidebar, day group, Mission, Usage) uses a collapsing title over a pinned toolbar.
 - **Custom views** — branching conversation map (animated live head) and animated
   throughput bar chart.
 - Light and dark schemes, edge-to-edge insets, portrait demo.
@@ -40,8 +44,10 @@ context budget bar.
   (the left rail folds), pick a model, drag the effort slider, open the custom
   `reasoning_effort` / `thinking_budget` dialog.
 - Tap the sidebar icon for the session panel; the collapse chevron on its leading edge closes it
-  with the shared axis X return, and a day group card grows into its own page.
-- Tap the FAB at the bottom left for Settings; the settings pages are pushed with shared axis X.
+  with the shared axis X return, and a day group card grows into its group page in place.
+- Tap the FAB at the bottom left for Settings: it grows into the page and shrinks back into the
+  FAB. Settings rows do the same, and a back press during any entrance retraces it instead of
+  cutting.
 - Type in the field (the fullscreen glyph appears), send, watch the bar turn wavy and the
   tonal send button flip to stop. Toggle the mic for the REC state.
 

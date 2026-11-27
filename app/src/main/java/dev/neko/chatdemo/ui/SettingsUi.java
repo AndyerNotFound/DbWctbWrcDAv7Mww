@@ -19,6 +19,7 @@ import androidx.core.view.WindowCompat;
 import androidx.core.view.WindowInsetsCompat;
 import androidx.core.view.WindowInsetsControllerCompat;
 
+import com.google.android.material.appbar.CollapsingToolbarLayout;
 import com.google.android.material.card.MaterialCardView;
 import com.google.android.material.color.MaterialColors;
 import com.google.android.material.materialswitch.MaterialSwitch;
@@ -43,19 +44,25 @@ public final class SettingsUi {
         controller.setAppearanceLightNavigationBars(!night);
     }
 
-    public static void applyInsets(View root, View topBar, View scroll) {
-        final int sidePadding = dp(topBar, 8);
-        final int bottomPadding = scroll.getPaddingBottom();
+    /** Gives the collapsing app bar the status bar height and the scroll view the nav bar height. */
+    public static void applyInsets(View root, View appBar, View scroll) {
+        final int top = appBar.getPaddingTop();
+        final int bottom = scroll.getPaddingBottom();
         ViewCompat.setOnApplyWindowInsetsListener(root, (v, insets) -> {
             Insets bars = insets.getInsets(WindowInsetsCompat.Type.systemBars()
                     | WindowInsetsCompat.Type.displayCutout());
-            topBar.setMinimumHeight(dp(topBar, 56) + bars.top);
-            topBar.setPadding(bars.left + sidePadding, bars.top, bars.right + sidePadding, 0);
+            appBar.setPadding(appBar.getPaddingLeft(), top + bars.top,
+                    appBar.getPaddingRight(), appBar.getPaddingBottom());
             scroll.setPadding(scroll.getPaddingLeft(), scroll.getPaddingTop(),
-                    scroll.getPaddingRight(), bottomPadding + bars.bottom);
+                    scroll.getPaddingRight(), bottom + bars.bottom);
             return insets;
         });
         ViewCompat.requestApplyInsets(root);
+    }
+
+    /** Sets the page title on a collapsing app bar. */
+    public static void setTitle(CollapsingToolbarLayout collapsing, CharSequence title) {
+        collapsing.setTitle(title);
     }
 
     /** Adds a titled card to {@code parent} and returns the container rows go into. */

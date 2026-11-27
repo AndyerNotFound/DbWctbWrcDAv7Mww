@@ -3,15 +3,18 @@ package dev.neko.chatdemo;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.View;
 import android.widget.LinearLayout;
-import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
+
+import com.google.android.material.appbar.CollapsingToolbarLayout;
+import com.google.android.material.appbar.MaterialToolbar;
 
 import dev.neko.chatdemo.ui.SettingsUi;
 import dev.neko.chatdemo.ui.UiTransitions;
 
-/** One settings sub page, built as a single card group of switches. */
+/** One settings sub page: a collapsing title over a single card group of switches. */
 public class SettingsDetailActivity extends AppCompatActivity {
 
     private static final String EXTRA_PAGE = "page";
@@ -22,15 +25,32 @@ public class SettingsDetailActivity extends AppCompatActivity {
         UiTransitions.start(from, intent, true);
     }
 
+    /** Grows the page out of the row that was tapped. */
+    public static void startFrom(Activity from, View source, String page) {
+        Intent intent = new Intent(from, SettingsDetailActivity.class);
+        intent.putExtra(EXTRA_PAGE, page);
+        UiTransitions.startMorph(from, source, intent);
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        // Must run before super.onCreate so the shared element callback is installed before the
+        // content view is attached.
+        boolean morphing = UiTransitions.prepareMorph(this);
         super.onCreate(savedInstanceState);
         SettingsUi.setupWindow(this);
-        UiTransitions.incoming(this, true);
         setContentView(R.layout.activity_settings_detail);
+        if (morphing) {
+            UiTransitions.enterMorph(this);
+        } else {
+            UiTransitions.incoming(this, true);
+        }
+
         SettingsUi.applyInsets(findViewById(R.id.detail_root),
-                findViewById(R.id.detail_top_bar), findViewById(R.id.detail_scroll));
-        findViewById(R.id.detail_back).setOnClickListener(v -> finishAfterTransition());
+                findViewById(R.id.detail_app_bar), findViewById(R.id.detail_scroll));
+
+        MaterialToolbar toolbar = findViewById(R.id.detail_toolbar);
+        toolbar.setNavigationOnClickListener(v -> UiTransitions.close(this));
 
         String page = getIntent().getStringExtra(EXTRA_PAGE);
         bindPage(page == null ? "theme" : page);
@@ -38,7 +58,7 @@ public class SettingsDetailActivity extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
-        finishAfterTransition();
+        UiTransitions.close(this);
     }
 
     private void bindPage(String page) {
@@ -88,7 +108,8 @@ public class SettingsDetailActivity extends AppCompatActivity {
                 break;
         }
 
-        ((TextView) findViewById(R.id.detail_title)).setText(titleRes);
+        CollapsingToolbarLayout collapsing = findViewById(R.id.detail_collapsing);
+        SettingsUi.setTitle(collapsing, getString(titleRes));
 
         LinearLayout content = findViewById(R.id.detail_content);
         int container = SettingsUi.color(content,
