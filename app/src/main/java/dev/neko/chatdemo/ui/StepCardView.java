@@ -74,7 +74,7 @@ public class StepCardView extends MaterialCardView {
         ImageView icon = new ImageView(context);
         icon.setImageResource(R.drawable.ic_psychology);
         icon.setImageTintList(android.content.res.ColorStateList.valueOf(
-                MaterialColors.getColor(this, com.google.android.material.R.attr.colorPrimary)));
+                MaterialColors.getColor(this, androidx.appcompat.R.attr.colorPrimary)));
         header.addView(icon, new LinearLayout.LayoutParams(dp(17), dp(17)));
 
         TextView title = new TextView(context);
