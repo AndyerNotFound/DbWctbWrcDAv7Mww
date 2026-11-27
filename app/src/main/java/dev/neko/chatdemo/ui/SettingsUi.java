@@ -112,6 +112,9 @@ public final class SettingsUi {
                            CharSequence title, CharSequence subtitle,
                            int containerColor, int contentColor) {
         View row = LayoutInflater.from(activity).inflate(R.layout.item_pref_row, group, false);
+        // A name derived from the row title instead of the instance, so a page opened from this
+        // row can shrink back into it even after the row is rebuilt.
+        ViewCompat.setTransitionName(row, "neko_row_" + Integer.toHexString(title.toString().hashCode()));
         bindRow(row, iconRes, title, subtitle, containerColor, contentColor);
         group.addView(row);
         return row;
