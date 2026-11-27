@@ -89,7 +89,7 @@ public class SidebarDrawer {
 
     private void buildHistory(LinearLayout host) {
         int muted = MaterialColors.getColor(host,
-                androidx.appcompat.R.attr.colorOnSurfaceVariant);
+                com.google.android.material.R.attr.colorOnSurfaceVariant);
 
         TextView heading = new TextView(activity);
         heading.setText(R.string.sidebar_history);
