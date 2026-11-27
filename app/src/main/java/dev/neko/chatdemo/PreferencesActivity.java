@@ -4,7 +4,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.widget.LinearLayout;
 
-import com.google.android.material.card.MaterialCardView;
+import android.view.View;
 
 import dev.neko.chatdemo.ui.SettingsPageActivity;
 import dev.neko.chatdemo.ui.SettingsUi;
@@ -45,7 +45,7 @@ public class PreferencesActivity extends SettingsPageActivity {
 
     private void addRow(LinearLayout group, int icon, int title, int subtitle, String key,
                         int container, int onContainer) {
-        MaterialCardView row = SettingsUi.row(this, group, icon,
+        View row = SettingsUi.row(this, group, icon,
                 getString(title), getString(subtitle), container, onContainer);
         row.setOnClickListener(v -> SettingsDetailActivity.start(this, key));
     }
