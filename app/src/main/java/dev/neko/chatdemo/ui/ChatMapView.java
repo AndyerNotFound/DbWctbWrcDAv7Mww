@@ -79,7 +79,7 @@ public class ChatMapView extends View {
     private void resolveColors() {
         colorPrimary = color(androidx.appcompat.R.attr.colorPrimary);
         colorOnPrimary = color(com.google.android.material.R.attr.colorOnPrimary);
-        colorPrimaryContainer = color(androidx.appcompat.R.attr.colorPrimaryContainer);
+        colorPrimaryContainer = color(com.google.android.material.R.attr.colorPrimaryContainer);
         colorOnPrimaryContainer = color(com.google.android.material.R.attr.colorOnPrimaryContainer);
         colorSurface = color(com.google.android.material.R.attr.colorSurface);
         colorSurfaceContainerHigh = color(com.google.android.material.R.attr.colorSurfaceContainerHigh);

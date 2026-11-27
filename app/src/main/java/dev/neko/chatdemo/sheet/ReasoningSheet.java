@@ -554,7 +554,7 @@ public class ReasoningSheet extends BottomSheetDialog {
                     break;
                 case 0:
                 default:
-                    bgAttr = androidx.appcompat.R.attr.colorPrimaryContainer;
+                    bgAttr = com.google.android.material.R.attr.colorPrimaryContainer;
                     fgAttr = com.google.android.material.R.attr.colorOnPrimaryContainer;
                     break;
             }
