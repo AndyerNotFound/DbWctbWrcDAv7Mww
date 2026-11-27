@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!-- Nested session rows light up when they are the active one. -->
 <selector xmlns:android="http://schemas.android.com/apk/res/android">
-    <item android:color="?attr/colorOnSecondaryContainer" android:state_checked="true" />
+    <item android:color="?attr/colorOnSecondaryContainer" android:state_activated="true" />
     <item android:color="?attr/colorOnSurfaceVariant" />
 </selector>

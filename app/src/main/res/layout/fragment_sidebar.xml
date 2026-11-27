@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
   Sidebar panel: a collapsing title, the quick entries pinned inside the app bar (noScroll), and the
-  history as the scrolling child so it drives the collapse. The group host is a laid out but
-  invisible layer that a day group page grows into, so opening a group never leaves this page.
+  history as the scrolling child so it drives the collapse. A day group opens inside its own card
+  in that history, so opening one never leaves this page.
 -->
 <androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
@@ -146,14 +146,4 @@
             android:paddingEnd="16dp"
             android:paddingBottom="112dp" />
     </androidx.core.widget.NestedScrollView>
-
-    <!--
-      Group page layer: laid out while invisible so the container transform has real end bounds,
-      then shown in place. The page itself is a child fragment of the panel.
-    -->
-    <FrameLayout
-        android:id="@+id/sidebar_group_host"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:visibility="invisible" />
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

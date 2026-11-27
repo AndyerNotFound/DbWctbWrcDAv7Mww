@@ -1,12 +1,16 @@
 package dev.neko.chatdemo.ui;
 
+import android.animation.Animator;
+import android.animation.AnimatorListenerAdapter;
+import android.animation.ValueAnimator;
 import android.content.Context;
-import android.graphics.Color;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.DecelerateInterpolator;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -16,44 +20,48 @@ import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 import androidx.fragment.app.Fragment;
-import androidx.transition.TransitionManager;
 
 import com.google.android.material.appbar.CollapsingToolbarLayout;
 import com.google.android.material.appbar.MaterialToolbar;
+import com.google.android.material.button.MaterialButton;
 import com.google.android.material.card.MaterialCardView;
 import com.google.android.material.color.MaterialColors;
-import com.google.android.material.transition.MaterialContainerTransform;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import dev.neko.chatdemo.R;
 
 /**
  * Sidebar panel: a collapsing title, the pinned quick entries as one full width column, then the
- * chat history. Tapping a day group grows that card into {@link SidebarGroupFragment} inside this
- * panel — the group page is a child fragment, so expanding and collapsing never swaps pages.
+ * chat history.
  *
- * <p>A collapse asked for mid expansion is queued and played once the expansion finishes, so the
- * transform always retraces its own path instead of cutting.
+ * <p>The history is an accordion of plain views: each day group is a card that owns an indented
+ * session list, so tapping a group opens it where it sits. The list grows from zero to its measured
+ * height while its rows settle in from the indent, and the groups below slide down to make room —
+ * nothing leaves this page, no activity, no child page, no page swap.
+ *
+ * <p>One group is open at a time; opening another closes the first in the same frame, so the list
+ * only ever travels once.
  */
 public class SidebarFragment extends Fragment {
 
-    private static final String TAG_GROUP = "SidebarGroupFragment";
     private static final String STATE_GROUP = "expanded_group";
+    private static final long OPEN_MS = 260L;
+    private static final long CLOSE_MS = 200L;
 
     @Nullable
     private Callbacks callbacks;
 
     @Nullable
     private View root;
-    @Nullable
-    private View groupHost;
-    @Nullable
-    private MaterialCardView expandedCard;
+
+    private final List<MaterialCardView> cards = new ArrayList<>();
+    private final Map<View, ValueAnimator> heightAnimators = new HashMap<>();
 
     private int expandedGroup = -1;
-    private boolean transforming;
-    private boolean pendingCollapse;
-    private boolean collapsing;
-    private int morphToken;
 
     public interface Callbacks {
         void onCollapseSidebar();
@@ -102,7 +110,6 @@ public class SidebarFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         root = view;
-        groupHost = view.findViewById(R.id.sidebar_group_host);
 
         View appBar = view.findViewById(R.id.sidebar_app_bar);
         View scroll = view.findViewById(R.id.sidebar_scroll);
@@ -145,19 +152,24 @@ public class SidebarFragment extends Fragment {
 
         buildHistory(view.findViewById(R.id.sidebar_history));
 
-        if (expandedGroup >= 0) {
-            // Rebuilt after a configuration change: restore the open group page without animating.
-            showGroupInstantly(expandedGroup);
+        if (expandedGroup >= 0 && expandedGroup < cards.size()) {
+            // Rebuilt after a configuration change: keep the open group open, without animating.
+            applyOpen(cards.get(expandedGroup), true);
         }
     }
 
     @Override
     public void onDestroyView() {
+        for (ValueAnimator animator : heightAnimators.values()) {
+            animator.cancel();
+        }
+        heightAnimators.clear();
+        cards.clear();
         root = null;
-        groupHost = null;
-        expandedCard = null;
         super.onDestroyView();
     }
+
+    // ---------------------------------------------------------------- history
 
     private void buildHistory(LinearLayout host) {
         int muted = MaterialColors.getColor(host,
@@ -177,156 +189,280 @@ public class SidebarFragment extends Fragment {
             ((TextView) card.findViewById(R.id.group_label)).setText(SidebarData.titleRes(group));
             ((TextView) card.findViewById(R.id.group_count)).setText(
                     getString(R.string.sidebar_group_count, SidebarData.sessions(group).length));
-            if (group == expandedGroup) {
-                card.setVisibility(View.INVISIBLE);
-                expandedCard = card;
-            }
+
+            buildSessions((LinearLayout) card.findViewById(R.id.group_sessions), group);
+
             int index = group;
-            card.setOnClickListener(v -> expand(v, index));
+            card.findViewById(R.id.group_header).setOnClickListener(v -> toggle(index));
             host.addView(card);
+            cards.add(card);
+        }
+
+        // The newest session in the newest group starts out as the active one.
+        if (!cards.isEmpty()) {
+            View list = cards.get(0).findViewById(R.id.group_sessions);
+            if (list instanceof LinearLayout && ((LinearLayout) list).getChildCount() > 0) {
+                ((LinearLayout) list).getChildAt(0).setActivated(true);
+            }
+        }
+    }
+
+    /** Fills one group's indented list; the rows are children of the group card, not of the page. */
+    private void buildSessions(LinearLayout host, int group) {
+        String[] sessions = SidebarData.sessions(group);
+        for (int i = 0; i < sessions.length; i++) {
+            MaterialButton button = (MaterialButton) getLayoutInflater()
+                    .inflate(R.layout.item_drawer_session, host, false);
+            button.setText(sessions[i]);
+            LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(
+                    ViewGroup.LayoutParams.MATCH_PARENT, dp(38));
+            lp.topMargin = dp(2);
+            host.addView(button, lp);
+            button.setOnClickListener(v -> select(button));
+        }
+    }
+
+    /** Keeps a single session active across the whole history. */
+    private void select(MaterialButton button) {
+        for (MaterialCardView card : cards) {
+            View list = card.findViewById(R.id.group_sessions);
+            if (!(list instanceof LinearLayout)) {
+                continue;
+            }
+            LinearLayout group = (LinearLayout) list;
+            for (int i = 0; i < group.getChildCount(); i++) {
+                View child = group.getChildAt(i);
+                if (child instanceof MaterialButton) {
+                    child.setActivated(child == button);
+                }
+            }
         }
     }
 
     // ---------------------------------------------------------------- expand / collapse
 
-    /** Grows the tapped card into its day page, inside this panel. */
-    private void expand(View card, int group) {
-        if (transforming || expandedGroup >= 0 || groupHost == null) {
+    /** Opens the tapped group in place, or closes it when it is already the open one. */
+    private void toggle(int group) {
+        if (group < 0 || group >= cards.size()) {
             return;
+        }
+        if (expandedGroup == group) {
+            expandedGroup = -1;
+            animateOpen(cards.get(group), false);
+            return;
+        }
+        if (expandedGroup >= 0 && expandedGroup < cards.size()) {
+            // The old group gives up its space in the same frame, so the list travels once.
+            animateOpen(cards.get(expandedGroup), false);
         }
         expandedGroup = group;
-        expandedCard = (MaterialCardView) card;
-
-        SidebarGroupFragment page = SidebarGroupFragment.newInstance(group);
-        getChildFragmentManager().beginTransaction()
-                .setReorderingAllowed(true)
-                .replace(R.id.sidebar_group_host, page, TAG_GROUP)
-                .commitNow();
-
-        // The host is invisible but laid out, so the transform has real end bounds right away.
-        morph(card, groupHost, true, () -> {
-            card.setVisibility(View.INVISIBLE);
-            groupHost.setVisibility(View.VISIBLE);
-        });
+        MaterialCardView card = cards.get(group);
+        animateOpen(card, true);
+        ensureVisible(card);
     }
 
-    /** Shrinks the day page back into the card it came from. */
+    /**
+     * Nudges the history so the freshly opened group is not left half under the fold: the card
+     * grows downward, and the list only has to travel by the part that is still off screen.
+     */
+    private void ensureVisible(View card) {
+        View scroll = root == null ? null : root.findViewById(R.id.sidebar_scroll);
+        if (!(scroll instanceof androidx.core.widget.NestedScrollView)) {
+            return;
+        }
+        final androidx.core.widget.NestedScrollView view =
+                (androidx.core.widget.NestedScrollView) scroll;
+        view.postDelayed(() -> {
+            if (!isAdded() || card.getParent() == null) {
+                return;
+            }
+            // Distance from the card to the scroll view's content top.
+            int top = card.getTop();
+            View parent = (View) card.getParent();
+            while (parent != null && parent != view) {
+                top += parent.getTop();
+                parent = (View) parent.getParent();
+            }
+            int bottom = top + card.getHeight();
+            int visible = view.getScrollY() + view.getHeight() - dp(96);
+            if (bottom > visible) {
+                view.smoothScrollBy(0, Math.min(bottom - visible, dp(180)));
+            }
+        }, OPEN_MS + 40);
+    }
+
+    /** Closes whichever group is open, from a back press. */
     public void collapseGroup() {
-        if (expandedGroup < 0) {
+        if (expandedGroup < 0 || expandedGroup >= cards.size()) {
             return;
         }
-        if (transforming) {
-            // Let the expansion finish first, then retrace it instead of cutting it.
-            pendingCollapse = true;
-            return;
-        }
-        View card = expandedCard;
-        if (card == null || groupHost == null || root == null) {
-            finishCollapse();
-            return;
-        }
-        // Set before the transform starts: onMorphDone reads it to know this was a collapse.
-        collapsing = true;
-        morph(groupHost, card, false, () -> {
-            card.setVisibility(View.VISIBLE);
-            groupHost.setVisibility(View.INVISIBLE);
-        });
-    }
-
-    private void finishCollapse() {
-        if (expandedCard != null) {
-            expandedCard.setVisibility(View.VISIBLE);
-        }
-        if (groupHost != null) {
-            groupHost.setVisibility(View.INVISIBLE);
-        }
+        MaterialCardView card = cards.get(expandedGroup);
         expandedGroup = -1;
-        expandedCard = null;
-        collapsing = false;
-        removeGroupPage();
+        animateOpen(card, false);
     }
 
-    private void removeGroupPage() {
-        if (!isAdded()) {
-            return;
-        }
-        Fragment page = getChildFragmentManager().findFragmentByTag(TAG_GROUP);
-        if (page != null) {
-            getChildFragmentManager().beginTransaction()
-                    .setReorderingAllowed(true)
-                    .remove(page)
-                    .commitAllowingStateLoss();
-        }
-    }
-
-    private void showGroupInstantly(int group) {
-        if (groupHost == null) {
-            return;
-        }
-        SidebarGroupFragment page = SidebarGroupFragment.newInstance(group);
-        getChildFragmentManager().beginTransaction()
-                .setReorderingAllowed(true)
-                .replace(R.id.sidebar_group_host, page, TAG_GROUP)
-                .commitNow();
-        groupHost.setVisibility(View.VISIBLE);
-    }
-
-    /** True while a day page sits on top of the panel, so back closes it first. */
+    /** True while a group is open, so back closes it before it closes the panel. */
     public boolean isGroupOpen() {
         return expandedGroup >= 0;
     }
 
-    // ---------------------------------------------------------------- transform plumbing
-
     /**
-     * Runs a container transform between two views inside this panel.
+     * Grows or shrinks one group's session list to its real height.
      *
-     * <p>The bookkeeping is time based: {@code beginDelayedTransition} clones the transition and a
-     * clone drops its listeners, so the completion is scheduled from the transform duration
-     * instead of a listener. That also gives the queued collapse a well defined moment to play.
+     * <p>A height animation on the list, not a transition on the card: the card keeps laying out
+     * every frame, so the groups underneath follow instead of being revealed from behind a clip.
+     * The rows also start pushed in by the indent and settle to their own left edge, which is what
+     * makes the nesting read.
      */
-    private void morph(View start, View end, boolean entering, Runnable swap) {
-        if (root == null) {
-            swap.run();
+    private void animateOpen(MaterialCardView card, final boolean open) {
+        View found = card.findViewById(R.id.group_sessions);
+        ImageView chevron = card.findViewById(R.id.group_chevron);
+        if (!(found instanceof LinearLayout)) {
             return;
         }
-        MaterialContainerTransform transform =
-                new MaterialContainerTransform(requireContext(), entering);
-        transform.setDrawingViewId(R.id.sidebar_start_root);
-        transform.setScrimColor(Color.TRANSPARENT);
-        transform.setAllContainerColors(MaterialColors.getColor(root,
-                com.google.android.material.R.attr.colorSurface));
-        transform.setStartView(start);
-        transform.setEndView(end);
-        // A single target keeps the transform off the start view.
-        transform.addTarget(end);
+        final LinearLayout sessions = (LinearLayout) found;
 
-        long duration = transform.getDuration() < 0 ? 320 : transform.getDuration();
-        final int token = ++morphToken;
-        transforming = true;
+        if (chevron != null) {
+            chevron.animate()
+                    .rotation(open ? 180f : 0f)
+                    .setDuration(open ? OPEN_MS : CLOSE_MS)
+                    .setInterpolator(new DecelerateInterpolator())
+                    .start();
+        }
 
-        TransitionManager.beginDelayedTransition((ViewGroup) root, transform);
-        swap.run();
+        cancelHeightAnimator(sessions);
 
-        root.postDelayed(() -> onMorphDone(token), duration + 40);
+        LinearLayout.LayoutParams lp = (LinearLayout.LayoutParams) sessions.getLayoutParams();
+        // A hidden list keeps its old height, so only a visible one contributes a start value:
+        // a fresh open always unfolds from zero.
+        int start = sessions.getVisibility() == View.VISIBLE ? sessions.getHeight() : 0;
+        int target;
+
+        if (open) {
+            sessions.setVisibility(View.VISIBLE);
+            sessions.measure(View.MeasureSpec.makeMeasureSpec(widthOf(sessions),
+                            View.MeasureSpec.AT_MOST),
+                    View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED));
+            target = sessions.getMeasuredHeight();
+            if (start <= 0) {
+                // Start flat so the card unfolds out of the header row.
+                lp.height = 0;
+                sessions.setLayoutParams(lp);
+                start = 0;
+            }
+            for (int i = 0; i < sessions.getChildCount(); i++) {
+                View child = sessions.getChildAt(i);
+                child.animate().cancel();
+                child.setAlpha(0f);
+                child.setTranslationX(-dp(12));
+                child.animate()
+                        .alpha(1f)
+                        .translationX(0f)
+                        .setStartDelay(70L + i * 30L)
+                        .setDuration(200L)
+                        .setInterpolator(new DecelerateInterpolator())
+                        .start();
+            }
+        } else {
+            target = 0;
+            // A close can land mid-open; drop the row stagger so nothing keeps fading out.
+            for (int i = 0; i < sessions.getChildCount(); i++) {
+                View child = sessions.getChildAt(i);
+                child.animate().cancel();
+                child.setAlpha(1f);
+                child.setTranslationX(0f);
+            }
+        }
+
+        if (start == target) {
+            settle(sessions, open);
+            return;
+        }
+
+        final ValueAnimator animator = ValueAnimator.ofInt(start, target);
+        animator.setDuration(open ? OPEN_MS : CLOSE_MS);
+        animator.setInterpolator(new DecelerateInterpolator());
+        animator.addUpdateListener(animation -> {
+            LinearLayout.LayoutParams params =
+                    (LinearLayout.LayoutParams) sessions.getLayoutParams();
+            params.height = (int) animation.getAnimatedValue();
+            sessions.setLayoutParams(params);
+        });
+        animator.addListener(new AnimatorListenerAdapter() {
+            private boolean cancelled;
+
+            @Override
+            public void onAnimationCancel(Animator animation) {
+                cancelled = true;
+            }
+
+            @Override
+            public void onAnimationEnd(Animator animation) {
+                heightAnimators.remove(sessions);
+                if (cancelled) {
+                    // A newer run owns this list now; leave its frame alone.
+                    return;
+                }
+                settle(sessions, open);
+            }
+        });
+        heightAnimators.put(sessions, animator);
+        animator.start();
     }
 
-    private void onMorphDone(int token) {
-        if (token != morphToken || !transforming) {
+    /** Leaves the list at its natural height, hidden when closed. */
+    private void settle(LinearLayout sessions, boolean open) {
+        LinearLayout.LayoutParams lp = (LinearLayout.LayoutParams) sessions.getLayoutParams();
+        lp.height = ViewGroup.LayoutParams.WRAP_CONTENT;
+        sessions.setLayoutParams(lp);
+        sessions.setVisibility(open ? View.VISIBLE : View.GONE);
+    }
+
+    /** Applies an open or closed group without animating, for state restore. */
+    private void applyOpen(MaterialCardView card, boolean open) {
+        View found = card.findViewById(R.id.group_sessions);
+        View chevron = card.findViewById(R.id.group_chevron);
+        if (!(found instanceof LinearLayout)) {
             return;
         }
-        transforming = false;
-        if (collapsing) {
-            // The collapse finished: the group page has served its purpose.
-            collapsing = false;
-            expandedGroup = -1;
-            expandedCard = null;
-            removeGroupPage();
+        LinearLayout sessions = (LinearLayout) found;
+        cancelHeightAnimator(sessions);
+        LinearLayout.LayoutParams lp = (LinearLayout.LayoutParams) sessions.getLayoutParams();
+        lp.height = ViewGroup.LayoutParams.WRAP_CONTENT;
+        sessions.setLayoutParams(lp);
+        sessions.setVisibility(open ? View.VISIBLE : View.GONE);
+        resetRows(sessions);
+        if (chevron != null) {
+            chevron.setRotation(open ? 180f : 0f);
         }
-        if (pendingCollapse) {
-            pendingCollapse = false;
-            collapseGroup();
+    }
+
+    private void resetRows(LinearLayout sessions) {
+        for (int i = 0; i < sessions.getChildCount(); i++) {
+            View child = sessions.getChildAt(i);
+            child.animate().cancel();
+            child.setAlpha(1f);
+            child.setTranslationX(0f);
         }
+    }
+
+    private void cancelHeightAnimator(View list) {
+        ValueAnimator running = heightAnimators.remove(list);
+        if (running != null) {
+            running.cancel();
+        }
+    }
+
+    private int widthOf(View view) {
+        int width = view.getWidth();
+        if (width > 0) {
+            return width;
+        }
+        View parent = (View) view.getParent();
+        if (parent != null && parent.getWidth() > 0) {
+            return parent.getWidth();
+        }
+        return getResources().getDisplayMetrics().widthPixels;
     }
 
     private int dp(int value) {

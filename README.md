@@ -23,12 +23,13 @@ context budget bar.
   foldable providers and rich model cards.
 - **Sidebar** — a full page session panel with a collapsing title: a collapse chevron, three
   pinned quick actions stacked as one full width column, and the chat history scrolling on its
-  own underneath. A day group card grows into its group page with a
-  `MaterialContainerTransform`, and the group page is a child fragment of the panel, so
-  expanding and collapsing never switches page. The bottom left FAB grows into Settings the
-  same way.
+  own underneath. Every day group is an accordion card: tapping its header opens the indented
+  session list inside that same card, the groups below slide down to make room, and the rows
+  settle in from the indent. One group is open at a time, and nothing ever leaves the panel —
+  no activity, no child page, no page swap. The bottom left FAB grows into Settings the same
+  way.
 - **Chrome** — every titled scrolling page (settings, preferences, providers, settings detail,
-  sidebar, day group, Mission, Usage) uses a collapsing title over a pinned toolbar.
+  sidebar, Mission, Usage) uses a collapsing title over a pinned toolbar.
 - **Custom views** — branching conversation map (animated live head) and animated
   throughput bar chart.
 - Light and dark schemes, edge-to-edge insets, portrait demo.
@@ -44,7 +45,8 @@ context budget bar.
   (the left rail folds), pick a model, drag the effort slider, open the custom
   `reasoning_effort` / `thinking_budget` dialog.
 - Tap the sidebar icon for the session panel; the collapse chevron on its leading edge closes it
-  with the shared axis X return, and a day group card grows into its group page in place.
+  with the shared axis X return, and a day group card opens its indented session list in place.
+  Tap the same header again (or press back) to fold it, and the groups below close the gap.
 - Tap the FAB at the bottom left for Settings: it grows into the page and shrinks back into the
   FAB. Settings rows do the same, and a back press during any entrance retraces it instead of
   cutting.
