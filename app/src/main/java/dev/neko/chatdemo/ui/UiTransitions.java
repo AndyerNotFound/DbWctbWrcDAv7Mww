@@ -3,6 +3,7 @@ package dev.neko.chatdemo.ui;
 import android.app.Activity;
 import android.app.ActivityOptions;
 import android.content.Intent;
+import android.os.SystemClock;
 import android.transition.Fade;
 import android.transition.Slide;
 import android.transition.Transition;
@@ -34,9 +35,13 @@ import dev.neko.chatdemo.R;
  *       settings row.
  * </ul>
  *
- * <p>Both kinds remember whether the entrance started and finished. A back press that arrives mid
- * entrance is queued and played once the entrance is done, so the page always retraces its own
- * path instead of cutting.
+ * <p>Both kinds remember when the entrance is expected to finish. A back press that arrives mid
+ * entrance is queued until then and played as the return transition, so an interrupted transition
+ * retraces its own path instead of cutting.
+ *
+ * <p>The bookkeeping is time based rather than listener based: the framework clones transitions
+ * when it runs them, and a clone drops its listeners, so a listener attached here would never
+ * fire.
  */
 public final class UiTransitions {
 
@@ -55,8 +60,9 @@ public final class UiTransitions {
     public static void incoming(Activity activity, boolean forward) {
         int edge = forward ? Gravity.END : Gravity.START;
         Window window = activity.getWindow();
-        window.setEnterTransition(track(activity, axis(edge)));
+        window.setEnterTransition(axis(edge));
         window.setReturnTransition(axis(edge));
+        markEnterWindow(activity, DURATION);
     }
 
     /** Pushes {@code intent} with the shared axis X pair. */
@@ -93,8 +99,10 @@ public final class UiTransitions {
 
         Window window = activity.getWindow();
         window.setEnterTransition(null);
-        window.setSharedElementEnterTransition(track(activity, morph(activity, true)));
+        MaterialContainerTransform enter = morph(activity, true);
+        window.setSharedElementEnterTransition(enter);
         window.setSharedElementReturnTransition(morph(activity, false));
+        markEnterWindow(activity, enter.getDuration() < 0 ? DURATION : enter.getDuration());
     }
 
     /** Opens {@code intent} by growing it out of {@code source}, and back into it on return. */
@@ -135,22 +143,19 @@ public final class UiTransitions {
 
     /**
      * Leaves the page along the path it arrived on. When the entrance is still running the exit is
-     * queued until it finishes, which keeps the return transition instead of a hard cut. When the
-     * entrance never started there is nothing to retrace and the page just closes.
+     * queued until it ends and then played as the return transition; when there is nothing to
+     * retrace the page just closes.
      */
     public static void close(Activity activity) {
-        Window window = activity.getWindow();
-        View decor = window.getDecorView();
+        View decor = activity.getWindow().getDecorView();
+        Object endsAt = decor.getTag(R.id.neko_enter_ends_at);
 
-        Transition enter = window.getSharedElementEnterTransition();
-        if (enter == null) {
-            enter = window.getEnterTransition();
+        if (!(endsAt instanceof Long)) {
+            activity.finishAfterTransition();
+            return;
         }
-
-        boolean started = Boolean.TRUE.equals(decor.getTag(R.id.neko_enter_started));
-        boolean done = Boolean.TRUE.equals(decor.getTag(R.id.neko_enter_done));
-
-        if (enter == null || done || !started) {
+        long remaining = (Long) endsAt - SystemClock.uptimeMillis();
+        if (remaining <= 0) {
             activity.finishAfterTransition();
             return;
         }
@@ -158,72 +163,15 @@ public final class UiTransitions {
             return;
         }
         decor.setTag(R.id.neko_exit_queued, true);
-        enter.addListener(new Listener() {
-            @Override
-            public void onTransitionEnd(Transition transition) {
-                activity.finishAfterTransition();
-            }
-
-            @Override
-            public void onTransitionCancel(Transition transition) {
-                activity.finishAfterTransition();
-            }
-        });
-        // Safety net: if the entrance never reports back, the page still closes instead of
-        // swallowing the back press.
-        decor.postDelayed(() -> {
-            if (!activity.isFinishing()) {
-                activity.finishAfterTransition();
-            }
-        }, enter.getDuration() < 0 ? 600 : enter.getDuration() + 120);
+        // Wait for the entrance to land, then leave through the return transition.
+        decor.postDelayed(activity::finishAfterTransition, remaining + 40);
     }
 
-    /** Remembers how far the entrance got, so {@link #close(Activity)} knows whether to wait. */
-    private static Transition track(Activity activity, Transition transition) {
+    /** Records when this page's entrance will be over, so {@link #close(Activity)} can wait it out. */
+    private static void markEnterWindow(Activity activity, long duration) {
         View decor = activity.getWindow().getDecorView();
-        decor.setTag(R.id.neko_enter_started, false);
-        decor.setTag(R.id.neko_enter_done, false);
-        transition.addListener(new Listener() {
-            @Override
-            public void onTransitionStart(Transition t) {
-                decor.setTag(R.id.neko_enter_started, true);
-            }
-
-            @Override
-            public void onTransitionEnd(Transition t) {
-                decor.setTag(R.id.neko_enter_done, true);
-            }
-
-            @Override
-            public void onTransitionCancel(Transition t) {
-                decor.setTag(R.id.neko_enter_done, true);
-            }
-        });
-        return transition;
-    }
-
-    /** Framework transition listener with no-op defaults. */
-    private abstract static class Listener implements Transition.TransitionListener {
-
-        @Override
-        public void onTransitionStart(Transition transition) {
-        }
-
-        @Override
-        public void onTransitionEnd(Transition transition) {
-        }
-
-        @Override
-        public void onTransitionCancel(Transition transition) {
-        }
-
-        @Override
-        public void onTransitionPause(Transition transition) {
-        }
-
-        @Override
-        public void onTransitionResume(Transition transition) {
-        }
+        decor.setTag(R.id.neko_enter_ends_at, SystemClock.uptimeMillis() + duration);
+        decor.setTag(R.id.neko_exit_queued, false);
     }
 
     private static Transition axis(int slideEdge) {

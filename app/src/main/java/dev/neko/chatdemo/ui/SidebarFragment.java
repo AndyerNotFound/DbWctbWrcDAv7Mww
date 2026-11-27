@@ -16,8 +16,6 @@ import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 import androidx.fragment.app.Fragment;
-import androidx.transition.Transition;
-import androidx.transition.TransitionListenerAdapter;
 import androidx.transition.TransitionManager;
 
 import com.google.android.material.appbar.CollapsingToolbarLayout;
@@ -280,6 +278,13 @@ public class SidebarFragment extends Fragment {
 
     // ---------------------------------------------------------------- transform plumbing
 
+    /**
+     * Runs a container transform between two views inside this panel.
+     *
+     * <p>The bookkeeping is time based: {@code beginDelayedTransition} clones the transition and a
+     * clone drops its listeners, so the completion is scheduled from the transform duration
+     * instead of a listener. That also gives the queued collapse a well defined moment to play.
+     */
     private void morph(View start, View end, boolean entering, Runnable swap) {
         if (root == null) {
             swap.run();
@@ -296,28 +301,14 @@ public class SidebarFragment extends Fragment {
         // A single target keeps the transform off the start view.
         transform.addTarget(end);
 
+        long duration = transform.getDuration() < 0 ? 320 : transform.getDuration();
         final int token = ++morphToken;
         transforming = true;
-        transform.addListener(new TransitionListenerAdapter() {
-            @Override
-            public void onTransitionEnd(Transition transition) {
-                transition.removeListener(this);
-                onMorphDone(token);
-            }
-
-            @Override
-            public void onTransitionCancel(Transition transition) {
-                transition.removeListener(this);
-                onMorphDone(token);
-            }
-        });
 
         TransitionManager.beginDelayedTransition((ViewGroup) root, transform);
         swap.run();
 
-        // Safety net: if the transition never reports back (no animator, cancelled scene), the
-        // panel would stay locked out of further taps.
-        root.postDelayed(() -> onMorphDone(token), 1200);
+        root.postDelayed(() -> onMorphDone(token), duration + 40);
     }
 
     private void onMorphDone(int token) {
