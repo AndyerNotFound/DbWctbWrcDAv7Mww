@@ -1,20 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/drawer_root"
+    android:id="@+id/sidebar_root"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="?attr/colorSurface">
 
     <com.google.android.material.appbar.AppBarLayout
-        android:id="@+id/drawer_app_bar"
+        android:id="@+id/sidebar_app_bar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="?attr/colorSurface"
         app:elevation="0dp">
 
         <com.google.android.material.appbar.CollapsingToolbarLayout
-            android:id="@+id/drawer_collapsing"
+            android:id="@+id/sidebar_collapsing"
             android:layout_width="match_parent"
             android:layout_height="152dp"
             app:collapsedTitleGravity="center_vertical|start"
@@ -26,19 +26,19 @@
             app:titleEnabled="true">
 
             <com.google.android.material.appbar.MaterialToolbar
-                android:id="@+id/drawer_toolbar"
+                android:id="@+id/sidebar_toolbar"
                 android:layout_width="match_parent"
                 android:layout_height="?attr/actionBarSize"
                 android:background="@android:color/transparent"
                 app:layout_collapseMode="pin"
                 app:navigationContentDescription="@string/sidebar_collapse"
-                app:navigationIcon="@drawable/ic_menu_open"
+                app:navigationIcon="@drawable/ic_arrow_back"
                 app:titleMarginStart="56dp" />
         </com.google.android.material.appbar.CollapsingToolbarLayout>
     </com.google.android.material.appbar.AppBarLayout>
 
     <androidx.core.widget.NestedScrollView
-        android:id="@+id/drawer_scroll"
+        android:id="@+id/sidebar_scroll"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:clipToPadding="false"
@@ -59,13 +59,13 @@
                 android:scrollbars="none">
 
                 <LinearLayout
-                    android:id="@+id/drawer_functions"
+                    android:id="@+id/sidebar_functions"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:orientation="horizontal">
 
                     <com.google.android.material.button.MaterialButton
-                        android:id="@+id/drawer_function_new"
+                        android:id="@+id/sidebar_function_new"
                         style="?attr/materialButtonOutlinedStyle"
                         android:layout_width="wrap_content"
                         android:layout_height="40dp"
@@ -82,7 +82,7 @@
                         app:iconSize="16dp" />
 
                     <com.google.android.material.button.MaterialButton
-                        android:id="@+id/drawer_function_search"
+                        android:id="@+id/sidebar_function_search"
                         style="?attr/materialButtonOutlinedStyle"
                         android:layout_width="wrap_content"
                         android:layout_height="40dp"
@@ -100,7 +100,7 @@
                         app:iconSize="16dp" />
 
                     <com.google.android.material.button.MaterialButton
-                        android:id="@+id/drawer_function_folders"
+                        android:id="@+id/sidebar_function_folders"
                         style="?attr/materialButtonOutlinedStyle"
                         android:layout_width="wrap_content"
                         android:layout_height="40dp"
@@ -126,7 +126,7 @@
                 android:background="?attr/colorOutlineVariant" />
 
             <LinearLayout
-                android:id="@+id/drawer_history"
+                android:id="@+id/sidebar_history"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="12dp"
@@ -135,8 +135,7 @@
     </androidx.core.widget.NestedScrollView>
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/drawer_fab"
-        style="?attr/floatingActionButtonSmallStyle"
+        android:id="@+id/sidebar_fab"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|start"

@@ -1,8 +1,8 @@
-package dev.neko.chatdemo.ui;
+package dev.neko.chatdemo;
 
-import android.app.Activity;
 import android.content.res.ColorStateList;
 import android.graphics.Typeface;
+import android.os.Bundle;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -11,8 +11,10 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import androidx.core.view.GravityCompat;
-import androidx.drawerlayout.widget.DrawerLayout;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.graphics.Insets;
+import androidx.core.view.ViewCompat;
+import androidx.core.view.WindowInsetsCompat;
 import androidx.transition.ChangeBounds;
 import androidx.transition.TransitionManager;
 
@@ -20,26 +22,13 @@ import com.google.android.material.appbar.CollapsingToolbarLayout;
 import com.google.android.material.appbar.MaterialToolbar;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.color.MaterialColors;
+import com.google.android.material.snackbar.Snackbar;
 
-import dev.neko.chatdemo.R;
+import dev.neko.chatdemo.ui.SettingsUi;
+import dev.neko.chatdemo.ui.UiTransitions;
 
-/**
- * Session drawer: collapsing title, a row of function buttons, then the chat history grouped by
- * time. Each history entry is a checkable button and the current session stays toggled.
- */
-public class SidebarDrawer {
-
-    public interface Callbacks {
-        void onNewSession();
-
-        void onSearch();
-
-        void onFolders();
-
-        void onSessionChosen(String title);
-
-        void onOpenSettings(View fab);
-    }
+/** Full page session browser: collapsing title, functions, then the history grouped by day. */
+public class SidebarActivity extends AppCompatActivity {
 
     private static final String[][] SESSIONS = {
             {"Late night refactor", "Sheet motion study"},
@@ -50,48 +39,60 @@ public class SidebarDrawer {
             R.string.group_today, R.string.group_yesterday, R.string.group_earlier
     };
 
-    private final Activity activity;
-    private final DrawerLayout drawer;
-    private final Callbacks callbacks;
     private MaterialButton current;
+    private View root;
 
-    public SidebarDrawer(Activity activity, DrawerLayout drawer, Callbacks callbacks) {
-        this.activity = activity;
-        this.drawer = drawer;
-        this.callbacks = callbacks;
-    }
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        SettingsUi.setupWindow(this);
+        UiTransitions.incomingPanel(this);
+        setContentView(R.layout.activity_sidebar);
+        root = findViewById(R.id.sidebar_root);
 
-    public void setUp() {
-        CollapsingToolbarLayout collapsing = activity.findViewById(R.id.drawer_collapsing);
-        collapsing.setTitle(activity.getString(R.string.sidebar_title));
-
-        MaterialToolbar toolbar = activity.findViewById(R.id.drawer_toolbar);
-        toolbar.setNavigationOnClickListener(v -> close());
-
-        activity.findViewById(R.id.drawer_function_new).setOnClickListener(v -> {
-            close();
-            callbacks.onNewSession();
+        View appBar = findViewById(R.id.sidebar_app_bar);
+        View scroll = findViewById(R.id.sidebar_scroll);
+        View fab = findViewById(R.id.sidebar_fab);
+        ViewCompat.setOnApplyWindowInsetsListener(root, (v, insets) -> {
+            Insets bars = insets.getInsets(WindowInsetsCompat.Type.systemBars()
+                    | WindowInsetsCompat.Type.displayCutout());
+            appBar.setPadding(bars.left, bars.top, bars.right, 0);
+            scroll.setPadding(scroll.getPaddingLeft(), scroll.getPaddingTop(),
+                    scroll.getPaddingRight(), bars.bottom);
+            ViewGroup.MarginLayoutParams params =
+                    (ViewGroup.MarginLayoutParams) fab.getLayoutParams();
+            int bottom = bars.bottom + dp(16);
+            if (params.bottomMargin != bottom) {
+                params.bottomMargin = bottom;
+                fab.setLayoutParams(params);
+            }
+            return insets;
         });
-        activity.findViewById(R.id.drawer_function_search).setOnClickListener(v -> {
-            close();
-            callbacks.onSearch();
-        });
-        activity.findViewById(R.id.drawer_function_folders).setOnClickListener(v -> {
-            close();
-            callbacks.onFolders();
-        });
+        ViewCompat.requestApplyInsets(root);
 
-        buildHistory(activity.findViewById(R.id.drawer_history));
+        CollapsingToolbarLayout collapsing = findViewById(R.id.sidebar_collapsing);
+        collapsing.setTitle(getString(R.string.sidebar_title));
 
-        View fab = activity.findViewById(R.id.drawer_fab);
-        fab.setOnClickListener(v -> callbacks.onOpenSettings(fab));
+        MaterialToolbar toolbar = findViewById(R.id.sidebar_toolbar);
+        toolbar.setNavigationOnClickListener(v -> finish());
+
+        findViewById(R.id.sidebar_function_new).setOnClickListener(v ->
+                notice(getString(R.string.sidebar_notice_new)));
+        findViewById(R.id.sidebar_function_search).setOnClickListener(v ->
+                notice(getString(R.string.notice_menu_demo, getString(R.string.sidebar_search))));
+        findViewById(R.id.sidebar_function_folders).setOnClickListener(v ->
+                notice(getString(R.string.notice_menu_demo, getString(R.string.sidebar_folders))));
+
+        buildHistory(findViewById(R.id.sidebar_history));
+
+        fab.setOnClickListener(v -> SettingsActivity.start(this));
     }
 
     private void buildHistory(LinearLayout host) {
         int muted = MaterialColors.getColor(host,
                 com.google.android.material.R.attr.colorOnSurfaceVariant);
 
-        TextView heading = new TextView(activity);
+        TextView heading = new TextView(this);
         heading.setText(R.string.sidebar_history);
         heading.setTextSize(12);
         heading.setTypeface(Typeface.create("sans-serif-medium", Typeface.NORMAL));
@@ -100,14 +101,14 @@ public class SidebarDrawer {
         host.addView(heading);
 
         for (int group = 0; group < SESSIONS.length; group++) {
-            LinearLayout header = new LinearLayout(activity);
+            LinearLayout header = new LinearLayout(this);
             header.setOrientation(LinearLayout.HORIZONTAL);
             header.setGravity(Gravity.CENTER_VERTICAL);
             header.setPadding(dp(4), dp(8), dp(4), dp(8));
             header.setClickable(true);
             header.setFocusable(true);
 
-            TextView label = new TextView(activity);
+            TextView label = new TextView(this);
             label.setText(GROUP_TITLES[group]);
             label.setTextSize(12);
             label.setTypeface(Typeface.create("sans-serif-medium", Typeface.NORMAL));
@@ -115,16 +116,16 @@ public class SidebarDrawer {
             header.addView(label, new LinearLayout.LayoutParams(
                     0, ViewGroup.LayoutParams.WRAP_CONTENT, 1f));
 
-            ImageView chevron = new ImageView(activity);
+            ImageView chevron = new ImageView(this);
             chevron.setImageResource(R.drawable.ic_keyboard_arrow_down);
             chevron.setImageTintList(ColorStateList.valueOf(muted));
             header.addView(chevron, new LinearLayout.LayoutParams(dp(18), dp(18)));
 
-            LinearLayout items = new LinearLayout(activity);
+            LinearLayout items = new LinearLayout(this);
             items.setOrientation(LinearLayout.VERTICAL);
 
             for (String title : SESSIONS[group]) {
-                MaterialButton button = (MaterialButton) LayoutInflater.from(activity)
+                MaterialButton button = (MaterialButton) LayoutInflater.from(this)
                         .inflate(R.layout.item_drawer_session, items, false);
                 button.setText(title);
                 button.setCheckable(true);
@@ -157,15 +158,14 @@ public class SidebarDrawer {
         }
         button.setChecked(true);
         current = button;
-        callbacks.onSessionChosen(title);
-        close();
+        notice(getString(R.string.notice_menu_demo, title));
     }
 
-    private void close() {
-        drawer.closeDrawer(GravityCompat.START);
+    private void notice(String message) {
+        Snackbar.make(root, message, Snackbar.LENGTH_SHORT).show();
     }
 
     private int dp(int value) {
-        return Math.round(value * activity.getResources().getDisplayMetrics().density);
+        return Math.round(value * getResources().getDisplayMetrics().density);
     }
 }

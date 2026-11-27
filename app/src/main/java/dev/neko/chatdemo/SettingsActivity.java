@@ -7,7 +7,6 @@ import android.widget.LinearLayout;
 
 import androidx.annotation.StringRes;
 import androidx.appcompat.app.AppCompatDelegate;
-import androidx.core.app.ActivityOptionsCompat;
 
 import com.google.android.material.button.MaterialButtonToggleGroup;
 import com.google.android.material.snackbar.Snackbar;
@@ -21,32 +20,14 @@ public class SettingsActivity extends SettingsPageActivity {
 
     public static final String PREFS = "neko_prefs";
     public static final String KEY_COLOR_MODE = "color_mode";
-    private static final String EXTRA_CONTAINER = "container";
-    private static final String SHARED_CONTAINER = "settings_container";
 
     public static void start(Activity from) {
         UiTransitions.start(from, new Intent(from, SettingsActivity.class), true);
     }
 
-    /** Opens the page with a container transform growing out of {@code source}. */
-    public static void startFrom(Activity from, View source) {
-        Intent intent = new Intent(from, SettingsActivity.class)
-                .putExtra(EXTRA_CONTAINER, true);
-        from.getWindow().setExitTransition(null);
-        from.getWindow().setReenterTransition(null);
-        ActivityOptionsCompat options = ActivityOptionsCompat.makeSceneTransitionAnimation(
-                from, source, SHARED_CONTAINER);
-        from.startActivity(intent, options.toBundle());
-    }
-
     @Override
     protected int titleRes() {
         return R.string.settings_title;
-    }
-
-    @Override
-    protected boolean usesContainerTransform() {
-        return getIntent().getBooleanExtra(EXTRA_CONTAINER, false);
     }
 
     @Override

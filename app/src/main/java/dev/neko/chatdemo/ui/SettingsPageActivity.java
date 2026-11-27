@@ -7,8 +7,6 @@ import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.google.android.material.transition.platform.MaterialContainerTransform;
-
 import dev.neko.chatdemo.R;
 import dev.neko.chatdemo.SettingsActivity;
 
@@ -23,13 +21,7 @@ public abstract class SettingsPageActivity extends AppCompatActivity {
         SettingsUi.setupWindow(this);
         prefs = getSharedPreferences(SettingsActivity.PREFS, MODE_PRIVATE);
 
-        if (usesContainerTransform()) {
-            getWindow().setEnterTransition(null);
-            getWindow().setSharedElementEnterTransition(containerTransform());
-            getWindow().setSharedElementReturnTransition(containerTransform());
-        } else {
-            UiTransitions.incoming(this, true);
-        }
+        UiTransitions.incoming(this, true);
 
         setContentView(R.layout.activity_settings);
         SettingsUi.applyInsets(findViewById(R.id.settings_root),
@@ -43,15 +35,4 @@ public abstract class SettingsPageActivity extends AppCompatActivity {
     protected abstract int titleRes();
 
     protected abstract void buildContent(LinearLayout content);
-
-    /** True when the page was opened from a shared element and should morph instead of sliding. */
-    protected boolean usesContainerTransform() {
-        return false;
-    }
-
-    private static MaterialContainerTransform containerTransform() {
-        MaterialContainerTransform transform = new MaterialContainerTransform();
-        transform.setDuration(400);
-        return transform;
-    }
 }

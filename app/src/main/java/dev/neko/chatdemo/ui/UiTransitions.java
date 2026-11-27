@@ -39,6 +39,23 @@ public final class UiTransitions {
         window.setReturnTransition(axis(edge));
     }
 
+    /**
+     * Opens a full page panel: the panel slides in from the left and the page underneath stays
+     * put, so closing it slides the same panel back out to the left.
+     */
+    public static void startPanel(Activity from, Intent intent) {
+        from.getWindow().setExitTransition(null);
+        from.getWindow().setReenterTransition(null);
+        from.startActivity(intent, ActivityOptions.makeSceneTransitionAnimation(from).toBundle());
+    }
+
+    /** Companion of {@link #startPanel(Activity, Intent)} for the panel activity itself. */
+    public static void incomingPanel(Activity activity) {
+        Window window = activity.getWindow();
+        window.setEnterTransition(axis(Gravity.START));
+        window.setReturnTransition(axis(Gravity.START));
+    }
+
     public static void start(Activity from, Intent intent, boolean forward) {
         outgoing(from, forward);
         from.startActivity(intent, ActivityOptions.makeSceneTransitionAnimation(from).toBundle());
