@@ -125,6 +125,18 @@ print(adb("shell", "wm", "size").stdout.strip())
 print(adb("shell", "wm", "density").stdout.strip())
 print(adb("shell", "logcat", "-d", "-s", "NekoInsets:I").stdout)
 cache_tabs()
+
+ui = dump()
+with open(os.path.join(OUT, "ui-chat.xml"), "w") as f:
+    f.write(ET.tostring(ui, encoding="unicode"))
+for n in ui.iter("node"):
+    cls = n.get("class", "")
+    rid = n.get("resource-id", "")
+    txt = n.get("text", "")
+    if any(k in cls for k in ("RecyclerView", "ViewPager", "TabLayout")):
+        print("UI", cls, rid, n.get("bounds"))
+    if txt.startswith("MainActivity"):
+        print("META", rid, n.get("bounds"), txt[:40])
 shot("01-chat.png")
 
 # Tabs: use the tab bounds captured before the map starts animating.
@@ -137,6 +149,9 @@ shot("03-mission.png")
 tab("Usage")
 wait(1.6)
 shot("04-usage.png")
+adb("shell", "input", "swipe", "540", "1550", "540", "950", "320")
+wait(1.4)
+shot("04b-usage-scrolled.png")
 tab("Chat")
 wait(1.5)
 

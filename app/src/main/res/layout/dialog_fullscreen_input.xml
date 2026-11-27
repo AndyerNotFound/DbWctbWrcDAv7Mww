@@ -84,8 +84,6 @@
             android:gravity="top|start"
             android:inputType="textCapSentences|textMultiLine"
             android:lineSpacingExtra="3dp"
-            android:paddingTop="16dp"
-            android:paddingBottom="16dp"
             android:scrollbars="vertical"
             android:textSize="16sp" />
     </com.google.android.material.textfield.TextInputLayout>
