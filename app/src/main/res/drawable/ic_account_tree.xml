@@ -5,6 +5,6 @@
     android:viewportWidth="960"
     android:viewportHeight="960">
     <group android:translateY="960">
-        <path android:fillColor="#FFFFFFFF" android:fillType="nonZero" android:pathData="M600-120v-120H440v-400h-80v120H80v-320h280v120h240v-120h280v320H600v-120h-80v320h80v-120h280v320H600ZM160-760v160-160Zm520 400v160-160Zm0-400v160-160Zm0 160h120v-160H680v160Zm0 400h120v-160H680v160ZM160-600h120v-160H160v160Z"/>
+        <path android:fillColor="?attr/colorOnSurfaceVariant" android:fillType="nonZero" android:pathData="M600-120v-120H440v-400h-80v120H80v-320h280v120h240v-120h280v320H600v-120h-80v320h80v-120h280v320H600ZM160-760v160-160Zm520 400v160-160Zm0-400v160-160Zm0 160h120v-160H680v160Zm0 400h120v-160H680v160ZM160-600h120v-160H160v160Z"/>
     </group>
 </vector>

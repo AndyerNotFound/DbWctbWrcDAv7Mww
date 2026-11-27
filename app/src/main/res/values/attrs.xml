@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <!-- The user message surface: a button-shaped container that can also hold rich media. -->
+    <declare-styleable name="BubbleButton">
+        <!-- Rounded corner radius; the tail corner overrides it. -->
+        <attr name="bubbleCornerSize" format="dimension" />
+        <!-- The near square corner that points at the sender. -->
+        <attr name="bubbleTailSize" format="dimension" />
+        <!-- Which corner is the tail: none, bottomRight (user, end aligned) or bottomLeft. -->
+        <attr name="bubbleSharpCorner">
+            <enum name="none" value="0" />
+            <enum name="bottomRight" value="1" />
+            <enum name="bottomLeft" value="2" />
+        </attr>
+        <!-- Container colour; defaults to colorPrimaryContainer. -->
+        <attr name="bubbleContainerColor" format="color" />
+    </declare-styleable>
+
+</resources>

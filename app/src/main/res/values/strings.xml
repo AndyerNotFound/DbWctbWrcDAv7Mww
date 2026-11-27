@@ -122,6 +122,29 @@
     <string name="tool_read_files">Read · 3 files</string>
     <string name="status_completed">completed</string>
 
+    <!-- Message editing -->
+    <string name="edit_chip_default">Editing message</string>
+    <string name="edit_chip">Editing · %1$s</string>
+    <string name="edit_chip_remove">Stop editing</string>
+    <string name="edit_notice_started">Editing · the draft is back in the field</string>
+    <string name="edit_notice_cancelled">Editing cancelled · draft cleared</string>
+    <string name="notice_edited">Message updated</string>
+    <string name="message_action_edit">Edit</string>
+    <string name="message_action_copy">Copy text</string>
+    <string name="message_action_quote">Quote in a reply</string>
+    <string name="message_action_delete">Delete</string>
+    <string name="message_action_delete_sub">Removes this message from the thread</string>
+    <string name="message_action_branch">Branch from here</string>
+    <string name="message_action_speak">Read aloud</string>
+    <string name="message_action_copy_section">Clipboard</string>
+    <string name="message_action_thread_section">Thread</string>
+    <string name="notice_copied">Copied to the clipboard</string>
+    <string name="notice_quoted">Quoted in the composer</string>
+    <string name="notice_deleted">Message deleted</string>
+    <string name="notice_branched">Branched from that message · demo</string>
+    <string name="notice_read_aloud">Read aloud · demo</string>
+
+
     <!-- Model rows -->
     <string name="model_meta_context">OpenAI · 200k context</string>
     <string name="model_desc_flagship">Flagship reasoning, tools and vision.</string>

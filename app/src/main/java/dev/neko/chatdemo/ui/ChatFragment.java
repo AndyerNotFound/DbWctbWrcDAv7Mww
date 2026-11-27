@@ -1,5 +1,6 @@
 package dev.neko.chatdemo.ui;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.view.View;
 
@@ -16,6 +17,13 @@ import dev.neko.chatdemo.R;
 
 public class ChatFragment extends Fragment {
 
+    /** The activity owns the composer, so the chat list reports taps and long presses upward. */
+    public interface Host {
+        void onEditMessage(@NonNull ChatItem item);
+
+        void onMessageActions(@NonNull View bubble, @NonNull ChatItem item);
+    }
+
     private RecyclerView list;
     private ChatAdapter adapter;
 
@@ -30,6 +38,23 @@ public class ChatFragment extends Fragment {
         LinearLayoutManager lm = new LinearLayoutManager(requireContext());
         list.setLayoutManager(lm);
         adapter = new ChatAdapter();
+        adapter.setListener(new ChatAdapter.MessageListener() {
+            @Override
+            public void onEditMessage(@NonNull ChatItem item) {
+                Context context = getContext();
+                if (context instanceof Host) {
+                    ((Host) context).onEditMessage(item);
+                }
+            }
+
+            @Override
+            public void onMessageActions(@NonNull View bubble, @NonNull ChatItem item) {
+                Context context = getContext();
+                if (context instanceof Host) {
+                    ((Host) context).onMessageActions(bubble, item);
+                }
+            }
+        });
         list.setAdapter(adapter);
         adapter.submit(seed());
     }
@@ -90,6 +115,51 @@ public class ChatFragment extends Fragment {
         }
         adapter.add(ChatItem.neko(text, "just now · demo reply"));
         scrollToBottom();
+    }
+
+    /** Writes an edited message back into the row it came from. */
+    public void updateUserMessage(@NonNull ChatItem item, @NonNull String text) {
+        if (adapter == null) {
+            return;
+        }
+        item.text = text;
+        ChatItem stored = adapter.findById(item.id);
+        if (stored != null) {
+            stored.text = text;
+        }
+        int index = indexOf(item);
+        if (index >= 0) {
+            adapter.notifyItemChanged(index);
+        }
+    }
+
+    public void removeMessage(@NonNull ChatItem item) {
+        if (adapter == null) {
+            return;
+        }
+        int index = indexOf(item);
+        if (index >= 0) {
+            adapter.removeAt(index);
+        }
+    }
+
+    /** Paints the bubble of the message that is currently in the composer. */
+    public void setEditingMessage(int id) {
+        if (adapter != null) {
+            adapter.setEditingId(id);
+        }
+    }
+
+    private int indexOf(@NonNull ChatItem item) {
+        if (list == null || adapter == null) {
+            return -1;
+        }
+        for (int i = 0; i < adapter.getItemCount(); i++) {
+            if (adapter.idAt(i) == item.id) {
+                return i;
+            }
+        }
+        return -1;
     }
 
     public void resetConversation() {

@@ -30,7 +30,23 @@ context budget bar.
   no activity, no child page, no page swap. The bottom left FAB grows into Settings the same
   way.
 - **Chrome** — every titled scrolling page (settings, preferences, providers, settings detail,
-  sidebar, Mission, Usage) uses a collapsing title over a pinned toolbar.
+  sidebar, Mission, Usage) uses a collapsing title over a pinned toolbar. Toolbar navigation
+  icons are tinted with `?attr/colorOnSurface`, and every vector in `drawable/` fills with a
+  theme attribute, so the leading glyphs and the in-content icons follow light and dark instead
+  of staying white.
+- **Conversation** — an assistant reply has no bubble: the avatar and the author sit above the
+  reply, and the text spans the full width between two equal side margins. Tool calls, code
+  blocks and suggestion chips follow the same header, with their own card or code surface as the
+  only inset element. A user message is a button shaped surface (`BubbleButton`): filled
+  container, 10% pressed state layer, ripple clipped to the outline, `Button` accessibility role,
+  and a `message_media` slot so a thumbnail or any other rich child sits above the caption.
+- **Message editing** — tapping a user bubble pulls that message back into the field and turns
+  the bubble to `colorTertiaryContainer`. A removable input chip above the field names what is
+  being edited; removing it clears the draft and leaves the edit state, and sending writes the
+  text back into the same row.
+- **Message actions** — holding a user bubble opens a floating card under it: a multi-section
+  list (section subheader + segmented `ListItemLayout` rows) for copy, quote, edit, branch, read
+  aloud and delete.
 - **Settings** — a multi-section list: each block is named by a section header, and its rows are
   `ListItemLayout` segments sharing one continuous card, so only the first row rounds its top
   corners and only the last rounds its bottom.
@@ -56,6 +72,11 @@ context budget bar.
   cutting.
 - Type in the field (the fullscreen glyph appears), send, watch the bar turn wavy and the
   tonal send button flip to stop. Toggle the mic for the REC state.
+- Tap a user bubble: it comes back into the field with a removable chip above it, and the bubble
+  turns tertiary while it is being edited. Remove the chip to drop the draft, or send to write the
+  text back into the same row.
+- Hold a user bubble: a card grows out of it with a multi-section list — copy, quote, edit,
+  branch, read aloud, delete.
 
 ## Build
 

@@ -84,18 +84,6 @@
         <item name="android:fontFamily">sans-serif-medium</item>
     </style>
 
-    <style name="ShapeAppearanceOverlay.Neko.BubbleUser" parent="">
-        <item name="cornerFamily">rounded</item>
-        <item name="cornerSize">20dp</item>
-        <item name="cornerSizeBottomRight">5dp</item>
-    </style>
-
-    <style name="ShapeAppearanceOverlay.Neko.BubbleNeko" parent="">
-        <item name="cornerFamily">rounded</item>
-        <item name="cornerSize">20dp</item>
-        <item name="cornerSizeTopLeft">5dp</item>
-    </style>
-
     <style name="ShapeAppearanceOverlay.Neko.InputDock" parent="">
         <item name="cornerFamily">rounded</item>
         <item name="cornerSizeTopLeft">28dp</item>
@@ -139,6 +127,30 @@
     <style name="ShapeAppearanceOverlay.Neko.Chip" parent="">
         <item name="cornerFamily">rounded</item>
         <item name="cornerSize">10dp</item>
+    </style>
+
+    <!-- The removable chip that marks the message currently being edited in the composer. -->
+    <style name="Widget.Neko.Chip.Input" parent="Widget.Material3.Chip.Input">
+        <item name="android:textSize">12sp</item>
+        <item name="chipMinHeight">30dp</item>
+        <item name="chipIconSize">16dp</item>
+        <item name="closeIconSize">16dp</item>
+        <item name="chipStartPadding">6dp</item>
+        <item name="chipEndPadding">6dp</item>
+        <item name="textStartPadding">6dp</item>
+        <item name="textEndPadding">4dp</item>
+        <item name="iconStartPadding">2dp</item>
+        <item name="iconEndPadding">0dp</item>
+        <item name="closeIconStartPadding">2dp</item>
+        <item name="closeIconEndPadding">2dp</item>
+        <item name="android:checkable">false</item>
+        <item name="checkedIconVisible">false</item>
+        <item name="shapeAppearanceOverlay">@style/ShapeAppearanceOverlay.Neko.Chip</item>
+        <item name="chipBackgroundColor">?attr/colorTertiaryContainer</item>
+        <item name="android:textColor">?attr/colorOnTertiaryContainer</item>
+        <item name="chipIconTint">?attr/colorOnTertiaryContainer</item>
+        <item name="closeIconTint">?attr/colorOnTertiaryContainer</item>
+        <item name="chipStrokeWidth">0dp</item>
     </style>
 
     <style name="Widget.Neko.Divider" parent="">

@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  The long press card of a message. It is a floating surface holding a multi-section list: each
+  section is named by a subheader and its options are ListItemLayout segments, so a run of options
+  reads as one continuous card the way the settings pages do.
+-->
+<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/message_actions_card"
+    style="?attr/materialCardViewFilledStyle"
+    android:layout_width="288dp"
+    android:layout_height="wrap_content"
+    app:cardBackgroundColor="?attr/colorSurfaceContainerLow"
+    app:cardCornerRadius="20dp"
+    app:cardElevation="6dp">
+
+    <LinearLayout
+        android:id="@+id/message_actions_content"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:paddingTop="4dp"
+        android:paddingBottom="8dp" />
+</com.google.android.material.card.MaterialCardView>

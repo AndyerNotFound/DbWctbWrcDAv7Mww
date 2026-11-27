@@ -39,6 +39,7 @@
                 app:layout_collapseMode="pin"
                 app:navigationContentDescription="@string/sidebar_collapse"
                 app:navigationIcon="@drawable/ic_keyboard_double_arrow_left"
+                app:navigationIconTint="?attr/colorOnSurface"
                 app:titleMarginStart="56dp" />
         </com.google.android.material.appbar.CollapsingToolbarLayout>
 

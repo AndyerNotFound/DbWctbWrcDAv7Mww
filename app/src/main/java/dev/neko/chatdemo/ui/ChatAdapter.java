@@ -1,11 +1,13 @@
 package dev.neko.chatdemo.ui;
 
+import android.view.HapticFeedbackConstants;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.ArrayList;
@@ -15,7 +17,23 @@ import dev.neko.chatdemo.R;
 
 public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.Holder> {
 
+    /** What the chat list tells the composer about a user bubble the finger landed on. */
+    public interface MessageListener {
+        /** A tap: the message goes back into the field for editing. */
+        void onEditMessage(@NonNull ChatItem item);
+
+        /** A long press: the action card opens under the bubble. */
+        void onMessageActions(@NonNull View bubble, @NonNull ChatItem item);
+    }
+
     private final List<ChatItem> items = new ArrayList<>();
+    @Nullable
+    private MessageListener listener;
+    private int editingId = -1;
+
+    public void setListener(@Nullable MessageListener listener) {
+        this.listener = listener;
+    }
 
     public void submit(List<ChatItem> seed) {
         items.clear();
@@ -30,6 +48,57 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.Holder> {
 
     public int count() {
         return items.size();
+    }
+
+    @Nullable
+    public ChatItem findById(int id) {
+        for (ChatItem item : items) {
+            if (item.id == id) {
+                return item;
+            }
+        }
+        return null;
+    }
+
+    /** Row id, so a caller holding a {@link ChatItem} can find its position after a rebind. */
+    public int idAt(int position) {
+        return items.get(position).id;
+    }
+
+    public void removeAt(int position) {
+        if (position < 0 || position >= items.size()) {
+            return;
+        }
+        items.remove(position);
+        notifyItemRemoved(position);
+    }
+
+    /** Marks one message as the one being edited, so its bubble can show the state. */
+    public void setEditingId(int id) {
+        if (editingId == id) {
+            return;
+        }
+        int previous = indexOf(editingId);
+        editingId = id;
+        if (previous >= 0) {
+            notifyItemChanged(previous);
+        }
+        int next = indexOf(id);
+        if (next >= 0) {
+            notifyItemChanged(next);
+        }
+    }
+
+    private int indexOf(int id) {
+        if (id < 0) {
+            return -1;
+        }
+        for (int i = 0; i < items.size(); i++) {
+            if (items.get(i).id == id) {
+                return i;
+            }
+        }
+        return -1;
     }
 
     @Override
@@ -102,6 +171,58 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.Holder> {
         if (code != null && item.code != null) {
             code.setText(item.code);
         }
+
+        View bubble = holder.itemView.findViewById(R.id.message_bubble);
+        if (bubble instanceof BubbleButton) {
+            BubbleButton button = (BubbleButton) bubble;
+            bindBubble(button, item);
+        }
+    }
+
+    /**
+     * The bubble is a button: one tap reopens the message in the composer, a long press opens the
+     * action card, and while it is the message being edited the container switches to the tertiary
+     * pair so the row is recognisable from the composer.
+     */
+    private void bindBubble(@NonNull BubbleButton bubble, @NonNull ChatItem item) {
+        boolean editing = item.id == editingId;
+        bubble.setContainerColor(containerFor(bubble, editing));
+
+        // The content colours follow the container pair, so an edited bubble stays readable.
+        int onContainer = com.google.android.material.color.MaterialColors.getColor(bubble,
+                editing ? com.google.android.material.R.attr.colorOnTertiaryContainer
+                        : com.google.android.material.R.attr.colorOnPrimaryContainer);
+        View text = bubble.findViewById(R.id.message_text);
+        if (text instanceof TextView) {
+            ((TextView) text).setTextColor(onContainer);
+        }
+
+        if (!item.isEditable()) {
+            bubble.setClickable(false);
+            bubble.setLongClickable(false);
+            bubble.setOnClickListener(null);
+            bubble.setOnLongClickListener(null);
+            return;
+        }
+
+        bubble.setOnClickListener(v -> {
+            if (listener != null) {
+                listener.onEditMessage(item);
+            }
+        });
+        bubble.setOnLongClickListener(v -> {
+            v.performHapticFeedback(HapticFeedbackConstants.LONG_PRESS);
+            if (listener != null) {
+                listener.onMessageActions(v, item);
+            }
+            return true;
+        });
+    }
+
+    private int containerFor(@NonNull View view, boolean editing) {
+        return com.google.android.material.color.MaterialColors.getColor(view,
+                editing ? com.google.android.material.R.attr.colorTertiaryContainer
+                        : com.google.android.material.R.attr.colorPrimaryContainer);
     }
 
     @Override

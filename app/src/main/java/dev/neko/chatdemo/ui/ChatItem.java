@@ -11,20 +11,31 @@ public class ChatItem {
     public static final int TYPE_IMAGE = 5;
     public static final int TYPE_CHIPS = 6;
 
+    private static int nextId = 1;
+
+    public final int id;
     public final int type;
-    public final String text;
     public final String meta;
     public final String time;
     public final String author;
     public final String code;
 
+    /** Mutable: a user message can be reopened for editing and written back in place. */
+    public String text;
+
     public ChatItem(int type, String text, String meta, String time, String author, String code) {
+        this.id = nextId++;
         this.type = type;
         this.text = text;
         this.meta = meta;
         this.time = time;
         this.author = author;
         this.code = code;
+    }
+
+    /** True for the rows that can be reopened in the composer. */
+    public boolean isEditable() {
+        return type == TYPE_USER || type == TYPE_IMAGE;
     }
 
     public static ChatItem divider(String text) {

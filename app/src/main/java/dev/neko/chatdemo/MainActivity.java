@@ -38,6 +38,7 @@ import androidx.viewpager2.widget.ViewPager2;
 
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.card.MaterialCardView;
+import com.google.android.material.chip.Chip;
 import com.google.android.material.color.MaterialColors;
 import com.google.android.material.progressindicator.LinearProgressIndicator;
 import com.google.android.material.tabs.TabLayout;
@@ -50,13 +51,16 @@ import java.util.Locale;
 import dev.neko.chatdemo.sheet.AttachmentsSheet;
 import dev.neko.chatdemo.sheet.ReasoningSheet;
 import dev.neko.chatdemo.ui.ChatFragment;
+import dev.neko.chatdemo.ui.ChatItem;
 import dev.neko.chatdemo.ui.FullscreenInputDialog;
 import dev.neko.chatdemo.ui.MapFragment;
+import dev.neko.chatdemo.ui.MessageActionsSheet;
 import dev.neko.chatdemo.ui.MissionFragment;
 import dev.neko.chatdemo.ui.UiTransitions;
 import dev.neko.chatdemo.ui.UsageFragment;
 
-public class MainActivity extends AppCompatActivity implements ReasoningSheet.Listener {
+public class MainActivity extends AppCompatActivity
+        implements ReasoningSheet.Listener, ChatFragment.Host {
 
     private static final int[] STATUS_ICONS = {
             R.drawable.ic_check_circle, R.drawable.ic_schedule, R.drawable.ic_check_circle
@@ -92,6 +96,7 @@ public class MainActivity extends AppCompatActivity implements ReasoningSheet.Li
     private MaterialButton sessionButton;
     private MaterialButton presetButton;
     private MaterialButton interpolationButton;
+    private Chip editChip;
     private LinearProgressIndicator contextProgress;
     private TextView contextLabel;
     private MaterialCardView noticeCard;
@@ -103,6 +108,9 @@ public class MainActivity extends AppCompatActivity implements ReasoningSheet.Li
     private TabLayout tabs;
 
     private ChatFragment chatFragment;
+
+    /** The message currently pulled back into the composer, or null when composing fresh. */
+    private ChatItem editingItem;
 
     private final Handler handler = new Handler(Looper.getMainLooper());
     private Runnable replyRunnable;
@@ -185,6 +193,7 @@ public class MainActivity extends AppCompatActivity implements ReasoningSheet.Li
         interpolationButton = findViewById(R.id.btn_interpolation);
         contextProgress = findViewById(R.id.context_progress);
         contextLabel = findViewById(R.id.context_label);
+        editChip = findViewById(R.id.edit_chip);
         contextProgress.setWaveAmplitude(0);
         setupNotice();
         pager = findViewById(R.id.pager);
@@ -207,6 +216,7 @@ public class MainActivity extends AppCompatActivity implements ReasoningSheet.Li
         if (chatFragment != null) {
             chatFragment.resetConversation();
         }
+        stopEditing(true);
         sessionButton.setText(R.string.new_chat_title);
         contextPercent = 4;
         updateContextIndicator(true);
@@ -357,6 +367,11 @@ public class MainActivity extends AppCompatActivity implements ReasoningSheet.Li
             fullscreenButton.setOnClickListener(v -> openFullscreenInput());
         }
 
+        if (editChip != null) {
+            editChip.setCloseIconContentDescription(getString(R.string.edit_chip_remove));
+            editChip.setOnCloseIconClickListener(v -> stopEditing(true));
+        }
+
         input.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -487,6 +502,19 @@ public class MainActivity extends AppCompatActivity implements ReasoningSheet.Li
             return;
         }
 
+        if (editingItem != null) {
+            // An edit writes back into the row it came from and leaves the edit state.
+            ChatItem target = editingItem;
+            if (chatFragment != null) {
+                chatFragment.updateUserMessage(target, text);
+            }
+            input.setText("");
+            stopEditing(false);
+            hideKeyboard();
+            showNotice(R.drawable.ic_check_circle, getString(R.string.notice_edited));
+            return;
+        }
+
         if (chatFragment != null) {
             chatFragment.addUserMessage(text);
         }
@@ -495,6 +523,144 @@ public class MainActivity extends AppCompatActivity implements ReasoningSheet.Li
         setGenerating(true);
         handler.removeCallbacks(replyRunnable);
         handler.postDelayed(replyRunnable, 2700);
+    }
+
+    @Override
+    public void onEditMessage(@NonNull ChatItem item) {
+        beginEditing(item);
+    }
+
+    @Override
+    public void onMessageActions(@NonNull View bubble, @NonNull ChatItem item) {
+        MessageActionsSheet.show(this, bubble, new MessageActionsSheet.Callbacks() {
+            @Override
+            public void onEdit() {
+                beginEditing(item);
+            }
+
+            @Override
+            public void onCopy() {
+                android.content.ClipboardManager clipboard =
+                        (android.content.ClipboardManager) getSystemService(CLIPBOARD_SERVICE);
+                if (clipboard != null && item.text != null) {
+                    clipboard.setPrimaryClip(
+                            android.content.ClipData.newPlainText(getString(R.string.app_name),
+                                    item.text));
+                }
+                showNotice(R.drawable.ic_content_copy, getString(R.string.notice_copied));
+            }
+
+            @Override
+            public void onQuote() {
+                String quoted = "> " + (item.text == null ? "" : item.text.replace("\n", "\n> ")) + "\n\n";
+                String existing = input.getText() == null ? "" : input.getText().toString();
+                input.setText(quoted + existing);
+                input.setSelection(input.getText() == null ? 0 : input.getText().length());
+                input.requestFocus();
+                showKeyboard();
+                showNotice(R.drawable.ic_chat_bubble, getString(R.string.notice_quoted));
+            }
+
+            @Override
+            public void onBranch() {
+                showNotice(R.drawable.ic_alt_route, getString(R.string.notice_branched));
+            }
+
+            @Override
+            public void onReadAloud() {
+                showNotice(R.drawable.ic_graphic_eq, getString(R.string.notice_read_aloud));
+            }
+
+            @Override
+            public void onDelete() {
+                if (editingItem != null && editingItem.id == item.id) {
+                    stopEditing(true);
+                }
+                if (chatFragment != null) {
+                    chatFragment.removeMessage(item);
+                }
+                showNotice(R.drawable.ic_delete, getString(R.string.notice_deleted));
+            }
+        });
+    }
+
+    /**
+     * Pulls a message back into the composer. The chip above the field names what is being edited,
+     * and removing the chip is the way out: the draft is dropped and the state is cleared.
+     */
+    private void beginEditing(@NonNull ChatItem item) {
+        if (editingItem != null && editingItem.id == item.id) {
+            input.requestFocus();
+            showKeyboard();
+            return;
+        }
+        if (editingItem != null) {
+            // Switching targets: the previous draft is simply replaced by the new message.
+            chatFragmentSetEditing(-1);
+        }
+        editingItem = item;
+        input.setText(item.text == null ? "" : item.text);
+        if (input.getText() != null) {
+            input.setSelection(input.getText().length());
+        }
+        input.requestFocus();
+        showKeyboard();
+
+        if (editChip != null) {
+            editChip.setText(getString(R.string.edit_chip, shorten(item.text)));
+            editChip.setVisibility(View.VISIBLE);
+            editChip.setAlpha(0f);
+            editChip.animate().alpha(1f).setDuration(140).start();
+        }
+        chatFragmentSetEditing(item.id);
+        updateInputState();
+        showNotice(R.drawable.ic_edit_note, getString(R.string.edit_notice_started));
+    }
+
+    /**
+     * Leaves the edit state. Removing the chip is the way out: the field is emptied and the bubble
+     * drops back to its normal colour, so nothing of the draft is left behind.
+     */
+    private void stopEditing(boolean clearDraft) {
+        if (editingItem == null && (editChip == null || editChip.getVisibility() != View.VISIBLE)) {
+            return;
+        }
+        editingItem = null;
+        chatFragmentSetEditing(-1);
+
+        if (editChip != null && editChip.getVisibility() == View.VISIBLE) {
+            editChip.animate().alpha(0f).setDuration(120).withEndAction(() -> {
+                editChip.setVisibility(View.GONE);
+                editChip.setAlpha(1f);
+            }).start();
+        }
+
+        if (clearDraft) {
+            input.setText("");
+            showNotice(R.drawable.ic_close, getString(R.string.edit_notice_cancelled));
+        }
+        updateInputState();
+    }
+
+    private void chatFragmentSetEditing(int id) {
+        if (chatFragment != null) {
+            chatFragment.setEditingMessage(id);
+        }
+    }
+
+    private String shorten(String text) {
+        if (text == null) {
+            return "";
+        }
+        String flat = text.replace('\n', ' ').trim();
+        return flat.length() <= 24 ? flat : flat.substring(0, 24) + "…";
+    }
+
+    private void showKeyboard() {
+        InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+        if (imm != null) {
+            imm.showSoftInput(input, InputMethodManager.SHOW_IMPLICIT);
+        }
     }
 
     private void stopGenerating() {
