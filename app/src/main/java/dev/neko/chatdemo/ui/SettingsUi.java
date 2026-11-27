@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.content.res.ColorStateList;
 import android.content.res.Configuration;
 import android.graphics.Color;
-import android.graphics.Typeface;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,15 +19,17 @@ import androidx.core.view.WindowInsetsCompat;
 import androidx.core.view.WindowInsetsControllerCompat;
 
 import com.google.android.material.appbar.CollapsingToolbarLayout;
-import com.google.android.material.card.MaterialCardView;
 import com.google.android.material.color.MaterialColors;
+import com.google.android.material.listitem.ListItemLayout;
 import com.google.android.material.materialswitch.MaterialSwitch;
 
 import dev.neko.chatdemo.R;
 
 /**
- * Settings rows built as preference cards: one card per section, plain rows inside separated by a
- * 1dp divider, a 40dp icon well and a title / subtitle column.
+ * Settings rows built as a multi-section list: a section header names the block, and the rows
+ * below it are segmented {@link ListItemLayout} items. Each row only knows its index inside its
+ * own section, so the first row gets the large top corners, the last the large bottom corners and
+ * the rows between stay square — the block reads as one continuous card.
  */
 public final class SettingsUi {
 
@@ -65,56 +66,47 @@ public final class SettingsUi {
         collapsing.setTitle(title);
     }
 
-    /** Adds a titled card to {@code parent} and returns the container rows go into. */
+    /** Adds a titled section to {@code parent} and returns the container rows go into. */
     public static LinearLayout group(Activity activity, LinearLayout parent, int titleRes) {
         return group(activity, parent, activity.getString(titleRes));
     }
 
     /** Same as {@link #group(Activity, LinearLayout, int)} but without a heading. */
     public static LinearLayout group(Activity activity, LinearLayout parent, CharSequence titleText) {
-        LinearLayout block = new LinearLayout(activity);
-        block.setOrientation(LinearLayout.VERTICAL);
+        LinearLayout section = new LinearLayout(activity);
+        section.setOrientation(LinearLayout.VERTICAL);
 
         if (titleText != null && titleText.length() > 0) {
-            TextView title = new TextView(activity);
-            title.setText(titleText);
-            title.setTextSize(14);
-            title.setTypeface(Typeface.create("sans-serif-medium", Typeface.NORMAL));
-            title.setTextColor(MaterialColors.getColor(title,
-                    com.google.android.material.R.attr.colorOnSurfaceVariant));
-            title.setPadding(dp(title, 4), dp(title, 8), dp(title, 4), dp(title, 8));
-            block.addView(title);
+            TextView header = (TextView) LayoutInflater.from(activity)
+                    .inflate(R.layout.item_list_subheader, section, false);
+            header.setText(titleText);
+            section.addView(header);
         }
-
-        MaterialCardView card = new MaterialCardView(activity);
-        card.setCardBackgroundColor(MaterialColors.getColor(card,
-                com.google.android.material.R.attr.colorSurfaceContainerLow));
-        card.setRadius(dp(card, 20));
-        card.setCardElevation(0);
-        card.setUseCompatPadding(false);
-        card.setClipToOutline(true);
 
         LinearLayout rows = new LinearLayout(activity);
         rows.setOrientation(LinearLayout.VERTICAL);
-        card.addView(rows, new LinearLayout.LayoutParams(
-                ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
-        block.addView(card);
+        section.addView(rows);
 
         LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(
                 ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
         lp.topMargin = dp(activity.getWindow().getDecorView(),
-                parent.getChildCount() == 0 ? 0 : 12);
-        parent.addView(block, lp);
+                parent.getChildCount() == 0 ? 0 : 4);
+        parent.addView(section, lp);
         return rows;
     }
 
+    /**
+     * Adds one segmented row. The returned view is the clickable card, so callers can hang a click
+     * listener on it directly; the corners are resolved later by {@link #finishGroup}.
+     */
     public static View row(Activity activity, LinearLayout group, int iconRes,
                            CharSequence title, CharSequence subtitle,
                            int containerColor, int contentColor) {
-        View row = LayoutInflater.from(activity).inflate(R.layout.item_pref_row, group, false);
-        bindRow(row, iconRes, title, subtitle, containerColor, contentColor);
-        group.addView(row);
-        return row;
+        ListItemLayout item = (ListItemLayout) LayoutInflater.from(activity)
+                .inflate(R.layout.item_pref_row, group, false);
+        bindRow(item, iconRes, title, subtitle, containerColor, contentColor);
+        group.addView(item);
+        return item.findViewById(R.id.pref_card);
     }
 
     public static View switchRow(Activity activity, LinearLayout group, int iconRes,
@@ -136,14 +128,23 @@ public final class SettingsUi {
         pill.setVisibility(View.VISIBLE);
     }
 
-    /** Hides the divider of the last row so the card closes cleanly. */
+    /** Applies the section position state to every row so the block closes on rounded corners. */
     public static void finishGroup(LinearLayout group) {
-        if (group.getChildCount() == 0) {
-            return;
-        }
-        View divider = group.getChildAt(group.getChildCount() - 1).findViewById(R.id.pref_divider);
-        if (divider != null) {
-            divider.setVisibility(View.GONE);
+        int count = group.getChildCount();
+        for (int i = 0; i < count; i++) {
+            View child = group.getChildAt(i);
+            if (!(child instanceof ListItemLayout)) {
+                continue;
+            }
+            ((ListItemLayout) child).updateAppearance(i, count);
+            // Segments sit 2dp apart; the block's own bottom edge stays flush so the rounded
+            // last row ends the card cleanly.
+            ViewGroup.LayoutParams params = child.getLayoutParams();
+            if (params instanceof ViewGroup.MarginLayoutParams) {
+                ((ViewGroup.MarginLayoutParams) params).bottomMargin =
+                        dp(child, i == count - 1 ? 0 : 2);
+                child.setLayoutParams(params);
+            }
         }
     }
 

@@ -12,7 +12,8 @@ context budget bar.
 - **Top bar** — sidebar entry (shared axis X to the panel), session-folder split button, session
   title (text button with a live status icon), session preset, new chat, overflow menu.
 - **Tabs** — Chat / Map / Mission / Usage, fill gravity, elastic animation, full-width
-  rounded line indicator.
+  rounded line indicator. The pager underneath is tap-only: horizontal drags and the edge
+  stretch are both off, so a page never moves unless its tab is tapped.
 - **Composer** — wavy determinate/indeterminate context progress, filled multi-line field
   (6-line cap, internal scrolling), fullscreen composer, attachments, quick message,
   model + reasoning split button, interpolation, recording toggle, send/stop tonal button.
@@ -30,13 +31,16 @@ context budget bar.
   way.
 - **Chrome** — every titled scrolling page (settings, preferences, providers, settings detail,
   sidebar, Mission, Usage) uses a collapsing title over a pinned toolbar.
+- **Settings** — a multi-section list: each block is named by a section header, and its rows are
+  `ListItemLayout` segments sharing one continuous card, so only the first row rounds its top
+  corners and only the last rounds its bottom.
 - **Custom views** — branching conversation map (animated live head) and animated
   throughput bar chart.
 - Light and dark schemes, edge-to-edge insets, portrait demo.
 
 ## Poke at it
 
-- Tap the four tabs; swipe the pager.
+- Tap the four tabs; the pager only follows the tab, it does not swipe.
 - Tap the folder split button, the session title (cycles live status), the preset, new chat
   and the overflow menu.
 - Tap the attachment clip for the multi-section sheet; enter Drafts / Web search /

@@ -253,6 +253,11 @@ public class MainActivity extends AppCompatActivity implements ReasoningSheet.Li
             }
         });
         pager.setOffscreenPageLimit(3);
+        // The pager is a passive container: pages only change from a tab tap. Turning the user
+        // input off removes the horizontal drag, and the overscroll mode is cleared so no edge
+        // stretch is left to rebound even if a gesture reaches the pager.
+        pager.setUserInputEnabled(false);
+        pager.setOverScrollMode(View.OVER_SCROLL_NEVER);
         new TabLayoutMediator(tabs, pager, (tab, position) ->
                 tab.setText(tabTitles[position])).attach();
 
