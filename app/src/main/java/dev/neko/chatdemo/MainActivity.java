@@ -253,7 +253,6 @@ public class MainActivity extends AppCompatActivity {
         });
         findViewById(R.id.btn_menu).setOnClickListener(this::showSessionMenu);
 
-        modelChevron.setTag(modelChevronId);
     }
 
     private void showFolderMenu(View anchor) {
