@@ -1,5 +1,7 @@
 package dev.neko.chatdemo;
 
+import android.app.ActivityOptions;
+import android.content.Intent;
 import android.content.res.ColorStateList;
 import android.graphics.Typeface;
 import android.os.Bundle;
@@ -17,23 +19,31 @@ import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 import androidx.transition.ChangeBounds;
 import androidx.transition.TransitionManager;
+import androidx.transition.TransitionSet;
 
-import com.google.android.material.appbar.CollapsingToolbarLayout;
 import com.google.android.material.appbar.MaterialToolbar;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.color.MaterialColors;
 import com.google.android.material.snackbar.Snackbar;
+import com.google.android.material.transition.MaterialFade;
+import com.google.android.material.transition.platform.MaterialContainerTransformSharedElementCallback;
 
 import dev.neko.chatdemo.ui.SettingsUi;
 import dev.neko.chatdemo.ui.UiTransitions;
 
-/** Full page session browser: collapsing title, functions, then the history grouped by day. */
+/**
+ * Full page session browser: a collapse control and the panel title on top, the quick entries
+ * pinned underneath as one full width column, then the chat history in its own scrolling area.
+ * The bottom left FAB grows into the settings page with a container transform.
+ */
 public class SidebarActivity extends AppCompatActivity {
 
+    private static final String SHARED_CONTAINER = "settings_container";
+
     private static final String[][] SESSIONS = {
-            {"Late night refactor", "Sheet motion study"},
-            {"Palette pass"},
-            {"Apr 12 · build log"}
+            {"Late night refactor", "Sheet motion study", "Palette pass"},
+            {"Dock clipping", "Wavy progress", "Map caption"},
+            {"Apr 12 · build log", "Mar 30 · insets", "Mar 21 · tabs"}
     };
     private static final int[] GROUP_TITLES = {
             R.string.group_today, R.string.group_yesterday, R.string.group_earlier
@@ -41,22 +51,27 @@ public class SidebarActivity extends AppCompatActivity {
 
     private MaterialButton current;
     private View root;
+    private LinearLayout historyHost;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        // The FAB hands its bounds to the settings page, so this window keeps a shared element
+        // callback for both directions of the morph.
+        setExitSharedElementCallback(new MaterialContainerTransformSharedElementCallback());
         super.onCreate(savedInstanceState);
         SettingsUi.setupWindow(this);
         UiTransitions.incomingPanel(this);
         setContentView(R.layout.activity_sidebar);
         root = findViewById(R.id.sidebar_root);
 
-        View appBar = findViewById(R.id.sidebar_app_bar);
+        View header = findViewById(R.id.sidebar_header);
         View scroll = findViewById(R.id.sidebar_scroll);
         View fab = findViewById(R.id.sidebar_fab);
         ViewCompat.setOnApplyWindowInsetsListener(root, (v, insets) -> {
             Insets bars = insets.getInsets(WindowInsetsCompat.Type.systemBars()
                     | WindowInsetsCompat.Type.displayCutout());
-            appBar.setPadding(bars.left, bars.top, bars.right, 0);
+            header.setPadding(header.getPaddingLeft(), bars.top,
+                    header.getPaddingRight(), header.getPaddingBottom());
             scroll.setPadding(scroll.getPaddingLeft(), scroll.getPaddingTop(),
                     scroll.getPaddingRight(), bars.bottom);
             ViewGroup.MarginLayoutParams params =
@@ -70,9 +85,6 @@ public class SidebarActivity extends AppCompatActivity {
         });
         ViewCompat.requestApplyInsets(root);
 
-        CollapsingToolbarLayout collapsing = findViewById(R.id.sidebar_collapsing);
-        collapsing.setTitle(getString(R.string.sidebar_title));
-
         MaterialToolbar toolbar = findViewById(R.id.sidebar_toolbar);
         toolbar.setNavigationOnClickListener(v -> finish());
 
@@ -83,9 +95,10 @@ public class SidebarActivity extends AppCompatActivity {
         findViewById(R.id.sidebar_function_folders).setOnClickListener(v ->
                 notice(getString(R.string.notice_menu_demo, getString(R.string.sidebar_folders))));
 
-        buildHistory(findViewById(R.id.sidebar_history));
+        historyHost = findViewById(R.id.sidebar_history);
+        buildHistory(historyHost);
 
-        fab.setOnClickListener(v -> SettingsActivity.start(this));
+        fab.setOnClickListener(this::openSettings);
     }
 
     private void buildHistory(LinearLayout host) {
@@ -143,13 +156,27 @@ public class SidebarActivity extends AppCompatActivity {
             host.addView(header);
             host.addView(items);
 
-            header.setOnClickListener(v -> {
-                boolean show = items.getVisibility() != View.VISIBLE;
-                TransitionManager.beginDelayedTransition(host, new ChangeBounds().setDuration(200));
-                items.setVisibility(show ? View.VISIBLE : View.GONE);
-                chevron.animate().rotation(show ? 0f : -90f).setDuration(200).start();
-            });
+            header.setOnClickListener(v -> toggleGroup(items, chevron));
         }
+    }
+
+    /**
+     * Expands or collapses one day group. The rows fade out and in on the M3 fade curve instead of
+     * snapping, while {@link ChangeBounds} closes the gap so the groups below slide into place.
+     */
+    private void toggleGroup(LinearLayout items, ImageView chevron) {
+        boolean show = items.getVisibility() != View.VISIBLE;
+
+        MaterialFade fade = new MaterialFade();
+
+        TransitionSet set = new TransitionSet()
+                .setOrdering(TransitionSet.ORDERING_TOGETHER)
+                .addTransition(fade)
+                .addTransition(new ChangeBounds());
+        TransitionManager.beginDelayedTransition(historyHost, set);
+
+        items.setVisibility(show ? View.VISIBLE : View.GONE);
+        chevron.animate().rotation(show ? 0f : -90f).setDuration(200).start();
     }
 
     private void choose(MaterialButton button, String title) {
@@ -159,6 +186,17 @@ public class SidebarActivity extends AppCompatActivity {
         button.setChecked(true);
         current = button;
         notice(getString(R.string.notice_menu_demo, title));
+    }
+
+    /** Grows the settings page out of the FAB and shrinks it back on return. */
+    private void openSettings(View source) {
+        Intent intent = new Intent(this, SettingsActivity.class)
+                .putExtra(SettingsActivity.EXTRA_CONTAINER, true);
+        getWindow().setExitTransition(null);
+        getWindow().setReenterTransition(null);
+        ActivityOptions options = ActivityOptions.makeSceneTransitionAnimation(
+                this, source, SHARED_CONTAINER);
+        startActivity(intent, options.toBundle());
     }
 
     private void notice(String message) {

@@ -65,12 +65,12 @@
 
     <!-- Sidebar -->
     <string name="cd_back">返回</string>
-    <string name="sidebar_title">会话</string>
+    <string name="sidebar_title">Neko Chat</string>
     <string name="sidebar_new_session">新建会话</string>
     <string name="sidebar_recent">会话</string>
     <string name="sidebar_tonight">今晚 4 个</string>
     <string name="sidebar_settings">设置</string>
-    <string name="sidebar_version">Neko Chat 1.0.0 · MD3 演示</string>
+    <string name="sidebar_version">Neko Chat 1.1.0 · MD3 演示</string>
     <string name="sidebar_workspace">Neko Studio</string>
     <string name="sidebar_workspace_meta">andyer@local · 1 个工作区</string>
     <string name="sidebar_notice_new">演示：新建会话</string>
@@ -132,7 +132,8 @@
     <string name="sidebar_collapse">收起侧边栏</string>
     <string name="sidebar_search">搜索</string>
     <string name="sidebar_folders">文件夹</string>
-    <string name="sidebar_history">聊天记录</string>
+    <string name="sidebar_history">会话历史</string>
+    <string name="sidebar_quick_actions">快捷入口</string>
     <string name="group_today">今天</string>
     <string name="group_yesterday">昨天</string>
     <string name="group_earlier">更早</string>

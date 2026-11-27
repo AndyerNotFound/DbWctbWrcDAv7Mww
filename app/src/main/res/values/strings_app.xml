@@ -65,12 +65,12 @@
 
     <!-- Sidebar -->
     <string name="cd_back">Back</string>
-    <string name="sidebar_title">Sessions</string>
+    <string name="sidebar_title">Neko Chat</string>
     <string name="sidebar_new_session">New session</string>
     <string name="sidebar_recent">Sessions</string>
     <string name="sidebar_tonight">4 tonight</string>
     <string name="sidebar_settings">Settings</string>
-    <string name="sidebar_version">Neko Chat 1.0.0 · MD3 demo</string>
+    <string name="sidebar_version">Neko Chat 1.1.0 · MD3 demo</string>
     <string name="sidebar_workspace">Neko Studio</string>
     <string name="sidebar_workspace_meta">andyer@local · 1 workspace</string>
     <string name="sidebar_notice_new">Demo: new session</string>
@@ -133,6 +133,7 @@
     <string name="sidebar_search">Search</string>
     <string name="sidebar_folders">Folders</string>
     <string name="sidebar_history">Chat History</string>
+    <string name="sidebar_quick_actions">Quick actions</string>
     <string name="group_today">Today</string>
     <string name="group_yesterday">Yesterday</string>
     <string name="group_earlier">Earlier</string>

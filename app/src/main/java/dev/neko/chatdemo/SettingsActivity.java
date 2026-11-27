@@ -20,6 +20,8 @@ public class SettingsActivity extends SettingsPageActivity {
 
     public static final String PREFS = "neko_prefs";
     public static final String KEY_COLOR_MODE = "color_mode";
+    /** Set by callers that hand a shared element to the container transform. */
+    public static final String EXTRA_CONTAINER = "container";
 
     public static void start(Activity from) {
         UiTransitions.start(from, new Intent(from, SettingsActivity.class), true);
@@ -98,7 +100,7 @@ public class SettingsActivity extends SettingsPageActivity {
         LinearLayout about = SettingsUi.group(this, content, R.string.settings_about_group);
         View aboutApp = SettingsUi.row(this, about, R.drawable.ic_info,
                 getString(R.string.settings_about_app), null, primary, onPrimary);
-        SettingsUi.setValue(aboutApp, "1.0.0");
+        SettingsUi.setValue(aboutApp, BuildConfig.VERSION_NAME);
         aboutApp.setOnClickListener(v -> demo(R.string.settings_about_app));
 
         View docs = SettingsUi.row(this, about, R.drawable.ic_description,

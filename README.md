@@ -21,7 +21,10 @@ context budget bar.
 - **Reasoning sheet** — effort slider with nine ticks (Off → Ultra), custom
   `reasoning_effort` / `thinking_budget` dialog, and a two-column model picker with
   foldable providers and rich model cards.
-- **Sidebar** — `SideSheetDialog` session browser.
+- **Sidebar** — a full page session panel: a collapse chevron plus the Neko Chat title on top,
+  three pinned quick actions stacked as one full width column, and the chat history scrolling
+  on its own underneath. Expanding a day group fades its rows in with `MaterialFade` instead of
+  cutting, and the bottom left FAB opens Settings through a container transform.
 - **Custom views** — branching conversation map (animated live head) and animated
   throughput bar chart.
 - Light and dark schemes, edge-to-edge insets, portrait demo.
@@ -36,7 +39,8 @@ context budget bar.
 - Tap the model split button for the reasoning sheet; open the model page, switch providers
   (the left rail folds), pick a model, drag the effort slider, open the custom
   `reasoning_effort` / `thinking_budget` dialog.
-- Tap the sidebar icon for the session side sheet.
+- Tap the sidebar icon for the session panel; the collapse chevron on its leading edge closes it,
+  and the FAB at the bottom left morphs into Settings.
 - Type in the field (the fullscreen glyph appears), send, watch the bar turn wavy and the
   tonal send button flip to stop. Toggle the mic for the REC state.
 
@@ -50,7 +54,9 @@ context budget bar.
 - release (demo-signed with the debug keystore): `app/build/outputs/apk/release/app-release.apk`
 
 CI (`.github/workflows/android.yml`) validates the Gradle wrapper, assembles both APKs on
-GitHub Actions, prints their SHA-256 and uploads them as the `neko-chat-1.0.0` artifact.
+GitHub Actions, prints their SHA-256 and uploads them as the `neko-chat-<version>` artifact.
+Pushing a `v*` tag (or dispatching the workflow with *publish_release*) then publishes the
+release APK and `sha256.txt` to a GitHub Release, with notes built from the same run.
 
 - `compileSdk` / `targetSdk` 36, `minSdk` 26
 - Java 17, AGP 8.10.1, Gradle 8.11.1
