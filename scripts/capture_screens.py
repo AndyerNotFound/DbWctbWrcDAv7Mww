@@ -121,9 +121,9 @@ def back():
 print("launch")
 adb("shell", "am", "start", "-W", "-n", "dev.neko.chatdemo/.MainActivity")
 wait(5)
-print(adb("shell", "wm", "size", text=True).stdout.strip())
-print(adb("shell", "wm", "density", text=True).stdout.strip())
-print(adb("shell", "logcat", "-d", "-s", "NekoInsets:I", text=True).stdout)
+print(adb("shell", "wm", "size").stdout.strip())
+print(adb("shell", "wm", "density").stdout.strip())
+print(adb("shell", "logcat", "-d", "-s", "NekoInsets:I").stdout)
 cache_tabs()
 shot("01-chat.png")
 
