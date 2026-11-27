@@ -128,4 +128,14 @@
     <string name="row_net_proxy">Use proxy</string>
     <string name="row_net_metered">Metered connection warning</string>
     <string name="row_net_retry">Retry on timeout</string>
+    <!-- Drawer -->
+    <string name="sidebar_collapse">Collapse sidebar</string>
+    <string name="sidebar_search">Search</string>
+    <string name="sidebar_folders">Folders</string>
+    <string name="sidebar_history">Chat History</string>
+    <string name="group_today">Today</string>
+    <string name="group_yesterday">Yesterday</string>
+    <string name="group_earlier">Earlier</string>
+    <string name="settings_preferences_sub">Theme, notifications, UI and general settings</string>
+    <string name="settings_providers_sub">Configure AI providers and models</string>
 </resources>

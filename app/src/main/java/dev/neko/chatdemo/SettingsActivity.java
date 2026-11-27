@@ -1,176 +1,99 @@
 package dev.neko.chatdemo;
 
-import android.content.SharedPreferences;
-import android.graphics.Color;
-import android.os.Bundle;
+import android.app.Activity;
+import android.content.Intent;
 import android.view.View;
+import android.widget.LinearLayout;
 
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.app.AppCompatDelegate;
-import androidx.core.graphics.Insets;
-import androidx.core.view.ViewCompat;
-import androidx.core.view.WindowCompat;
-import androidx.core.view.WindowInsetsCompat;
-import androidx.core.view.WindowInsetsControllerCompat;
-import androidx.recyclerview.widget.ItemTouchHelper;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
+import androidx.core.app.ActivityOptionsCompat;
 
-import com.google.android.material.snackbar.Snackbar;
+import com.google.android.material.button.MaterialButtonToggleGroup;
+import com.google.android.material.card.MaterialCardView;
 
-import java.util.ArrayList;
-import java.util.List;
+import dev.neko.chatdemo.ui.SettingsPageActivity;
+import dev.neko.chatdemo.ui.SettingsUi;
 
-import dev.neko.chatdemo.ui.SettingsAdapter;
-import dev.neko.chatdemo.ui.UiTransitions;
-
-/** Multi-section settings home: colour mode, preferences and the provider block. */
-public class SettingsActivity extends AppCompatActivity implements SettingsAdapter.Callbacks {
+/** Settings home: colour mode, preferences and providers as card groups. */
+public class SettingsActivity extends SettingsPageActivity {
 
     public static final String PREFS = "neko_prefs";
     public static final String KEY_COLOR_MODE = "color_mode";
+    private static final String EXTRA_CONTAINER = "container";
+    private static final String SHARED_CONTAINER = "settings_container";
 
-    private SettingsAdapter adapter;
-    private SharedPreferences prefs;
-    private List<SettingsAdapter.ProviderItem> providers;
-
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        WindowCompat.setDecorFitsSystemWindows(getWindow(), false);
-        getWindow().setStatusBarColor(Color.TRANSPARENT);
-        getWindow().setNavigationBarColor(Color.TRANSPARENT);
-        UiTransitions.incoming(this, true);
-        setContentView(R.layout.activity_settings);
-
-        boolean night = (getResources().getConfiguration().uiMode
-                & android.content.res.Configuration.UI_MODE_NIGHT_MASK)
-                == android.content.res.Configuration.UI_MODE_NIGHT_YES;
-        WindowInsetsControllerCompat controller =
-                WindowCompat.getInsetsController(getWindow(), getWindow().getDecorView());
-        controller.setAppearanceLightStatusBars(!night);
-        controller.setAppearanceLightNavigationBars(!night);
-
-        View root = findViewById(R.id.settings_root);
-        View topBar = findViewById(R.id.settings_top_bar);
-        RecyclerView list = findViewById(R.id.settings_list);
-        ViewCompat.setOnApplyWindowInsetsListener(root, (v, insets) -> {
-            Insets bars = insets.getInsets(WindowInsetsCompat.Type.systemBars()
-                    | WindowInsetsCompat.Type.displayCutout());
-            topBar.setMinimumHeight(dp(56) + bars.top);
-            topBar.setPadding(bars.left + dp(8), bars.top, bars.right + dp(8), 0);
-            list.setPadding(0, 0, 0, bars.bottom + dp(28));
-            return insets;
-        });
-        ViewCompat.requestApplyInsets(root);
-
-        prefs = getSharedPreferences(PREFS, MODE_PRIVATE);
-        providers = buildProviders();
-
-        adapter = new SettingsAdapter(this, providers, readColorMode(), this);
-        list.setLayoutManager(new LinearLayoutManager(this));
-        list.setAdapter(adapter);
-
-        ItemTouchHelper drag = new ItemTouchHelper(new DragCallback());
-        drag.attachToRecyclerView(list);
-
-        findViewById(R.id.settings_back).setOnClickListener(v -> finish());
+    public static void start(Activity from) {
+        dev.neko.chatdemo.ui.UiTransitions.start(from,
+                new Intent(from, SettingsActivity.class), true);
     }
 
-    private int readColorMode() {
+    /** Opens the page with a container transform growing out of {@code source}. */
+    public static void startFrom(Activity from, View source) {
+        Intent intent = new Intent(from, SettingsActivity.class)
+                .putExtra(EXTRA_CONTAINER, true);
+        from.getWindow().setExitTransition(null);
+        from.getWindow().setReenterTransition(null);
+        ActivityOptionsCompat options = ActivityOptionsCompat.makeSceneTransitionAnimation(
+                from, source, SHARED_CONTAINER);
+        from.startActivity(intent, options.toBundle());
+    }
+
+    @Override
+    protected int titleRes() {
+        return R.string.settings_title;
+    }
+
+    @Override
+    protected boolean usesContainerTransform() {
+        return getIntent().getBooleanExtra(EXTRA_CONTAINER, false);
+    }
+
+    @Override
+    protected void buildContent(LinearLayout content) {
+        int primary = SettingsUi.color(content,
+                com.google.android.material.R.attr.colorPrimaryContainer);
+        int onPrimary = SettingsUi.color(content,
+                com.google.android.material.R.attr.colorOnPrimaryContainer);
+        int tertiary = SettingsUi.color(content,
+                com.google.android.material.R.attr.colorTertiaryContainer);
+        int onTertiary = SettingsUi.color(content,
+                com.google.android.material.R.attr.colorOnTertiaryContainer);
+
+        LinearLayout general = SettingsUi.group(this, content, R.string.settings_general);
+        View form = getLayoutInflater().inflate(R.layout.item_pref_form_mode, general, false);
+        bindColorMode(form);
+        general.addView(form);
+
+        MaterialCardView preferences = SettingsUi.row(this, general, R.drawable.ic_tune,
+                getString(R.string.settings_preferences), getString(R.string.settings_preferences_sub),
+                primary, onPrimary);
+        preferences.setOnClickListener(v -> PreferencesActivity.start(this));
+        SettingsUi.layoutGroup(general);
+
+        LinearLayout providers = SettingsUi.group(this, content, R.string.settings_providers);
+        MaterialCardView providerRow = SettingsUi.row(this, providers, R.drawable.ic_smart_toy,
+                getString(R.string.settings_providers), getString(R.string.settings_providers_sub),
+                tertiary, onTertiary);
+        providerRow.setOnClickListener(v -> ProvidersActivity.start(this));
+        SettingsUi.layoutGroup(providers);
+    }
+
+    private void bindColorMode(View form) {
+        MaterialButtonToggleGroup group = form.findViewById(R.id.color_mode_group);
         int mode = prefs.getInt(KEY_COLOR_MODE, 0);
-        return mode < 0 || mode > 2 ? 0 : mode;
-    }
-
-    private List<SettingsAdapter.ProviderItem> buildProviders() {
-        List<SettingsAdapter.ProviderItem> items = new ArrayList<>();
-        items.add(new SettingsAdapter.ProviderItem(
-                "OpenAI", "O", "https://api.openai.com", "sk-live-1234", 12));
-        items.add(new SettingsAdapter.ProviderItem(
-                "Anthropic", "A", "https://api.anthropic.com", "sk-ant-5678", 8));
-        items.add(new SettingsAdapter.ProviderItem(
-                "Google", "G", "https://generativelanguage.googleapis.com", "AIza-9012", 5));
-        items.add(new SettingsAdapter.ProviderItem(
-                "OpenRouter", "R", "https://openrouter.ai/api", "sk-or-3456", 42));
-        items.add(new SettingsAdapter.ProviderItem(
-                "Local", "L", "http://127.0.0.1:8080", "none", 3));
-        return items;
-    }
-
-    // ---------------------------------------------------------------------------------------
-    // Callbacks
-
-    @Override
-    public void onColorMode(int mode) {
-        prefs.edit().putInt(KEY_COLOR_MODE, mode).apply();
-        AppCompatDelegate.setDefaultNightMode(mode == 0
-                ? AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM
-                : mode == 1 ? AppCompatDelegate.MODE_NIGHT_NO : AppCompatDelegate.MODE_NIGHT_YES);
-        adapter.setColorMode(mode);
-        notice(getString(R.string.settings_notice_mode, getString(mode == 1
-                ? R.string.settings_color_light
-                : mode == 2 ? R.string.settings_color_dark : R.string.settings_color_follow)));
-    }
-
-    @Override
-    public void onPreference(@NonNull String key) {
-        SettingsDetailActivity.start(this, key);
-    }
-
-    @Override
-    public void onImportProvider() {
-        notice(getString(R.string.settings_notice_import));
-    }
-
-    @Override
-    public void onAddProvider() {
-        notice(getString(R.string.settings_notice_add));
-    }
-
-    @Override
-    public void onFetchModels(@NonNull SettingsAdapter.ProviderItem provider) {
-        notice(getString(R.string.settings_notice_models, provider.baseUrl));
-    }
-
-    private void notice(String message) {
-        View root = findViewById(R.id.settings_root);
-        Snackbar.make(root, message, Snackbar.LENGTH_SHORT).show();
-    }
-
-    private int dp(int value) {
-        return Math.round(value * getResources().getDisplayMetrics().density);
-    }
-
-    private class DragCallback extends ItemTouchHelper.SimpleCallback {
-
-        DragCallback() {
-            super(ItemTouchHelper.UP | ItemTouchHelper.DOWN, 0);
-        }
-
-        @Override
-        public int getMovementFlags(@NonNull RecyclerView recyclerView,
-                                    @NonNull RecyclerView.ViewHolder viewHolder) {
-            int drag = adapter.isProviderPosition(viewHolder.getBindingAdapterPosition())
-                    ? ItemTouchHelper.UP | ItemTouchHelper.DOWN : 0;
-            return makeMovementFlags(drag, 0);
-        }
-
-        @Override
-        public boolean onMove(@NonNull RecyclerView recyclerView,
-                              @NonNull RecyclerView.ViewHolder viewHolder,
-                              @NonNull RecyclerView.ViewHolder target) {
-            return adapter.moveProvider(viewHolder.getBindingAdapterPosition(),
-                    target.getBindingAdapterPosition());
-        }
-
-        @Override
-        public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int direction) {
-        }
-
-        @Override
-        public boolean isLongPressDragEnabled() {
-            return true;
-        }
+        group.check(mode == 1 ? R.id.color_mode_light
+                : mode == 2 ? R.id.color_mode_dark : R.id.color_mode_follow);
+        group.addOnButtonCheckedListener((g, checkedId, isChecked) -> {
+            if (!isChecked) {
+                return;
+            }
+            int picked = checkedId == R.id.color_mode_light ? 1
+                    : checkedId == R.id.color_mode_dark ? 2 : 0;
+            prefs.edit().putInt(KEY_COLOR_MODE, picked).apply();
+            AppCompatDelegate.setDefaultNightMode(picked == 0
+                    ? AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM
+                    : picked == 1 ? AppCompatDelegate.MODE_NIGHT_NO
+                    : AppCompatDelegate.MODE_NIGHT_YES);
+        });
     }
 }

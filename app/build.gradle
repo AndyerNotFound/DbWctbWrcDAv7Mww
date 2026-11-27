@@ -64,4 +64,5 @@ dependencies {
     implementation 'androidx.fragment:fragment:1.8.6'
     implementation 'androidx.recyclerview:recyclerview:1.4.0'
     implementation 'androidx.transition:transition:1.5.0'
+    implementation 'androidx.drawerlayout:drawerlayout:1.2.0'
 }

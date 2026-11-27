@@ -128,4 +128,14 @@
     <string name="row_net_proxy">使用代理</string>
     <string name="row_net_metered">计费网络提醒</string>
     <string name="row_net_retry">超时重试</string>
+    <!-- Drawer -->
+    <string name="sidebar_collapse">收起侧边栏</string>
+    <string name="sidebar_search">搜索</string>
+    <string name="sidebar_folders">文件夹</string>
+    <string name="sidebar_history">聊天记录</string>
+    <string name="group_today">今天</string>
+    <string name="group_yesterday">昨天</string>
+    <string name="group_earlier">更早</string>
+    <string name="settings_preferences_sub">主题、通知、界面和常规设置</string>
+    <string name="settings_providers_sub">配置 AI 服务商与模型</string>
 </resources>

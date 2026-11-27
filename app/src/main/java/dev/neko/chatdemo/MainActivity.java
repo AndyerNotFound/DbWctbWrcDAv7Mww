@@ -15,6 +15,7 @@ import android.view.Gravity;
 import android.view.MotionEvent;
 import android.view.VelocityTracker;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.animation.AccelerateInterpolator;
 import android.view.animation.DecelerateInterpolator;
 import android.view.inputmethod.InputMethodManager;
@@ -25,13 +26,16 @@ import android.widget.TextView;
 
 import androidx.annotation.AttrRes;
 import androidx.annotation.NonNull;
+import androidx.activity.OnBackPressedCallback;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.ColorUtils;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowCompat;
 import androidx.core.view.WindowInsetsCompat;
+import androidx.core.view.GravityCompat;
 import androidx.core.view.WindowInsetsControllerCompat;
+import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.Fragment;
 import androidx.viewpager2.adapter.FragmentStateAdapter;
 import androidx.viewpager2.widget.ViewPager2;
@@ -53,10 +57,12 @@ import dev.neko.chatdemo.ui.ChatFragment;
 import dev.neko.chatdemo.ui.FullscreenInputDialog;
 import dev.neko.chatdemo.ui.MapFragment;
 import dev.neko.chatdemo.ui.MissionFragment;
+import dev.neko.chatdemo.ui.SidebarDrawer;
 import dev.neko.chatdemo.ui.UiTransitions;
 import dev.neko.chatdemo.ui.UsageFragment;
 
-public class MainActivity extends AppCompatActivity implements ReasoningSheet.Listener {
+public class MainActivity extends AppCompatActivity
+        implements ReasoningSheet.Listener, SidebarDrawer.Callbacks {
 
     private static final int[] STATUS_ICONS = {
             R.drawable.ic_check_circle, R.drawable.ic_schedule, R.drawable.ic_check_circle
@@ -80,6 +86,7 @@ public class MainActivity extends AppCompatActivity implements ReasoningSheet.Li
     private String[] interpolations;
 
     private View root;
+    private DrawerLayout drawerLayout;
     private View topBar;
     private View inputDock;
     private TextInputLayout inputLayout;
@@ -134,6 +141,7 @@ public class MainActivity extends AppCompatActivity implements ReasoningSheet.Li
         loadLabels();
 
         bindViews();
+        setupDrawer();
         updateSystemBarAppearance();
         setupInsets();
         setupTabs();
@@ -203,12 +211,74 @@ public class MainActivity extends AppCompatActivity implements ReasoningSheet.Li
         controller.setAppearanceLightNavigationBars(!night);
     }
 
+    private void setupDrawer() {
+        drawerLayout = findViewById(R.id.drawer_layout);
+        new SidebarDrawer(this, drawerLayout, this).setUp();
+        getOnBackPressedDispatcher().addCallback(this, new OnBackPressedCallback(true) {
+            @Override
+            public void handleOnBackPressed() {
+                if (drawerLayout.isDrawerOpen(GravityCompat.START)) {
+                    drawerLayout.closeDrawer(GravityCompat.START);
+                } else {
+                    setEnabled(false);
+                    getOnBackPressedDispatcher().onBackPressed();
+                }
+            }
+        });
+    }
+
+    private void newChat() {
+        if (chatFragment != null) {
+            chatFragment.resetConversation();
+        }
+        sessionButton.setText(R.string.new_chat_title);
+        contextPercent = 4;
+        updateContextIndicator(true);
+        showNotice(R.drawable.ic_add_comment, getString(R.string.notice_new_chat));
+    }
+
+    @Override
+    public void onNewSession() {
+        newChat();
+    }
+
+    @Override
+    public void onSearch() {
+        showNotice(R.drawable.ic_search,
+                getString(R.string.notice_menu_demo, getString(R.string.sidebar_search)));
+    }
+
+    @Override
+    public void onFolders() {
+        showFolderMenu(folderButton);
+    }
+
+    @Override
+    public void onSessionChosen(String title) {
+        sessionButton.setText(title);
+        showNotice(R.drawable.ic_chat_bubble, getString(R.string.notice_menu_demo, title));
+    }
+
+    @Override
+    public void onOpenSettings(View fab) {
+        SettingsActivity.startFrom(this, fab);
+    }
+
     private void setupInsets() {
         ViewCompat.setOnApplyWindowInsetsListener(root, (v, insets) -> {
             Insets bars = insets.getInsets(WindowInsetsCompat.Type.systemBars()
                     | WindowInsetsCompat.Type.displayCutout());
             Insets ime = insets.getInsets(WindowInsetsCompat.Type.ime());
             topBar.setPadding(bars.left, bars.top, bars.right, topBar.getPaddingBottom());
+            View drawerBar = findViewById(R.id.drawer_app_bar);
+            drawerBar.setPadding(0, bars.top, 0, 0);
+            View fab = findViewById(R.id.drawer_fab);
+            ViewGroup.MarginLayoutParams fabParams = (ViewGroup.MarginLayoutParams) fab.getLayoutParams();
+            int fabBottom = bars.bottom + dp(16);
+            if (fabParams.bottomMargin != fabBottom) {
+                fabParams.bottomMargin = fabBottom;
+                fab.setLayoutParams(fabParams);
+            }
             inputDock.setPadding(bars.left, 0, bars.right, Math.max(bars.bottom, ime.bottom));
             if (noticeCard != null) {
                 FrameLayout.LayoutParams params =
@@ -257,7 +327,7 @@ public class MainActivity extends AppCompatActivity implements ReasoningSheet.Li
 
     private void setupTopBar() {
         findViewById(R.id.btn_sidebar).setOnClickListener(v ->
-                UiTransitions.start(this, new Intent(this, SidebarActivity.class), false));
+                drawerLayout.openDrawer(GravityCompat.START));
 
         folderButton.setOnClickListener(v -> showFolderMenu(v));
 
@@ -270,15 +340,7 @@ public class MainActivity extends AppCompatActivity implements ReasoningSheet.Li
         });
 
         presetButton.setOnClickListener(this::showPresetMenu);
-        findViewById(R.id.btn_new_chat).setOnClickListener(v -> {
-            if (chatFragment != null) {
-                chatFragment.resetConversation();
-            }
-            sessionButton.setText(R.string.new_chat_title);
-            contextPercent = 4;
-            updateContextIndicator(true);
-            showNotice(R.drawable.ic_add_comment, getString(R.string.notice_new_chat));
-        });
+        findViewById(R.id.btn_new_chat).setOnClickListener(v -> newChat());
         findViewById(R.id.btn_menu).setOnClickListener(this::showSessionMenu);
 
     }
@@ -331,7 +393,7 @@ public class MainActivity extends AppCompatActivity implements ReasoningSheet.Li
                     new AttachmentsSheet(this).show();
                     break;
                 case 3:
-                    UiTransitions.start(this, new Intent(this, SettingsActivity.class), true);
+                    SettingsActivity.start(this);
                     break;
                 default:
                     showNotice(R.drawable.ic_more_vert,

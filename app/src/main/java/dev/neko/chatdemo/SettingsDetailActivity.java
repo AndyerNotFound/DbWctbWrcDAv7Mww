@@ -2,26 +2,16 @@ package dev.neko.chatdemo;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.graphics.Color;
 import android.os.Bundle;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.graphics.Insets;
-import androidx.core.view.ViewCompat;
-import androidx.core.view.WindowCompat;
-import androidx.core.view.WindowInsetsCompat;
-import androidx.core.view.WindowInsetsControllerCompat;
 
-import com.google.android.material.materialswitch.MaterialSwitch;
-
+import dev.neko.chatdemo.ui.SettingsUi;
 import dev.neko.chatdemo.ui.UiTransitions;
 
-/** One settings sub page, opened with a shared axis X activity transition. */
+/** One settings sub page, built as a single card group of switches. */
 public class SettingsDetailActivity extends AppCompatActivity {
 
     private static final String EXTRA_PAGE = "page";
@@ -35,33 +25,11 @@ public class SettingsDetailActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        WindowCompat.setDecorFitsSystemWindows(getWindow(), false);
-        getWindow().setStatusBarColor(Color.TRANSPARENT);
-        getWindow().setNavigationBarColor(Color.TRANSPARENT);
+        SettingsUi.setupWindow(this);
         UiTransitions.incoming(this, true);
         setContentView(R.layout.activity_settings_detail);
-
-        boolean night = (getResources().getConfiguration().uiMode
-                & android.content.res.Configuration.UI_MODE_NIGHT_MASK)
-                == android.content.res.Configuration.UI_MODE_NIGHT_YES;
-        WindowInsetsControllerCompat controller =
-                WindowCompat.getInsetsController(getWindow(), getWindow().getDecorView());
-        controller.setAppearanceLightStatusBars(!night);
-        controller.setAppearanceLightNavigationBars(!night);
-
-        View root = findViewById(R.id.detail_root);
-        View topBar = findViewById(R.id.detail_top_bar);
-        View scroll = findViewById(R.id.detail_scroll);
-        ViewCompat.setOnApplyWindowInsetsListener(root, (v, insets) -> {
-            Insets bars = insets.getInsets(WindowInsetsCompat.Type.systemBars()
-                    | WindowInsetsCompat.Type.displayCutout());
-            topBar.setMinimumHeight(dp(56) + bars.top);
-            topBar.setPadding(bars.left + dp(8), bars.top, bars.right + dp(8), 0);
-            scroll.setPadding(0, 0, 0, bars.bottom);
-            return insets;
-        });
-        ViewCompat.requestApplyInsets(root);
-
+        SettingsUi.applyInsets(findViewById(R.id.detail_root),
+                findViewById(R.id.detail_top_bar), findViewById(R.id.detail_scroll));
         findViewById(R.id.detail_back).setOnClickListener(v -> finish());
 
         String page = getIntent().getStringExtra(EXTRA_PAGE);
@@ -118,19 +86,16 @@ public class SettingsDetailActivity extends AppCompatActivity {
         ((TextView) findViewById(R.id.detail_title)).setText(titleRes);
 
         LinearLayout content = findViewById(R.id.detail_content);
-        LayoutInflater inflater = getLayoutInflater();
-        for (int[] row : rows) {
-            View view = inflater.inflate(R.layout.item_settings_switch, content, false);
-            ((ImageView) view.findViewById(R.id.row_icon)).setImageResource(row[1]);
-            ((TextView) view.findViewById(R.id.row_title)).setText(row[0]);
-            MaterialSwitch toggle = view.findViewById(R.id.row_switch);
-            toggle.setChecked(row[2] == 1);
-            view.setOnClickListener(v -> toggle.setChecked(!toggle.isChecked()));
-            content.addView(view);
-        }
-    }
+        int container = SettingsUi.color(content,
+                com.google.android.material.R.attr.colorPrimaryContainer);
+        int onContainer = SettingsUi.color(content,
+                com.google.android.material.R.attr.colorOnPrimaryContainer);
 
-    private int dp(int value) {
-        return Math.round(value * getResources().getDisplayMetrics().density);
+        LinearLayout group = SettingsUi.group(this, content, (CharSequence) null);
+        for (int[] row : rows) {
+            SettingsUi.switchRow(this, group, row[1], getString(row[0]), row[2] == 1,
+                    container, onContainer);
+        }
+        SettingsUi.layoutGroup(group);
     }
 }
