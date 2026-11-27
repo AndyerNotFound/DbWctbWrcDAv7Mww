@@ -181,7 +181,7 @@ public class ReasoningSheet extends BottomSheetDialog {
                 boolean selected = i == effortIndex;
                 int color = MaterialColors.getColor(label,
                         selected
-                                ? com.google.android.material.R.attr.colorPrimary
+                                ? androidx.appcompat.R.attr.colorPrimary
                                 : com.google.android.material.R.attr.colorOnSurfaceVariant);
                 label.setTextColor(color);
                 label.setTypeface(null, selected ? Typeface.BOLD : Typeface.NORMAL);
@@ -369,12 +369,12 @@ public class ReasoningSheet extends BottomSheetDialog {
             Provider provider = providers.get(selectedProvider);
             if (selectedGroup == null) {
                 for (Group group : provider.groups) {
-                    models.addAll(group.models);
+                    java.util.Collections.addAll(models, group.models);
                 }
             } else {
                 for (Group group : provider.groups) {
                     if (group.name.equals(selectedGroup)) {
-                        models.addAll(group.models);
+                        java.util.Collections.addAll(models, group.models);
                     }
                 }
             }
@@ -460,7 +460,7 @@ public class ReasoningSheet extends BottomSheetDialog {
                 h.name.setText(row.provider.name);
                 h.indicator.setVisibility(selected ? View.VISIBLE : View.INVISIBLE);
                 h.name.setTextColor(MaterialColors.getColor(h.itemView, selected
-                        ? com.google.android.material.R.attr.colorPrimary
+                        ? androidx.appcompat.R.attr.colorPrimary
                         : com.google.android.material.R.attr.colorOnSurface));
                 h.name.setTypeface(null, selected ? Typeface.BOLD : Typeface.NORMAL);
                 h.chevron.setRotation(expanded[row.index] ? 180f : 0f);
@@ -470,13 +470,13 @@ public class ReasoningSheet extends BottomSheetDialog {
                 boolean selected = row.index == selectedProvider && row.group.name.equals(selectedGroup);
                 h.name.setText(row.group.name);
                 h.name.setTextColor(MaterialColors.getColor(h.itemView, selected
-                        ? com.google.android.material.R.attr.colorPrimary
+                        ? androidx.appcompat.R.attr.colorPrimary
                         : com.google.android.material.R.attr.colorOnSurfaceVariant));
                 h.name.setTypeface(null, selected ? Typeface.BOLD : Typeface.NORMAL);
                 int selectedBg = MaterialColors.getColor(h.itemView,
                         com.google.android.material.R.attr.colorSecondaryContainer);
                 int rippleColor = MaterialColors.getColor(h.itemView,
-                        com.google.android.material.R.attr.colorPrimary);
+                        androidx.appcompat.R.attr.colorPrimary);
                 rippleColor = (rippleColor & 0x00FFFFFF) | 0x33000000;
                 Drawable bg = new ColorDrawable(selected ? selectedBg : Color.TRANSPARENT);
                 h.name.setBackground(new RippleDrawable(ColorStateList.valueOf(rippleColor), bg, null));
@@ -554,7 +554,7 @@ public class ReasoningSheet extends BottomSheetDialog {
                     break;
                 case 0:
                 default:
-                    bgAttr = com.google.android.material.R.attr.colorPrimaryContainer;
+                    bgAttr = androidx.appcompat.R.attr.colorPrimaryContainer;
                     fgAttr = com.google.android.material.R.attr.colorOnPrimaryContainer;
                     break;
             }
@@ -565,7 +565,7 @@ public class ReasoningSheet extends BottomSheetDialog {
             boolean selected = model.name.equals(selectedModelName);
             holder.check.setVisibility(selected ? View.VISIBLE : View.GONE);
             int primary = MaterialColors.getColor(holder.itemView,
-                    com.google.android.material.R.attr.colorPrimary);
+                    androidx.appcompat.R.attr.colorPrimary);
             int outline = MaterialColors.getColor(holder.itemView,
                     com.google.android.material.R.attr.colorOutlineVariant);
             int low = MaterialColors.getColor(holder.itemView,

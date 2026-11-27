@@ -45,7 +45,7 @@ public class UsageChartView extends View {
     public UsageChartView(Context context, @Nullable AttributeSet attrs) {
         super(context, attrs);
         dp = getResources().getDisplayMetrics().density;
-        colorPrimary = resolve(com.google.android.material.R.attr.colorPrimary);
+        colorPrimary = resolve(androidx.appcompat.R.attr.colorPrimary);
         colorTertiary = resolve(com.google.android.material.R.attr.colorTertiary);
         colorOutline = resolve(com.google.android.material.R.attr.colorOutlineVariant);
         colorOnSurfaceVariant = resolve(com.google.android.material.R.attr.colorOnSurfaceVariant);
