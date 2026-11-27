@@ -18,6 +18,10 @@
         <com.google.android.material.button.MaterialButton
             android:id="@+id/fullscreen_close"
             style="?attr/materialIconButtonStyle"
+            android:insetLeft="0dp"
+            android:insetTop="0dp"
+            android:insetRight="0dp"
+            android:insetBottom="0dp"
             android:layout_width="40dp"
             android:layout_height="40dp"
             android:contentDescription="Close full screen input"
@@ -49,11 +53,18 @@
         <com.google.android.material.button.MaterialButton
             android:id="@+id/fullscreen_send"
             style="?attr/materialIconButtonFilledTonalStyle"
+            android:insetLeft="0dp"
+            android:insetTop="0dp"
+            android:insetRight="0dp"
+            android:insetBottom="0dp"
+            android:paddingLeft="12dp"
+            android:paddingRight="12dp"
+            android:paddingTop="12dp"
+            android:paddingBottom="12dp"
             android:layout_width="44dp"
             android:layout_height="44dp"
             android:contentDescription="Send message"
-            app:icon="@drawable/ic_send"
-            app:iconSize="21dp" />
+            app:icon="@drawable/ic_send" />
     </LinearLayout>
 
     <View

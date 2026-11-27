@@ -72,13 +72,13 @@ public class MainActivity extends AppCompatActivity {
     private View inputDock;
     private TextInputLayout inputLayout;
     private TextInputEditText input;
+    private MaterialButton fullscreenButton;
     private MaterialButton sendButton;
     private MaterialButton recordButton;
     private MaterialButton modelButton;
     private MaterialButton modelChevron;
     private MaterialButton folderButton;
     private MaterialButton folderChevron;
-    private MaterialButton folderLabel;
     private MaterialButton sessionButton;
     private MaterialButton presetButton;
     private MaterialButton interpolationButton;
@@ -96,6 +96,7 @@ public class MainActivity extends AppCompatActivity {
 
     private boolean generating;
     private boolean recording;
+    private boolean fullscreenShown;
     private int contextPercent = 68;
     private int effortIndex = 5;
     private int statusIndex = 0;
@@ -152,13 +153,13 @@ public class MainActivity extends AppCompatActivity {
         inputDock = findViewById(R.id.input_dock_container);
         inputLayout = findViewById(R.id.input_layout);
         input = findViewById(R.id.input);
+        fullscreenButton = findViewById(R.id.btn_fullscreen);
         sendButton = findViewById(R.id.btn_send);
         recordButton = findViewById(R.id.btn_record);
         modelButton = findViewById(R.id.model_button);
         modelChevron = findViewById(R.id.model_chevron);
         folderButton = findViewById(R.id.folder_button);
         folderChevron = findViewById(R.id.folder_chevron);
-        folderLabel = findViewById(R.id.folder_button);
         sessionButton = findViewById(R.id.session_button);
         presetButton = findViewById(R.id.btn_preset);
         interpolationButton = findViewById(R.id.btn_interpolation);
@@ -170,7 +171,6 @@ public class MainActivity extends AppCompatActivity {
 
         sendBackgroundColor = ContextCompat.getColor(this, R.color.neko_primary_container);
         sendButton.setBackgroundTintList(ColorStateList.valueOf(sendBackgroundColor));
-        modelButton.setMaxWidth((int) (96 * getResources().getDisplayMetrics().density));
     }
 
     private void updateSystemBarAppearance() {
@@ -256,15 +256,17 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void showFolderMenu(View anchor) {
+        folderChevron.setChecked(true);
         PopupMenu popup = new PopupMenu(this, anchor, Gravity.END);
         for (int i = 0; i < FOLDERS.length; i++) {
             popup.getMenu().add(0, i, i, FOLDERS[i]);
         }
         popup.setOnMenuItemClickListener(item -> {
-            folderLabel.setText(FOLDERS[item.getItemId() % FOLDERS.length]);
+            folderButton.setText(FOLDERS[item.getItemId() % FOLDERS.length]);
             snackbar("Session folder · " + FOLDERS[item.getItemId() % FOLDERS.length]);
             return true;
         });
+        popup.setOnDismissListener(p -> folderChevron.setChecked(false));
         popup.show();
     }
 
@@ -311,9 +313,9 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void setupInput() {
-        inputLayout.setEndIconVisible(false);
-        inputLayout.setEndIconOnClickListener(v -> openFullscreenInput());
-        inputLayout.setEndIconActivated(true);
+        if (fullscreenButton != null) {
+            fullscreenButton.setOnClickListener(v -> openFullscreenInput());
+        }
 
         input.addTextChangedListener(new TextWatcher() {
             @Override
@@ -327,6 +329,16 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void afterTextChanged(Editable s) {
                 inputLayout.setError(null);
+                if (s.length() == 0) {
+                    // The layout only re-measures the field on the next layout pass after the
+                    // text collapses back to a single line. Without this nudge the dock can keep
+                    // the height of the deleted paragraph.
+                    input.post(() -> {
+                        input.setMinHeight(0);
+                        input.requestLayout();
+                        inputLayout.requestLayout();
+                    });
+                }
                 updateInputState();
             }
         });
@@ -365,15 +377,28 @@ public class MainActivity extends AppCompatActivity {
     private void updateInputState() {
         boolean hasText = input.getText() != null
                 && input.getText().toString().trim().length() > 0;
-        inputLayout.setEndIconVisible(hasText);
-        sendButton.setEnabled(generating || hasText);
-        if (hasText) {
-            inputLayout.setEndIconActivated(true);
+        if (fullscreenButton != null && hasText != fullscreenShown) {
+            fullscreenShown = hasText;
+            fullscreenButton.animate().cancel();
+            fullscreenButton.animate()
+                    .alpha(hasText ? 1f : 0f)
+                    .setDuration(150)
+                    .start();
+            fullscreenButton.setClickable(hasText);
+            fullscreenButton.setFocusable(hasText);
+            fullscreenButton.setImportantForAccessibility(hasText
+                    ? View.IMPORTANT_FOR_ACCESSIBILITY_AUTO
+                    : View.IMPORTANT_FOR_ACCESSIBILITY_NO);
         }
+        sendButton.setEnabled(generating || hasText);
     }
 
     private void openReasoning(boolean models) {
-        new ReasoningSheet(this, models, modelName, modelMeta, effortIndex, reasoningListener).show();
+        modelChevron.setChecked(true);
+        ReasoningSheet sheet = new ReasoningSheet(
+                this, models, modelName, modelMeta, effortIndex, reasoningListener);
+        sheet.setOnDismissListener(d -> modelChevron.setChecked(false));
+        sheet.show();
     }
 
     private void openFullscreenInput() {
