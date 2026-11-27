@@ -2,13 +2,15 @@
 <!--
   One assistant turn. No bubble: the avatar and the author sit above the content.
 
-  Folding is a plain chevron-plus-label line in the primary colour, with no container of its own:
-  - above the card, "collapse the earlier N steps" appears only while the card is open;
-  - inside the card, the first line offers "show N more steps" while the card is folded;
-  - above the body, the same line brings back the paragraphs before the latest one.
+  Two folds, as in RikkaHub's chain of thought:
+  - the outer line above the card collapses *everything before the latest paragraph* — the steps
+    card and the earlier paragraphs together — and reads "collapse previous N steps" while they
+    are shown, "expand previous N steps" while they are not;
+  - the card's own first line folds its leading steps and reads "show N more steps" / "collapse".
 
-  The body is text-selectable, so a long press starts a selection. The footer holds the actions as
-  a bare icon-only button group — no pill around it — with the turn's stats on the end side.
+  Both are a chevron plus a label with no container of their own. The body is text-selectable, so
+  a long press starts a selection. The footer holds the actions as a bare icon-only button group —
+  no pill around it — with the turn's stats on the end side.
 -->
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
@@ -54,10 +56,10 @@
             android:textColor="?attr/colorPrimary" />
     </LinearLayout>
 
-    <!-- Folds the earlier steps back in; only visible while the card is open. -->
+    <!-- Folds every block that came before the latest paragraph. -->
     <TextView
-        android:id="@+id/steps_fold"
-        android:layout_width="wrap_content"
+        android:id="@+id/earlier_toggle"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginStart="2dp"
         android:layout_marginTop="2dp"
@@ -65,6 +67,7 @@
         android:drawableStart="@drawable/ic_expand_less"
         android:drawablePadding="6dp"
         android:drawableTint="?attr/colorOnSurfaceVariant"
+        android:paddingStart="8dp"
         android:paddingTop="6dp"
         android:paddingEnd="10dp"
         android:paddingBottom="6dp"
@@ -72,44 +75,33 @@
         android:textColor="?attr/colorOnSurfaceVariant"
         android:visibility="gone" />
 
-    <!-- Reasoning and tool calls, folded to the latest two steps. -->
-    <dev.neko.chatdemo.ui.StepCardView
-        android:id="@+id/steps_card"
+    <!-- Everything before the latest paragraph: the steps card and the earlier paragraphs. -->
+    <LinearLayout
+        android:id="@+id/pre_body"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
-        android:visibility="gone" />
+        android:orientation="vertical">
 
-    <!-- Folds the paragraphs before the latest one. -->
-    <TextView
-        android:id="@+id/earlier_toggle"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="2dp"
-        android:layout_marginTop="6dp"
-        android:background="@drawable/bg_step_toggle"
-        android:drawableStart="@drawable/ic_expand_more"
-        android:drawablePadding="6dp"
-        android:drawableTint="?attr/colorOnSurfaceVariant"
-        android:paddingTop="6dp"
-        android:paddingEnd="10dp"
-        android:paddingBottom="6dp"
-        android:textAppearance="?attr/textAppearanceLabelLarge"
-        android:textColor="?attr/colorOnSurfaceVariant"
-        android:visibility="gone" />
+        <dev.neko.chatdemo.ui.StepCardView
+            android:id="@+id/steps_card"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:visibility="gone" />
 
-    <TextView
-        android:id="@+id/message_earlier"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="4dp"
-        android:lineSpacingExtra="3dp"
-        android:paddingStart="4dp"
-        android:paddingEnd="4dp"
-        android:textAppearance="?attr/textAppearanceBodyMedium"
-        android:textColor="?attr/colorOnSurfaceVariant"
-        android:textIsSelectable="true"
-        android:visibility="gone" />
+        <TextView
+            android:id="@+id/message_earlier"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:lineSpacingExtra="3dp"
+            android:paddingStart="4dp"
+            android:paddingEnd="4dp"
+            android:textAppearance="?attr/textAppearanceBodyMedium"
+            android:textColor="?attr/colorOnSurfaceVariant"
+            android:textIsSelectable="true"
+            android:visibility="gone" />
+    </LinearLayout>
 
     <TextView
         android:id="@+id/message_text"
@@ -297,7 +289,10 @@
             app:chipIcon="@drawable/ic_draft" />
     </com.google.android.material.chip.ChipGroup>
 
-    <!-- Footer: a bare icon-only button group, then the stats on the end side. -->
+    <!--
+      Footer: a bare icon-only button group, then the stats on the end side. buttonSizeChange is
+      cleared because the group's default 15% press stretch would widen the row on every tap.
+    -->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -311,6 +306,7 @@
             android:id="@+id/assistant_actions"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            app:buttonSizeChange="@null"
             app:overflowMode="none">
 
             <com.google.android.material.button.MaterialButton

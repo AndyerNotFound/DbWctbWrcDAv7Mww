@@ -12,7 +12,9 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.transition.ChangeBounds;
+import androidx.transition.Fade;
 import androidx.transition.TransitionManager;
+import androidx.transition.TransitionSet;
 
 import com.google.android.material.card.MaterialCardView;
 import com.google.android.material.color.MaterialColors;
@@ -25,18 +27,19 @@ import dev.neko.chatdemo.R;
 /**
  * One card for everything the assistant did before it spoke: the reasoning pass and the tool calls.
  *
- * <p>The fold is a plain chevron-and-label line in the primary colour, with no container of its own.
- * Collapsed, the card keeps the latest {@value #VISIBLE_STEPS} steps — the ones that led to the
- * reply on screen — and its first line offers "show N more steps". Tapping it lists every step and
- * the line steps aside; folding back is the caller's line above the card.
+ * <p>Modelled on RikkaHub's chain of thought. The fold control is a single line pinned at the top of
+ * the card and it never moves or disappears: folded it reads "show N more steps" with a chevron
+ * pointing down, open it reads "collapse" with the chevron turned over. What folds away is the
+ * <em>leading</em> steps — the tail always stays, so the last two steps, the ones that led to the
+ * reply on screen, are what a folded card shows.
  *
- * <p>Each step is a row of its own: an icon, the label (two lines at most), a trailing chevron when
- * there is more to open, and a meter under it — a thin bar whose length is the step's share of the
- * time spent, with the duration printed at its end.
+ * <p>Each step is a row of its own: an icon, a two-line label, a trailing chevron when it opens
+ * something, and a meter under it whose length is the step's share of the elapsed time with the
+ * duration printed at the end.
  */
 public class StepCardView extends MaterialCardView {
 
-    /** How many steps survive the collapse. */
+    /** How many trailing steps survive the fold. */
     public static final int VISIBLE_STEPS = 2;
 
     /** Tells the row that the fold state changed, so a rebind does not undo the user's choice. */
@@ -47,6 +50,7 @@ public class StepCardView extends MaterialCardView {
     private final LinearLayout rows;
     private final LinearLayout toggle;
     private final TextView toggleLabel;
+    private final ImageView toggleChevron;
 
     private final List<ChatItem.Step> steps = new ArrayList<>();
     private boolean expanded;
@@ -66,25 +70,22 @@ public class StepCardView extends MaterialCardView {
         super(context, attrs, defStyleAttr);
 
         int primary = MaterialColors.getColor(this, androidx.appcompat.R.attr.colorPrimary);
-        int onSurface = MaterialColors.getColor(this,
-                com.google.android.material.R.attr.colorOnSurface);
-        int variant = MaterialColors.getColor(this,
-                com.google.android.material.R.attr.colorOnSurfaceVariant);
 
         LinearLayout content = new LinearLayout(context);
         content.setOrientation(LinearLayout.VERTICAL);
 
-        // The fold line: chevron plus label, primary, no container of its own.
+        // The fold control: chevron plus label, primary, no container of its own. It sits at the top
+        // and stays put — only its text and chevron turn over with the state.
         toggle = new LinearLayout(context);
         toggle.setOrientation(LinearLayout.HORIZONTAL);
         toggle.setGravity(Gravity.CENTER_VERTICAL);
         toggle.setMinimumHeight(dp(44));
-        toggle.setPadding(dp(12), dp(6), dp(12), dp(6));
+        toggle.setPadding(dp(10), dp(4), dp(12), dp(4));
         toggle.setBackgroundResource(R.drawable.bg_step_toggle);
         toggle.setClickable(true);
         toggle.setFocusable(true);
 
-        ImageView toggleChevron = new ImageView(context);
+        toggleChevron = new ImageView(context);
         toggleChevron.setImageResource(R.drawable.ic_expand_more);
         toggleChevron.setImageTintList(ColorStateList.valueOf(primary));
         toggle.addView(toggleChevron, new LinearLayout.LayoutParams(dp(20), dp(20)));
@@ -147,12 +148,19 @@ public class StepCardView extends MaterialCardView {
 
     private void render(boolean animate) {
         if (animate) {
-            // The card grows and shrinks by its own height instead of jumping between two sizes.
-            TransitionManager.beginDelayedTransition(this, new ChangeBounds());
+            // Height and opacity travel together, so a fold never snaps the card to its new size.
+            TransitionSet set = new TransitionSet()
+                    .addTransition(new ChangeBounds())
+                    .addTransition(new Fade());
+            set.setDuration(220);
+            TransitionManager.beginDelayedTransition(this, set);
         }
         rows.removeAllViews();
 
-        int hidden = expanded ? 0 : Math.max(0, steps.size() - VISIBLE_STEPS);
+        // The leading steps fold away; the tail — the ones that led to this reply — always stays.
+        boolean canCollapse = steps.size() > VISIBLE_STEPS;
+        int hidden = expanded || !canCollapse ? 0 : steps.size() - VISIBLE_STEPS;
+
         float longest = 0f;
         for (int i = hidden; i < steps.size(); i++) {
             longest = Math.max(longest, steps.get(i).progress);
@@ -161,13 +169,21 @@ public class StepCardView extends MaterialCardView {
             rows.addView(stepRow(steps.get(i), longest));
         }
 
-        // The inner line only offers the steps that are folded away; once the card is open the
-        // outer line above the card is the way back, so this one steps aside.
-        if (hidden > 0) {
-            toggle.setVisibility(VISIBLE);
-            toggleLabel.setText(getContext().getString(R.string.steps_hidden, hidden));
-        } else {
-            toggle.setVisibility(GONE);
+        // One line, one place. It only exists when there is something to fold.
+        toggle.setVisibility(canCollapse ? VISIBLE : GONE);
+        if (canCollapse) {
+            toggleLabel.setText(expanded
+                    ? getContext().getString(R.string.steps_collapse)
+                    : getContext().getString(R.string.steps_hidden, steps.size() - VISIBLE_STEPS));
+            toggleChevron.animate().cancel();
+            if (animate) {
+                toggleChevron.animate()
+                        .rotation(expanded ? 180f : 0f)
+                        .setDuration(200)
+                        .start();
+            } else {
+                toggleChevron.setRotation(expanded ? 180f : 0f);
+            }
         }
     }
 
@@ -240,9 +256,7 @@ public class StepCardView extends MaterialCardView {
         track.addView(new View(getContext()), new LinearLayout.LayoutParams(0,
                 LinearLayout.LayoutParams.MATCH_PARENT, Math.max(0.0001f, 1f - share)));
 
-        LinearLayout.LayoutParams trackParams = new LinearLayout.LayoutParams(
-                0, dp(3), 1f);
-        meter.addView(track, trackParams);
+        meter.addView(track, new LinearLayout.LayoutParams(0, dp(3), 1f));
 
         TextView duration = new TextView(getContext());
         duration.setText(step.meta);

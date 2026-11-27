@@ -133,9 +133,9 @@
     <string name="edit_notice_cancelled">已退出编辑 · 草稿已清空</string>
     <string name="notice_edited">消息已更新</string>
     <string name="steps_hidden">再显示 %1$d 步</string>
-    <string name="steps_collapse_count">收起此前 %1$d 步</string>
-    <string name="earlier_expand">显示此前内容</string>
-    <string name="earlier_collapse">收起此前内容</string>
+    <string name="steps_collapse">收起</string>
+    <string name="earlier_expand">展开此前 %1$d 步</string>
+    <string name="earlier_collapse">收起此前 %1$d 步</string>
     <string name="cd_copy_message">复制消息</string>
     <string name="cd_regenerate">重新生成</string>
     <string name="cd_share_message">分享消息</string>

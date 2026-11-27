@@ -66,7 +66,11 @@ public class ChatItem {
 
     /** View state that survives a rebind, since the list recycles rows. */
     public boolean stepsExpanded;
-    public boolean earlierExpanded;
+    /**
+     * Whether the blocks before the latest paragraph are on screen. Starts shown, so the card is
+     * what you meet first; the fold line above it puts them all away in one tap.
+     */
+    public boolean earlierExpanded = true;
 
     public ChatItem(int type, String text, String meta, String time, String author, String code) {
         this.id = nextId++;

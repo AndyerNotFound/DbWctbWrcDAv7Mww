@@ -174,8 +174,9 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.Holder> {
     }
 
     /**
-     * The assistant turn: one steps card on top, the latest paragraph of the body, an optional chip
-     * that unfolds the earlier paragraphs, and a footer with the actions and the stats.
+     * The assistant turn: the outer fold line, everything before the latest paragraph (the steps
+     * card and the earlier paragraphs) inside one container, the latest paragraph, and a footer
+     * with the actions and the stats.
      */
     private void bindAssistant(@NonNull Holder holder, @NonNull ChatItem item) {
         TextView author = holder.itemView.findViewById(R.id.message_author);
@@ -189,31 +190,49 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.Holder> {
             steps.bind(item.steps, item.stepsExpanded);
         }
 
-        // The outer fold line only exists while the card is open: it folds the earlier steps back
-        // into the card without scrolling up to its own line.
-        TextView fold = holder.itemView.findViewById(R.id.steps_fold);
-        if (fold != null) {
-            boolean showFold = item.stepsExpanded && item.steps.size() > StepCardView.VISIBLE_STEPS;
-            if (showFold) {
-                fold.setVisibility(View.VISIBLE);
-                fold.setText(holder.itemView.getContext().getString(
-                        R.string.steps_collapse_count,
-                        item.steps.size() - StepCardView.VISIBLE_STEPS));
-                fold.setOnClickListener(v -> {
-                    item.stepsExpanded = false;
-                    int position = holder.getBindingAdapterPosition();
-                    if (position != RecyclerView.NO_POSITION) {
-                        notifyItemChanged(position);
-                    }
-                });
+        TextView text = holder.itemView.findViewById(R.id.message_text);
+        if (text != null) {
+            text.setText(item.latestParagraph());
+        }
+
+        TextView earlier = holder.itemView.findViewById(R.id.message_earlier);
+        String earlierText = item.earlierParagraphs();
+        if (earlier != null) {
+            if (earlierText == null) {
+                earlier.setVisibility(View.GONE);
             } else {
-                fold.setVisibility(View.GONE);
-                fold.setOnClickListener(null);
+                earlier.setText(earlierText);
+                earlier.setVisibility(View.VISIBLE);
+            }
+        }
+
+        // The outer fold: one line above the card that collapses every block before the latest
+        // paragraph — the card and the earlier text together — the way RikkaHub folds the chain.
+        // The count is the number of steps it hides, plus one for the earlier text when present.
+        TextView toggle = holder.itemView.findViewById(R.id.earlier_toggle);
+        View preBody = holder.itemView.findViewById(R.id.pre_body);
+        int hiddenCount = item.steps.size() + (earlierText == null ? 0 : 1);
+        if (toggle != null && preBody != null) {
+            if (hiddenCount == 0) {
+                toggle.setVisibility(View.GONE);
+                preBody.setVisibility(View.VISIBLE);
+                toggle.setOnClickListener(null);
+            } else {
+                toggle.setVisibility(View.VISIBLE);
+                applyFoldLine(toggle, item.earlierExpanded, hiddenCount);
+                preBody.setVisibility(item.earlierExpanded ? View.VISIBLE : View.GONE);
+                toggle.setOnClickListener(v -> {
+                    item.earlierExpanded = !item.earlierExpanded;
+                    applyFoldLine(toggle, item.earlierExpanded, hiddenCount);
+                    foldAnimated(holder.itemView, preBody, item.earlierExpanded);
+                });
             }
         }
 
         // Icon-only buttons: the group's default 12dp spacing is meant for labelled buttons and
-        // would scatter these glyphs, so the row is tightened to a compact 4dp.
+        // would scatter these glyphs, so the row is tightened to a compact 4dp once. The 15% press
+        // stretch is already cleared in XML (app:buttonSizeChange="@null"), otherwise every tap
+        // would widen the row.
         View actions = holder.itemView.findViewById(R.id.assistant_actions);
         if (actions instanceof com.google.android.material.button.MaterialButtonGroup
                 && actions.getTag(R.id.assistant_actions) == null) {
@@ -221,40 +240,6 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.Holder> {
                     (com.google.android.material.button.MaterialButtonGroup) actions;
             group.setSpacing(Math.round(4 * actions.getResources().getDisplayMetrics().density));
             actions.setTag(R.id.assistant_actions, Boolean.TRUE);
-        }
-
-        TextView text = holder.itemView.findViewById(R.id.message_text);
-        if (text != null) {
-            text.setText(item.latestParagraph());
-        }
-
-        TextView earlier = holder.itemView.findViewById(R.id.message_earlier);
-        TextView toggle = holder.itemView.findViewById(R.id.earlier_toggle);
-        String earlierText = item.earlierParagraphs();
-        if (earlier != null && toggle != null) {
-            if (earlierText == null) {
-                earlier.setVisibility(View.GONE);
-                toggle.setVisibility(View.GONE);
-                toggle.setOnClickListener(null);
-            } else {
-                earlier.setText(earlierText);
-                earlier.setVisibility(item.earlierExpanded ? View.VISIBLE : View.GONE);
-                toggle.setVisibility(View.VISIBLE);
-                toggle.setText(item.earlierExpanded
-                        ? R.string.earlier_collapse
-                        : R.string.earlier_expand);
-                // The chevron points down while the text is still folded away.
-                setFoldChevron(toggle, item.earlierExpanded
-                        ? R.drawable.ic_expand_less
-                        : R.drawable.ic_expand_more);
-                toggle.setOnClickListener(v -> {
-                    item.earlierExpanded = !item.earlierExpanded;
-                    int position = holder.getBindingAdapterPosition();
-                    if (position != RecyclerView.NO_POSITION) {
-                        notifyItemChanged(position);
-                    }
-                });
-            }
         }
 
         TextView code = holder.itemView.findViewById(R.id.code_text);
@@ -295,6 +280,31 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.Holder> {
         bindAction(holder.itemView.findViewById(R.id.action_retry), item, ACTION_RETRY);
         bindAction(holder.itemView.findViewById(R.id.action_share), item, ACTION_SHARE);
         bindAction(holder.itemView.findViewById(R.id.action_more), item, ACTION_MORE);
+    }
+
+    /**
+     * Paints a fold line: the label names how many blocks it hides, and the chevron points up while
+     * those blocks are on screen, down while they are away.
+     */
+    private void applyFoldLine(@NonNull TextView view, boolean expanded, int count) {
+        view.setText(expanded
+                ? view.getContext().getString(R.string.earlier_collapse, count)
+                : view.getContext().getString(R.string.earlier_expand, count));
+        setFoldChevron(view, expanded ? R.drawable.ic_expand_less : R.drawable.ic_expand_more);
+    }
+
+    /**
+     * Folds a container in place instead of rebinding the row: height and opacity travel together,
+     * so the paragraph below slides up with the fold rather than jumping.
+     */
+    private void foldAnimated(@NonNull View root, @NonNull View container, boolean visible) {
+        androidx.transition.TransitionSet set = new androidx.transition.TransitionSet()
+                .addTransition(new androidx.transition.ChangeBounds())
+                .addTransition(new androidx.transition.Fade());
+        set.setDuration(220);
+        androidx.transition.TransitionManager.beginDelayedTransition(
+                (android.view.ViewGroup) root, set);
+        container.setVisibility(visible ? View.VISIBLE : View.GONE);
     }
 
     /**
