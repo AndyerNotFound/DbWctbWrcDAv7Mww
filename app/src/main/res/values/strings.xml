@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Neko Chat</string>
+    <string name="session_title">Late night refactor</string>
+    <string name="message_hint">Message Neko…</string>
+    <string name="cd_expand_sidebar">Expand sidebar</string>
+    <string name="cd_preset">Session preset</string>
+    <string name="cd_new_chat">New chat</string>
+    <string name="cd_menu">Session menu</string>
+    <string name="cd_session_title">Session status</string>
+    <string name="cd_attach">Add attachment</string>
+    <string name="cd_fast_message">Quick message</string>
+    <string name="cd_model">Model and reasoning effort</string>
+    <string name="cd_interpolation">Interpolation</string>
+    <string name="cd_record">Record voice message</string>
+    <string name="cd_send">Send message</string>
+    <string name="cd_stop">Stop generating</string>
+    <string name="cd_fullscreen">Full screen input</string>
+</resources>
