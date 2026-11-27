@@ -36,7 +36,6 @@
         <item name="colorSurfaceContainer">@color/neko_surface_container</item>
         <item name="colorSurfaceContainerHigh">@color/neko_surface_container_high</item>
         <item name="colorSurfaceContainerHighest">@color/neko_surface_container_highest</item>
-        <item name="colorScrim">@color/neko_scrim</item>
 
         <item name="android:windowBackground">?attr/colorSurface</item>
         <item name="android:statusBarColor">@android:color/transparent</item>
