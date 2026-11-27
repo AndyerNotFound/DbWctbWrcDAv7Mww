@@ -32,13 +32,6 @@ public class ChatFragment extends Fragment {
         adapter = new ChatAdapter();
         list.setAdapter(adapter);
         adapter.submit(seed());
-        list.post(() -> {
-            LinearLayoutManager manager = (LinearLayoutManager) list.getLayoutManager();
-            if (manager != null) {
-                manager.scrollToPositionWithOffset(6,
-                        (int) (4 * getResources().getDisplayMetrics().density));
-            }
-        });
     }
 
     private List<ChatItem> seed() {
@@ -116,7 +109,7 @@ public class ChatFragment extends Fragment {
         }
         list.post(() -> {
             if (adapter.getItemCount() > 0) {
-                list.smoothScrollToPosition(adapter.getItemCount() - 1);
+                list.scrollToPosition(adapter.getItemCount() - 1);
             }
         });
     }

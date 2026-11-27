@@ -104,7 +104,6 @@ public class MainActivity extends AppCompatActivity {
     private int recordSeconds = 0;
     private int replyCursor = 0;
     private int sendBackgroundColor;
-    private int modelChevronId;
     private String modelName = "GPT-5.4";
     private String modelMeta = "OpenAI · 200k context · vision";
 
@@ -168,7 +167,6 @@ public class MainActivity extends AppCompatActivity {
         contextProgress.setWaveAmplitude(0);
         pager = findViewById(R.id.pager);
         tabs = findViewById(R.id.tabs);
-        modelChevronId = modelChevron.getId();
 
         sendBackgroundColor = ContextCompat.getColor(this, R.color.neko_primary_container);
         sendButton.setBackgroundTintList(ColorStateList.valueOf(sendBackgroundColor));
@@ -191,17 +189,6 @@ public class MainActivity extends AppCompatActivity {
             Insets ime = insets.getInsets(WindowInsetsCompat.Type.ime());
             topBar.setPadding(bars.left, bars.top, bars.right, topBar.getPaddingBottom());
             inputDock.setPadding(bars.left, 0, bars.right, Math.max(bars.bottom, ime.bottom));
-            android.util.Log.i("NekoInsets", "density="
-                    + getResources().getDisplayMetrics().density + " top=" + bars.top
-                    + " bottom=" + bars.bottom + " ime=" + ime.bottom);
-            root.post(() -> {
-                int[] pos = new int[2];
-                View toolbar = findViewById(R.id.toolbar_row);
-                toolbar.getLocationOnScreen(pos);
-                android.util.Log.i("NekoInsets", "toolbarY=" + pos[1]
-                        + " topBarPadTop=" + topBar.getPaddingTop()
-                        + " rootTop=" + root.getTop());
-            });
             return insets;
         });
         ViewCompat.requestApplyInsets(root);
