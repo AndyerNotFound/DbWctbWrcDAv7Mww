@@ -100,26 +100,32 @@ public class ChatFragment extends Fragment {
                         + "while a sheet is open — pinned, or pushed back. Say the word and I take the pinned route.",
                 "12s · 214 tokens")
                 .withSteps(
-                        new ChatItem.Step(R.drawable.ic_psychology, "Reasoning · high effort",
-                                "1,840 thinking tokens"),
-                        new ChatItem.Step(R.drawable.ic_build, "Read · MainActivity.java",
-                                "825 lines · 18 ms"),
-                        new ChatItem.Step(R.drawable.ic_build, "Read · activity_main.xml",
-                                "412 lines · 12 ms"),
-                        new ChatItem.Step(R.drawable.ic_search, "Searched · insets, ime",
-                                "3 results · Material 3 docs"),
-                        new ChatItem.Step(R.drawable.ic_code, "Wrote · dock insets",
-                                "6 lines added"))
+                        new ChatItem.Step(R.drawable.ic_psychology, "Deep thinking · insets model",
+                                "1,840 tok", 7.3f, false),
+                        new ChatItem.Step(R.drawable.ic_build,
+                                "Edit · /app/src/main/res/layout/activity_main.xml",
+                                "0.4s", 0.4f, true),
+                        new ChatItem.Step(R.drawable.ic_build,
+                                "Edit · /app/src/main/java/MainActivity.java",
+                                "0.6s", 0.6f, true),
+                        new ChatItem.Step(R.drawable.ic_search, "Search · ime insets, dock",
+                                "1.1s", 1.1f, true),
+                        new ChatItem.Step(R.drawable.ic_check_circle, "Update todo list",
+                                "0.1s", 0.1f, true))
                 .withStats("12s · 214 tokens · GPT-5.4"));
 
         items.add(ChatItem.tool(
                 "I checked the XML for the pieces we need. Everything is public in 1.14.0 — no copied styles.",
                 "3 tool calls · 14s")
                 .withSteps(
-                        new ChatItem.Step(R.drawable.ic_build, "Read · 3 files",
-                                "MaterialSplitButton, ShapeAppearanceOverlay, activity_main"),
-                        new ChatItem.Step(R.drawable.ic_check_circle, "Verified · no private styles",
-                                "1.14.0 · all public"))
+                        new ChatItem.Step(R.drawable.ic_build,
+                                "Read · MaterialSplitButton.java, ShapeAppearanceOverlay.java",
+                                "0.8s", 0.8f, true),
+                        new ChatItem.Step(R.drawable.ic_build, "Read · activity_main.xml",
+                                "0.3s", 0.3f, true),
+                        new ChatItem.Step(R.drawable.ic_check_circle,
+                                "Verified · no private styles in 1.14.0",
+                                "0.1s", 0.1f, false))
                 .withStats("3 tool calls · 14s · 512 tokens"));
 
         items.add(ChatItem.code(
@@ -132,8 +138,8 @@ public class ChatFragment extends Fragment {
                         + "});",
                 "MainActivity.java · 6 lines")
                 .withSteps(
-                        new ChatItem.Step(R.drawable.ic_code, "Wrote · window insets",
-                                "MainActivity.java · 6 lines"))
+                        new ChatItem.Step(R.drawable.ic_code, "Edit · window insets, dock padding",
+                                "0.2s", 0.2f, true))
                 .withStats("6s · 148 tokens · GPT-5.4"));
 
         items.add(ChatItem.image(
@@ -150,8 +156,8 @@ public class ChatFragment extends Fragment {
                 "The map is live, by the way. Open Chat Map and you can still see the branch where we tried pill tabs.",
                 "4s · 86 tokens")
                 .withSteps(
-                        new ChatItem.Step(R.drawable.ic_alt_route, "Branched · pill tabs",
-                                "kept as a side branch"))
+                        new ChatItem.Step(R.drawable.ic_alt_route, "Branch · pill tabs kept aside",
+                                "0.1s", 0.1f, true))
                 .withStats("4s · 86 tokens · GPT-5.4"));
 
         items.add(ChatItem.user(

@@ -27,12 +27,24 @@ public class ChatItem {
         @DrawableRes
         public final int icon;
         public final String title;
+        /** The duration printed at the end of the meter, e.g. "7.3s". */
         public final String meta;
+        /** Relative weight of this step, used to size the meter against the longest one shown. */
+        public final float progress;
+        /** Whether the step opens something of its own, which earns it a trailing chevron. */
+        public final boolean expandable;
 
         public Step(@DrawableRes int icon, @NonNull String title, String meta) {
+            this(icon, title, meta, 1f, false);
+        }
+
+        public Step(@DrawableRes int icon, @NonNull String title, String meta, float progress,
+                    boolean expandable) {
             this.icon = icon;
             this.title = title;
             this.meta = meta;
+            this.progress = progress;
+            this.expandable = expandable;
         }
     }
 

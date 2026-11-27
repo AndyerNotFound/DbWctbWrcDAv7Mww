@@ -129,11 +129,10 @@
     <string name="edit_notice_started">Editing · the draft is back in the field</string>
     <string name="edit_notice_cancelled">Editing cancelled · draft cleared</string>
     <string name="notice_edited">Message updated</string>
-    <string name="steps_title">Reasoning &amp; tools</string>
-    <string name="steps_count">%1$d steps</string>
-    <string name="steps_hidden">%1$d more</string>
-    <string name="earlier_expand">Earlier</string>
-    <string name="earlier_collapse">Collapse</string>
+    <string name="steps_hidden">Show %1$d more steps</string>
+    <string name="steps_collapse_count">Collapse earlier %1$d steps</string>
+    <string name="earlier_expand">Show earlier text</string>
+    <string name="earlier_collapse">Collapse earlier text</string>
     <string name="cd_copy_message">Copy message</string>
     <string name="cd_regenerate">Regenerate</string>
     <string name="cd_share_message">Share message</string>

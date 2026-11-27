@@ -189,11 +189,38 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.Holder> {
             steps.bind(item.steps, item.stepsExpanded);
         }
 
-        // Standard icon buttons sit edge to edge inside the pill; the group's default spacing would
-        // pull them apart and break the single capsule.
+        // The outer fold line only exists while the card is open: it folds the earlier steps back
+        // into the card without scrolling up to its own line.
+        TextView fold = holder.itemView.findViewById(R.id.steps_fold);
+        if (fold != null) {
+            boolean showFold = item.stepsExpanded && item.steps.size() > StepCardView.VISIBLE_STEPS;
+            if (showFold) {
+                fold.setVisibility(View.VISIBLE);
+                fold.setText(holder.itemView.getContext().getString(
+                        R.string.steps_collapse_count,
+                        item.steps.size() - StepCardView.VISIBLE_STEPS));
+                fold.setOnClickListener(v -> {
+                    item.stepsExpanded = false;
+                    int position = holder.getBindingAdapterPosition();
+                    if (position != RecyclerView.NO_POSITION) {
+                        notifyItemChanged(position);
+                    }
+                });
+            } else {
+                fold.setVisibility(View.GONE);
+                fold.setOnClickListener(null);
+            }
+        }
+
+        // Icon-only buttons: the group's default 12dp spacing is meant for labelled buttons and
+        // would scatter these glyphs, so the row is tightened to a compact 4dp.
         View actions = holder.itemView.findViewById(R.id.assistant_actions);
-        if (actions instanceof com.google.android.material.button.MaterialButtonGroup) {
-            ((com.google.android.material.button.MaterialButtonGroup) actions).setSpacing(0);
+        if (actions instanceof com.google.android.material.button.MaterialButtonGroup
+                && actions.getTag(R.id.assistant_actions) == null) {
+            com.google.android.material.button.MaterialButtonGroup group =
+                    (com.google.android.material.button.MaterialButtonGroup) actions;
+            group.setSpacing(Math.round(4 * actions.getResources().getDisplayMetrics().density));
+            actions.setTag(R.id.assistant_actions, Boolean.TRUE);
         }
 
         TextView text = holder.itemView.findViewById(R.id.message_text);
@@ -208,6 +235,7 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.Holder> {
             if (earlierText == null) {
                 earlier.setVisibility(View.GONE);
                 toggle.setVisibility(View.GONE);
+                toggle.setOnClickListener(null);
             } else {
                 earlier.setText(earlierText);
                 earlier.setVisibility(item.earlierExpanded ? View.VISIBLE : View.GONE);
@@ -215,6 +243,10 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.Holder> {
                 toggle.setText(item.earlierExpanded
                         ? R.string.earlier_collapse
                         : R.string.earlier_expand);
+                // The chevron points down while the text is still folded away.
+                setFoldChevron(toggle, item.earlierExpanded
+                        ? R.drawable.ic_expand_less
+                        : R.drawable.ic_expand_more);
                 toggle.setOnClickListener(v -> {
                     item.earlierExpanded = !item.earlierExpanded;
                     int position = holder.getBindingAdapterPosition();
@@ -263,6 +295,27 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.Holder> {
         bindAction(holder.itemView.findViewById(R.id.action_retry), item, ACTION_RETRY);
         bindAction(holder.itemView.findViewById(R.id.action_share), item, ACTION_SHARE);
         bindAction(holder.itemView.findViewById(R.id.action_more), item, ACTION_MORE);
+    }
+
+    /**
+     * Swaps the leading chevron of a fold line. The drawable is tinted here rather than through
+     * {@code android:drawableTint}, because a compound drawable set at runtime does not pick up the
+     * XML tint on every API level.
+     */
+    private void setFoldChevron(@NonNull TextView view, int drawableRes) {
+        android.graphics.drawable.Drawable chevron =
+                androidx.appcompat.content.res.AppCompatResources.getDrawable(
+                        view.getContext(), drawableRes);
+        if (chevron == null) {
+            return;
+        }
+        chevron = androidx.core.graphics.drawable.DrawableCompat.wrap(chevron.mutate());
+        androidx.core.graphics.drawable.DrawableCompat.setTint(chevron,
+                com.google.android.material.color.MaterialColors.getColor(view,
+                        com.google.android.material.R.attr.colorOnSurfaceVariant));
+        int size = Math.round(18 * view.getResources().getDisplayMetrics().density);
+        chevron.setBounds(0, 0, size, size);
+        view.setCompoundDrawablesRelative(chevron, null, null, null);
     }
 
     private void bindAction(@Nullable View button, @NonNull ChatItem item, int action) {

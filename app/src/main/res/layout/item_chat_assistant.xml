@@ -1,11 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-  One assistant turn. No bubble: the avatar and the author sit above the content, and everything the
-  assistant did before speaking — the reasoning pass and the tool calls — lives in a single card that
-  folds down to its last two steps. The body shows only its latest paragraph; earlier paragraphs fold
-  away behind a chip. The footer carries the actions and the turn's stats.
+  One assistant turn. No bubble: the avatar and the author sit above the content.
 
-  The body is text-selectable, so a long press starts a selection instead of opening a card.
+  Folding is a plain chevron-plus-label line in the primary colour, with no container of its own:
+  - above the card, "collapse the earlier N steps" appears only while the card is open;
+  - inside the card, the first line offers "show N more steps" while the card is folded;
+  - above the body, the same line brings back the paragraphs before the latest one.
+
+  The body is text-selectable, so a long press starts a selection. The footer holds the actions as
+  a bare icon-only button group — no pill around it — with the turn's stats on the end side.
 -->
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
@@ -51,6 +54,24 @@
             android:textColor="?attr/colorPrimary" />
     </LinearLayout>
 
+    <!-- Folds the earlier steps back in; only visible while the card is open. -->
+    <TextView
+        android:id="@+id/steps_fold"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="2dp"
+        android:layout_marginTop="2dp"
+        android:background="@drawable/bg_step_toggle"
+        android:drawableStart="@drawable/ic_expand_less"
+        android:drawablePadding="6dp"
+        android:drawableTint="?attr/colorOnSurfaceVariant"
+        android:paddingTop="6dp"
+        android:paddingEnd="10dp"
+        android:paddingBottom="6dp"
+        android:textAppearance="?attr/textAppearanceLabelLarge"
+        android:textColor="?attr/colorOnSurfaceVariant"
+        android:visibility="gone" />
+
     <!-- Reasoning and tool calls, folded to the latest two steps. -->
     <dev.neko.chatdemo.ui.StepCardView
         android:id="@+id/steps_card"
@@ -59,35 +80,35 @@
         android:layout_marginTop="8dp"
         android:visibility="gone" />
 
-    <!-- Everything before the latest paragraph, hidden until asked for. -->
+    <!-- Folds the paragraphs before the latest one. -->
+    <TextView
+        android:id="@+id/earlier_toggle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="2dp"
+        android:layout_marginTop="6dp"
+        android:background="@drawable/bg_step_toggle"
+        android:drawableStart="@drawable/ic_expand_more"
+        android:drawablePadding="6dp"
+        android:drawableTint="?attr/colorOnSurfaceVariant"
+        android:paddingTop="6dp"
+        android:paddingEnd="10dp"
+        android:paddingBottom="6dp"
+        android:textAppearance="?attr/textAppearanceLabelLarge"
+        android:textColor="?attr/colorOnSurfaceVariant"
+        android:visibility="gone" />
+
     <TextView
         android:id="@+id/message_earlier"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
+        android:layout_marginTop="4dp"
         android:lineSpacingExtra="3dp"
         android:paddingStart="4dp"
         android:paddingEnd="4dp"
         android:textAppearance="?attr/textAppearanceBodyMedium"
         android:textColor="?attr/colorOnSurfaceVariant"
         android:textIsSelectable="true"
-        android:visibility="gone" />
-
-    <TextView
-        android:id="@+id/earlier_toggle"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="2dp"
-        android:background="@drawable/bg_pill"
-        android:drawableEnd="@drawable/ic_expand_more"
-        android:drawablePadding="4dp"
-        android:drawableTint="?attr/colorOnSurfaceVariant"
-        android:paddingStart="10dp"
-        android:paddingTop="4dp"
-        android:paddingEnd="10dp"
-        android:paddingBottom="4dp"
-        android:textAppearance="?attr/textAppearanceLabelMedium"
-        android:textColor="?attr/colorOnSurfaceVariant"
         android:visibility="gone" />
 
     <TextView
@@ -276,10 +297,7 @@
             app:chipIcon="@drawable/ic_draft" />
     </com.google.android.material.chip.ChipGroup>
 
-    <!--
-      Footer: the actions sit in a pill shaped Group of standard icon buttons, and the stats line
-      closes the row on the end side.
-    -->
+    <!-- Footer: a bare icon-only button group, then the stats on the end side. -->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -293,8 +311,6 @@
             android:id="@+id/assistant_actions"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:background="@drawable/bg_pill"
-            android:padding="1dp"
             app:overflowMode="none">
 
             <com.google.android.material.button.MaterialButton

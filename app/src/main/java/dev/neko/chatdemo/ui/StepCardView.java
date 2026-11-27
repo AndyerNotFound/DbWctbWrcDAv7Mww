@@ -1,6 +1,7 @@
 package dev.neko.chatdemo.ui;
 
 import android.content.Context;
+import android.content.res.ColorStateList;
 import android.util.AttributeSet;
 import android.view.Gravity;
 import android.view.View;
@@ -24,9 +25,14 @@ import dev.neko.chatdemo.R;
 /**
  * One card for everything the assistant did before it spoke: the reasoning pass and the tool calls.
  *
- * <p>Collapsed, the card keeps only the latest {@value #VISIBLE_STEPS} steps — the ones that led to
- * the reply on screen — and folds the rest behind its header. Expanded, every step is listed. The
- * header is the toggle; it carries the step count and a chevron that turns over with the state.
+ * <p>The fold is a plain chevron-and-label line in the primary colour, with no container of its own.
+ * Collapsed, the card keeps the latest {@value #VISIBLE_STEPS} steps — the ones that led to the
+ * reply on screen — and its first line offers "show N more steps". Tapping it lists every step and
+ * the line steps aside; folding back is the caller's line above the card.
+ *
+ * <p>Each step is a row of its own: an icon, the label (two lines at most), a trailing chevron when
+ * there is more to open, and a meter under it — a thin bar whose length is the step's share of the
+ * time spent, with the duration printed at its end.
  */
 public class StepCardView extends MaterialCardView {
 
@@ -39,8 +45,8 @@ public class StepCardView extends MaterialCardView {
     }
 
     private final LinearLayout rows;
-    private final TextView count;
-    private final ImageView chevron;
+    private final LinearLayout toggle;
+    private final TextView toggleLabel;
 
     private final List<ChatItem.Step> steps = new ArrayList<>();
     private boolean expanded;
@@ -59,63 +65,52 @@ public class StepCardView extends MaterialCardView {
     public StepCardView(@NonNull Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
 
+        int primary = MaterialColors.getColor(this, androidx.appcompat.R.attr.colorPrimary);
+        int onSurface = MaterialColors.getColor(this,
+                com.google.android.material.R.attr.colorOnSurface);
+        int variant = MaterialColors.getColor(this,
+                com.google.android.material.R.attr.colorOnSurfaceVariant);
+
         LinearLayout content = new LinearLayout(context);
         content.setOrientation(LinearLayout.VERTICAL);
 
-        LinearLayout header = new LinearLayout(context);
-        header.setOrientation(LinearLayout.HORIZONTAL);
-        header.setGravity(Gravity.CENTER_VERTICAL);
-        header.setMinimumHeight(dp(44));
-        header.setPadding(dp(12), 0, dp(10), 0);
-        header.setBackgroundResource(R.drawable.bg_step_header);
-        header.setClickable(true);
-        header.setFocusable(true);
+        // The fold line: chevron plus label, primary, no container of its own.
+        toggle = new LinearLayout(context);
+        toggle.setOrientation(LinearLayout.HORIZONTAL);
+        toggle.setGravity(Gravity.CENTER_VERTICAL);
+        toggle.setMinimumHeight(dp(44));
+        toggle.setPadding(dp(12), dp(6), dp(12), dp(6));
+        toggle.setBackgroundResource(R.drawable.bg_step_toggle);
+        toggle.setClickable(true);
+        toggle.setFocusable(true);
 
-        ImageView icon = new ImageView(context);
-        icon.setImageResource(R.drawable.ic_psychology);
-        icon.setImageTintList(android.content.res.ColorStateList.valueOf(
-                MaterialColors.getColor(this, androidx.appcompat.R.attr.colorPrimary)));
-        header.addView(icon, new LinearLayout.LayoutParams(dp(17), dp(17)));
+        ImageView toggleChevron = new ImageView(context);
+        toggleChevron.setImageResource(R.drawable.ic_expand_more);
+        toggleChevron.setImageTintList(ColorStateList.valueOf(primary));
+        toggle.addView(toggleChevron, new LinearLayout.LayoutParams(dp(20), dp(20)));
 
-        TextView title = new TextView(context);
-        title.setText(R.string.steps_title);
-        title.setTextAppearance(com.google.android.material.R.style.TextAppearance_Material3_LabelLarge);
-        title.setTextColor(MaterialColors.getColor(this,
-                com.google.android.material.R.attr.colorOnSurface));
-        LinearLayout.LayoutParams titleParams = new LinearLayout.LayoutParams(
+        toggleLabel = new TextView(context);
+        toggleLabel.setTextAppearance(
+                com.google.android.material.R.style.TextAppearance_Material3_LabelLarge);
+        toggleLabel.setTextColor(primary);
+        LinearLayout.LayoutParams labelParams = new LinearLayout.LayoutParams(
                 0, LinearLayout.LayoutParams.WRAP_CONTENT, 1f);
-        titleParams.setMarginStart(dp(8));
-        header.addView(title, titleParams);
+        labelParams.setMarginStart(dp(8));
+        toggle.addView(toggleLabel, labelParams);
 
-        count = new TextView(context);
-        count.setTextAppearance(com.google.android.material.R.style.TextAppearance_Material3_LabelSmall);
-        count.setTextColor(MaterialColors.getColor(this,
-                com.google.android.material.R.attr.colorOnSurfaceVariant));
-        header.addView(count);
-
-        chevron = new ImageView(context);
-        chevron.setImageResource(R.drawable.ic_expand_more);
-        chevron.setImageTintList(android.content.res.ColorStateList.valueOf(
-                MaterialColors.getColor(this,
-                        com.google.android.material.R.attr.colorOnSurfaceVariant)));
-        LinearLayout.LayoutParams chevronParams = new LinearLayout.LayoutParams(dp(18), dp(18));
-        chevronParams.setMarginStart(dp(4));
-        header.addView(chevron, chevronParams);
-
-        content.addView(header);
+        toggle.setOnClickListener(v -> setExpanded(!expanded, true));
+        content.addView(toggle);
 
         rows = new LinearLayout(context);
         rows.setOrientation(LinearLayout.VERTICAL);
-        rows.setPadding(dp(12), 0, dp(12), dp(10));
+        rows.setPadding(dp(12), 0, dp(12), dp(6));
         content.addView(rows);
-
-        header.setOnClickListener(v -> setExpanded(!expanded, true));
 
         addView(content);
         setCardBackgroundColor(MaterialColors.getColor(this,
                 com.google.android.material.R.attr.colorSurfaceContainerLow));
         setCardElevation(0f);
-        setRadius(dp(16));
+        setRadius(dp(20));
     }
 
     /** Fills the card. An empty list hides it, so a plain reply keeps no empty shell. */
@@ -158,69 +153,109 @@ public class StepCardView extends MaterialCardView {
         rows.removeAllViews();
 
         int hidden = expanded ? 0 : Math.max(0, steps.size() - VISIBLE_STEPS);
+        float longest = 0f;
         for (int i = hidden; i < steps.size(); i++) {
-            rows.addView(stepRow(steps.get(i)));
+            longest = Math.max(longest, steps.get(i).progress);
+        }
+        for (int i = hidden; i < steps.size(); i++) {
+            rows.addView(stepRow(steps.get(i), longest));
         }
 
-        int total = steps.size();
-        count.setText(expanded
-                ? getContext().getString(R.string.steps_count, total)
-                : hidden > 0
-                ? getContext().getString(R.string.steps_hidden, hidden)
-                : getContext().getString(R.string.steps_count, total));
-
-        chevron.animate().cancel();
-        if (animate) {
-            chevron.animate()
-                    .rotation(expanded ? 180f : 0f)
-                    .setDuration(180)
-                    .start();
+        // The inner line only offers the steps that are folded away; once the card is open the
+        // outer line above the card is the way back, so this one steps aside.
+        if (hidden > 0) {
+            toggle.setVisibility(VISIBLE);
+            toggleLabel.setText(getContext().getString(R.string.steps_hidden, hidden));
         } else {
-            chevron.setRotation(expanded ? 180f : 0f);
+            toggle.setVisibility(GONE);
         }
     }
 
-    private View stepRow(ChatItem.Step step) {
+    /**
+     * One step: icon and label on top with a trailing chevron, then a meter whose fill is this
+     * step's share of the longest step on screen, with the duration at the end of the bar.
+     */
+    private View stepRow(ChatItem.Step step, float longest) {
         LinearLayout row = new LinearLayout(getContext());
-        row.setOrientation(LinearLayout.HORIZONTAL);
-        row.setGravity(Gravity.TOP);
-        row.setPadding(0, dp(7), 0, dp(7));
+        row.setOrientation(LinearLayout.VERTICAL);
+        row.setPadding(0, dp(9), 0, dp(9));
+
+        LinearLayout top = new LinearLayout(getContext());
+        top.setOrientation(LinearLayout.HORIZONTAL);
+        top.setGravity(Gravity.TOP);
 
         ImageView icon = new ImageView(getContext());
         icon.setImageResource(step.icon);
-        icon.setImageTintList(android.content.res.ColorStateList.valueOf(
-                MaterialColors.getColor(this,
-                        com.google.android.material.R.attr.colorOnSurfaceVariant)));
-        LinearLayout.LayoutParams iconParams = new LinearLayout.LayoutParams(dp(15), dp(15));
-        iconParams.topMargin = dp(2);
-        row.addView(icon, iconParams);
-
-        LinearLayout text = new LinearLayout(getContext());
-        text.setOrientation(LinearLayout.VERTICAL);
-        LinearLayout.LayoutParams textParams = new LinearLayout.LayoutParams(
-                0, LinearLayout.LayoutParams.WRAP_CONTENT, 1f);
-        textParams.setMarginStart(dp(9));
+        icon.setImageTintList(ColorStateList.valueOf(MaterialColors.getColor(this,
+                com.google.android.material.R.attr.colorOnSurfaceVariant)));
+        LinearLayout.LayoutParams iconParams = new LinearLayout.LayoutParams(dp(18), dp(18));
+        iconParams.topMargin = dp(1);
+        top.addView(icon, iconParams);
 
         TextView title = new TextView(getContext());
         title.setText(step.title);
         title.setTextAppearance(
-                com.google.android.material.R.style.TextAppearance_Material3_BodySmall);
+                com.google.android.material.R.style.TextAppearance_Material3_BodyMedium);
         title.setTextColor(MaterialColors.getColor(this,
                 com.google.android.material.R.attr.colorOnSurface));
-        text.addView(title);
+        title.setMaxLines(2);
+        title.setEllipsize(android.text.TextUtils.TruncateAt.END);
+        LinearLayout.LayoutParams titleParams = new LinearLayout.LayoutParams(
+                0, LinearLayout.LayoutParams.WRAP_CONTENT, 1f);
+        titleParams.setMarginStart(dp(12));
+        top.addView(title, titleParams);
 
-        if (step.meta != null && step.meta.length() > 0) {
-            TextView meta = new TextView(getContext());
-            meta.setText(step.meta);
-            meta.setTextAppearance(
-                    com.google.android.material.R.style.TextAppearance_Material3_LabelSmall);
-            meta.setTextColor(MaterialColors.getColor(this,
-                    com.google.android.material.R.attr.colorOnSurfaceVariant));
-            meta.setPadding(0, dp(1), 0, 0);
-            text.addView(meta);
+        if (step.expandable) {
+            ImageView chevron = new ImageView(getContext());
+            chevron.setImageResource(R.drawable.ic_chevron_right);
+            chevron.setImageTintList(ColorStateList.valueOf(MaterialColors.getColor(this,
+                    com.google.android.material.R.attr.colorOnSurfaceVariant)));
+            LinearLayout.LayoutParams chevronParams =
+                    new LinearLayout.LayoutParams(dp(18), dp(18));
+            chevronParams.setMarginStart(dp(6));
+            chevronParams.topMargin = dp(1);
+            top.addView(chevron, chevronParams);
         }
 
-        row.addView(text, textParams);
+        row.addView(top);
+
+        LinearLayout meter = new LinearLayout(getContext());
+        meter.setOrientation(LinearLayout.HORIZONTAL);
+        meter.setGravity(Gravity.CENTER_VERTICAL);
+        LinearLayout.LayoutParams meterParams = new LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.MATCH_PARENT,
+                LinearLayout.LayoutParams.WRAP_CONTENT);
+        meterParams.topMargin = dp(9);
+        meterParams.setMarginStart(dp(30));
+
+        LinearLayout track = new LinearLayout(getContext());
+        track.setOrientation(LinearLayout.HORIZONTAL);
+        track.setBackgroundResource(R.drawable.bg_step_meter_track);
+
+        float share = longest <= 0f ? 1f : Math.max(0.04f, step.progress / longest);
+        View filled = new View(getContext());
+        filled.setBackgroundResource(R.drawable.bg_step_meter_fill);
+        track.addView(filled, new LinearLayout.LayoutParams(0,
+                LinearLayout.LayoutParams.MATCH_PARENT, share));
+        track.addView(new View(getContext()), new LinearLayout.LayoutParams(0,
+                LinearLayout.LayoutParams.MATCH_PARENT, Math.max(0.0001f, 1f - share)));
+
+        LinearLayout.LayoutParams trackParams = new LinearLayout.LayoutParams(
+                0, dp(3), 1f);
+        meter.addView(track, trackParams);
+
+        TextView duration = new TextView(getContext());
+        duration.setText(step.meta);
+        duration.setTextAppearance(
+                com.google.android.material.R.style.TextAppearance_Material3_LabelSmall);
+        duration.setTextColor(MaterialColors.getColor(this,
+                com.google.android.material.R.attr.colorOnSurfaceVariant));
+        LinearLayout.LayoutParams durationParams = new LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+        durationParams.setMarginStart(dp(10));
+        meter.addView(duration, durationParams);
+
+        row.addView(meter);
         return row;
     }
 

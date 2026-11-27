@@ -36,13 +36,16 @@ context budget bar.
   of staying white.
 - **Conversation** — an assistant reply has no bubble. The avatar and the author sit above the
   content, and everything the assistant did before speaking — the reasoning pass and the tool
-  calls — lives in one `StepCardView`: a header with the step count and a chevron, and rows that
-  fold down to the last two steps so only what led to the reply stays visible. The body shows
-  only its latest paragraph; a pill labelled *Earlier* unfolds the paragraphs before it, so the
-  whole pre-answer part of the turn can be collapsed at once. The body is text-selectable, so a
-  long press starts a selection. Below it, a footer holds the actions (copy, regenerate, share,
-  more) as standard icon buttons inside a pill shaped `MaterialButtonGroup`, with the turn's
-  stats — duration, tokens, model — closing the row on the end side.
+  calls — lives in one `StepCardView`. Each step is its own row: icon, a two-line label, a
+  trailing chevron when it opens something, and a thin meter underneath whose length is that
+  step's share of the time, with the duration printed at its end. Collapsed, the card keeps the
+  last two steps and offers *Show N more steps* as its first line; opened, that line steps aside
+  and a *Collapse earlier N steps* line above the card folds them back. Both fold lines are a
+  chevron plus a label with no container of their own. The body shows only its latest paragraph,
+  and the same kind of line above it brings back the earlier paragraphs, so the whole pre-answer
+  part of a turn can be folded at once. The body is text-selectable, so a long press starts a
+  selection. Below it, a bare icon-only `MaterialButtonGroup` — no pill around it — carries copy,
+  regenerate, share and more, with the turn's stats closing the row on the end side.
 - **User message** — a button shaped surface (`BubbleButton`): filled container, 10% pressed
   state layer, ripple clipped to the outline, `Button` accessibility role, and a `message_media`
   slot so a thumbnail or any other rich child sits above the caption. Pressing it morphs the
@@ -85,9 +88,10 @@ context budget bar.
   text back into the same row.
 - Hold a user bubble: a card grows out of it with stacked icon-and-label options — select and
   copy, preview, edit, share, create branch, delete.
-- Tap the header of the reasoning card on an assistant reply to unfold every step; tap *Earlier*
-  to bring back the paragraphs before the latest one. Hold the reply body to select text, and use
-  the icon row under it for copy, regenerate, share and more.
+- Tap *Show N more steps* on an assistant reply to unfold every step, and *Collapse earlier N
+  steps* above the card to fold them back; *Show earlier text* brings back the paragraphs before
+  the latest one. Hold the reply body to select text, and use the icon row under it for copy,
+  regenerate, share and more.
 
 ## Build
 
