@@ -79,6 +79,18 @@ public class SidebarActivity extends AppCompatActivity implements SidebarFragmen
     }
 
     @Override
+    protected void onResume() {
+        super.onResume();
+        // The FAB is the landing spot of the settings morph, so make sure it is back after a
+        // return where the shared element callback left it transparent.
+        View fab = findViewById(R.id.sidebar_fab);
+        if (fab != null) {
+            fab.setAlpha(1f);
+            fab.setVisibility(View.VISIBLE);
+        }
+    }
+
+    @Override
     public void onCollapseSidebar() {
         UiTransitions.close(this);
     }
