@@ -13,7 +13,6 @@
     android:textAlignment="viewStart"
     android:textSize="13sp"
     app:backgroundTint="@color/sidebar_item_bg"
-    app:checkable="true"
     app:icon="@drawable/ic_chat_bubble"
     app:iconGravity="textStart"
     app:iconPadding="10dp"

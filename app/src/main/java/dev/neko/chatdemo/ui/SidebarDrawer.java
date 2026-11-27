@@ -127,6 +127,7 @@ public class SidebarDrawer {
                 MaterialButton button = (MaterialButton) LayoutInflater.from(activity)
                         .inflate(R.layout.item_drawer_session, items, false);
                 button.setText(title);
+                button.setCheckable(true);
                 LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(
                         ViewGroup.LayoutParams.MATCH_PARENT, dp(44));
                 lp.topMargin = dp(4);
