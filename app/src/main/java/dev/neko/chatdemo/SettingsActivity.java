@@ -58,6 +58,7 @@ public class SettingsActivity extends AppCompatActivity implements SettingsAdapt
         ViewCompat.setOnApplyWindowInsetsListener(root, (v, insets) -> {
             Insets bars = insets.getInsets(WindowInsetsCompat.Type.systemBars()
                     | WindowInsetsCompat.Type.displayCutout());
+            topBar.setMinimumHeight(dp(56) + bars.top);
             topBar.setPadding(bars.left + dp(8), bars.top, bars.right + dp(8), 0);
             list.setPadding(0, 0, 0, bars.bottom + dp(28));
             return insets;
